@@ -2,7 +2,8 @@
   "$schema": "./node_modules/@angular/cli/lib/config/schema.json",
   "version": 1,
   "cli": {
-    "packageManager": "npm"
+    "packageManager": "npm",
+    "analytics": false
   },
   "newProjectRoot": "projects",
   "projects": {
@@ -18,33 +19,67 @@
           "options": {
             "browser": "src/main.ts",
             "tsConfig": "tsconfig.app.json",
+            "polyfills": ["zone.js"],
             "assets": [
+              "src/assets",
               {
                 "glob": "**/*",
                 "input": "public"
+              },
+              {
+                "glob": "**/*",
+                "input": "src/assets",
+                "output": "/assets/"
               }
             ],
             "styles": [
+              "node_modules/primeicons/primeicons.css",
               "src/styles.css"
             ]
           },
+
           "configurations": {
             "production": {
+              "baseHref": "/web-visits-mobile/",
+              "outputPath": "dist/web-visits-mobile",
+              "fileReplacements": [
+                {
+                  "replace": "src/environments/environment.ts",
+                  "with": "src/environments/environment.prod.ts"
+                }
+              ],
               "budgets": [
                 {
                   "type": "initial",
                   "maximumWarning": "500kB",
-                  "maximumError": "1MB"
+                  "maximumError": "3MB"
                 },
                 {
                   "type": "anyComponentStyle",
-                  "maximumWarning": "4kB",
-                  "maximumError": "8kB"
+                  "maximumWarning": "10kB",
+                  "maximumError": "15kB"
                 }
               ],
               "outputHashing": "all"
             },
+            "qa": {
+              "baseHref": "/web-visits-mobile/",
+              "outputPath": "dist/web-visits-mobile",
+              "fileReplacements": [
+                {
+                  "replace": "src/environments/environment.ts",
+                  "with": "src/environments/environment.qa.ts"
+                }
+              ],
+              "outputHashing": "all",
+              "optimization": true,
+              "sourceMap": false,
+              "extractLicenses": true
+            },
             "development": {
+              "baseHref": "/web-visits-mobile/",
+              "outputPath": "dist/web-visits-mobile",
+              "fileReplacements": [],
               "optimization": false,
               "extractLicenses": false,
               "sourceMap": true
@@ -57,6 +92,9 @@
           "configurations": {
             "production": {
               "buildTarget": "web-visits-mobile:build:production"
+            },
+            "qa": {
+              "buildTarget": "web-visits-mobile:build:qa"
             },
             "development": {
               "buildTarget": "web-visits-mobile:build:development"

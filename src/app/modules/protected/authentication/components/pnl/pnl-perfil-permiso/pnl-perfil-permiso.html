@@ -1,0 +1,60 @@
+<form [formGroup]="form" *ngIf="form !== null && form !== undefined && modulos !== null && modulos !== undefined">
+    <div formArrayName="modulos" class="modulos-container">
+        <div *ngFor="let moduloCtrl of modulos.controls; let i = index" [formGroupName]="i" class="modulo-card">
+            <div class="modulo-header">
+                <div class="modulo-info">
+                    <p-checkbox formControlName="seleccionado" (onChange)="toggleModulo(i)" binary="true"
+                        class="modulo-checkbox">
+                    </p-checkbox>
+                    <div class="modulo-details">
+                        <h3 class="modulo-title">{{ moduloCtrl.get('nombre')?.value }}</h3>
+                        <span class="secciones-count">
+                            {{ getSeccionesSeleccionadasCount(i) }}/{{ getSecciones(i).controls.length }} secciones
+                            seleccionadas
+                        </span>
+                    </div>
+                </div>
+                <button pButton type="button" (click)="togglePanel(i)" class="p-button-text p-button-sm toggle-btn"
+                    [icon]="expandedModuloIndex === i ? 'pi pi-chevron-up' : 'pi pi-chevron-down'"
+                    [label]="expandedModuloIndex === i ? 'Contraer' : 'Expandir'">
+                </button>
+            </div>
+
+            <div *ngIf="expandedModuloIndex === i" class="secciones-container">
+                <div formArrayName="secciones" class="secciones-list">
+                    <div *ngFor="let seccionCtrl of getSecciones(i).controls; let j = index" [formGroupName]="j"
+                        class="seccion-item">
+                        <div class="seccion-header">
+                            <p-checkbox formControlName="seleccionado" (onChange)="toggleSeccion(i, j)" binary="true"
+                                class="seccion-checkbox">
+                            </p-checkbox>
+                            <span class="seccion-title">{{ seccionCtrl.get('nombre')?.value }}</span>
+                        </div>
+
+                        <div *ngIf="seccionCtrl.get('seleccionado')?.value" class="permisos-container">
+                            <div class="permisos-title">Nivel de Permisos:</div>
+                            <div class="permisos-list">
+                                <div *ngFor="let permiso of getPermisosDisponibles(seccionCtrl.get('id')?.value)"
+                                    class="permiso-item">
+                                    <p-radioButton [name]="'permisos_' + i + '_' + j" [value]="permiso.id"
+                                        [inputId]="'permiso_' + i + '_' + j + '_' + permiso.id"
+                                        [formControl]="getPermisoControl(i, j)"
+                                        (onChange)="cambiarPermiso(i, j, permiso.id)" class="permiso-radio">
+                                    </p-radioButton>
+                                    <label [for]="'permiso_' + i + '_' + j + '_' + permiso.id" class="permiso-label">
+                                        {{ permiso.nombre }}
+                                        <span
+                                            *ngIf="esSeccionEspecial(seccionCtrl.get('id')?.value) && permiso.id === 2"
+                                            class="permiso-especial">
+                                            (Permiso único para esta sección)
+                                        </span>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>

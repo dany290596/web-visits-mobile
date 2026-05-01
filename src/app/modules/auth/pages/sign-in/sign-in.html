@@ -1,0 +1,435 @@
+<div class="login-container">
+    <!-- Fondo con efecto de partículas -->
+    <div class="gradient-bg "></div>
+
+    <!-- Contenedor principal -->
+    <div class="login-card">
+        <!-- Columna izquierda - Ilustración -->
+        <div class="login-illustration">
+            <div class="illustration-overlay"></div>
+            <img src="menu_wv.png" alt="WebVisitsMobile Logo" class="logo">
+            <div class="illustration-text">
+                <h2>Bienvenido a WebVisitsMobile</h2>
+                <p>Gestione sus visitas de manera eficiente y profesional</p>
+            </div>
+        </div>
+
+        <!-- Columna derecha - Formulario -->
+        <div class="login-form">
+            <div class="form-container">
+                <!-- Login Form -->
+                <div *ngIf="licencia" class="form-wrapper animate__animated animate__fadeIn">
+                    <div class="form-header">
+                        <h1>Iniciar sesión</h1>
+                        <p>Ingrese su credencial para acceder al sistema</p>
+                    </div>
+
+                    <form autocomplete="off" [formGroup]="miFormulario" (ngSubmit)="login()">
+                        <!-- Email Field -->
+                        <div class="form-group">
+                            <label for="email">Correo electrónico</label>
+                            <div class="error-wrapper">
+                                <div class="input-group">
+                                    <span class="input-group-text">
+                                        <i class="pi pi-envelope"></i>
+                                    </span>
+                                    <input type="text" id="email" class="form-control"
+                                        placeholder="tucorreo@ejemplo.com" formControlName="email"
+                                        [class.input-error]="campoConErrores('email')">
+                                </div>
+                                <div class="error-bubble" *ngIf="campoConErrores('email')">
+                                    <i class="pi pi-exclamation-circle"></i> El campo es obligatorio
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Password Field -->
+                        <div class="form-group">
+                            <label for="password">Contraseña</label>
+                            <div class="error-wrapper">
+                                <div class="input-group">
+                                    <span class="input-group-text">
+                                        <i class="pi pi-lock"></i>
+                                    </span>
+                                    <input type="password" id="password" class="form-control"
+                                        placeholder="Ingrese su contraseña" formControlName="contrasena"
+                                        [class.input-error]="campoConErrores('contrasena')">
+                                </div>
+                                <div class="error-bubble" *ngIf="campoConErrores('contrasena')">
+                                    <i class="pi pi-exclamation-circle"></i> La contraseña es muy corta
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Options Row -->
+                        <div class="form-options">
+                            <div class="form-check">
+                                <p-checkbox inputId="rememberMe" type="checkbox" id="rememberMe"
+                                    formControlName="recuerdame" binary="true">
+                                </p-checkbox>
+                                <label class="form-check-label" for="rememberMe">Recuérdame</label>
+                            </div>
+                            <a href="#" class="forgot-password" (click)="CambiarContrasena=true">
+                                Olvidé la contraseña
+                            </a>
+                        </div>
+
+                        <!-- Submit Button -->
+                        <button class="btn-login" type="submit" [disabled]="miFormulario.invalid">
+                            <span *ngIf="!displayModal2">Iniciar sesión</span>
+                            <div *ngIf="displayModal2" class="spinner-border spinner-border-sm" role="status">
+                                <span class="visually-hidden">Loading...</span>
+                            </div>
+                        </button>
+                    </form>
+                </div>
+
+                <!-- License Activation Form -->
+                <div *ngIf="!licencia" class="form-wrapper animate__animated animate__fadeIn">
+                    <div class="form-header">
+                        <h1>Activar licencia</h1>
+                        <p>Ingresa los datos de tu licencia para continuar</p>
+                    </div>
+
+                    <form autocomplete="off" [formGroup]="activacion" (ngSubmit)="guardarLicencia()">
+                        <!-- Activation Code -->
+                        <div class="form-group">
+                            <label for="activationCode">Código de activación</label>
+                            <div class="input-group">
+                                <span class="input-group-text">
+                                    <i class="pi pi-key"></i>
+                                </span>
+                                <input type="text" id="activationCode" class="form-control"
+                                    placeholder="Ingresa tu código" formControlName="codigo" autocomplete="off">
+                            </div>
+                        </div>
+
+                        <!-- Serial -->
+                        <div class="form-group">
+                            <label for="serial">Serial</label>
+                            <div class="input-group">
+                                <span class="input-group-text">
+                                    <i class="pi pi-barcode"></i>
+                                </span>
+                                <input type="text" id="serial" class="form-control" placeholder="Ingresa el serial"
+                                    formControlName="serial" autocomplete="off">
+                            </div>
+                        </div>
+
+                        <!-- Progress Bar -->
+                        <div *ngIf="validandoLicencia" class="progress-container">
+                            <p-progressBar mode="indeterminate" [style]="{ height: '6px' }"></p-progressBar>
+                            <p class="text-center mt-2">Validando licencia...</p>
+                        </div>
+
+                        <!-- Buttons -->
+                        <div class="button-group">
+                            <button class="btn-activate" type="submit" [disabled]="activacion.invalid">
+                                Activar licencia
+                            </button>
+                            <!--
+                            <button class="btn-hardware" type="button" (click)="datoshardware()"
+                                [disabled]="validandoLicencia">
+                                <i class="bi bi-cpu"></i> Obtener datos de hardware
+                            </button>
+                            -->
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Footer -->
+            <div class="login-footer">
+                <p>© 2026 WebVisitsMobile - Todos los derechos reservados</p>
+                <p class="version">Versión 1.0.0</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<p-dialog header="Información del Hardware" [modal]="true" [(visible)]="visible"
+    [style]="{ width: '40rem', borderRadius: '12px' }" [breakpoints]="{'640px': '90vw'}" class="hardware-dialog">
+
+    <!-- Spinner de carga -->
+    <div *ngIf="this.cargarLicencia" class="loading-container">
+        <div class="loading-content">
+            <p-progressSpinner strokeWidth="4" animationDuration=".5s"></p-progressSpinner>
+            <span class="loading-text">Cargando información del hardware...</span>
+        </div>
+    </div>
+
+    <!-- Contenido principal -->
+    <div *ngIf="!this.cargarLicencia" class="hardware-content">
+        <div class="section-title">
+            <i class="pi pi-info-circle"></i>
+            <span>Detalles del Sistema</span>
+        </div>
+
+        <div *ngIf="this.hardware" class="hardware-details">
+            <!-- Grupo 1: Información de la placa base -->
+            <div class="detail-group">
+                <h5><i class="pi pi-microchip"></i> Placa Base</h5>
+                <div class="detail-item">
+                    <span class="detail-label">Producto:</span>
+                    <span class="detail-value">{{this.hardware.baseBoardProduct || 'N/A'}}</span>
+                </div>
+                <div class="detail-item">
+                    <span class="detail-label">Fabricante:</span>
+                    <span class="detail-value">{{this.hardware.baseboardManufacturer || 'N/A'}}</span>
+                </div>
+                <div class="detail-item">
+                    <span class="detail-label">Número de serie:</span>
+                    <span class="detail-value">{{this.hardware.baseboardSerialNumber || 'N/A'}}</span>
+                </div>
+            </div>
+
+            <!-- Grupo 2: Información del CPU -->
+            <div class="detail-group">
+                <h5><i class="pi pi-cog"></i> Procesador</h5>
+                <div class="detail-item">
+                    <span class="detail-label">Nombre:</span>
+                    <span class="detail-value">{{this.hardware.cpuNombre || 'N/A'}}</span>
+                </div>
+                <div class="detail-item">
+                    <span class="detail-label">ID del dispositivo:</span>
+                    <span class="detail-value">{{this.hardware.cpuDeviceId || 'N/A'}}</span>
+                </div>
+                <div class="detail-item">
+                    <span class="detail-label">ID del CPU:</span>
+                    <span class="detail-value">{{this.hardware.cpuId || 'N/A'}}</span>
+                </div>
+                <div class="detail-item">
+                    <span class="detail-label">Nombre del sistema:</span>
+                    <span class="detail-value">{{this.hardware.cpuSystemname || 'N/A'}}</span>
+                </div>
+            </div>
+
+            <!-- Grupo 3: Almacenamiento -->
+            <div class="detail-group">
+                <h5><i class="pi pi-database"></i> Almacenamiento</h5>
+                <div class="detail-item">
+                    <span class="detail-label">Disco duro:</span>
+                    <span class="detail-value">{{this.hardware.discoDuro || 'N/A'}}</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Mensaje de error -->
+        <div *ngIf="!this.hardware" class="error-message">
+            <i class="pi pi-exclamation-triangle"></i>
+            <span>Ocurrió un problema al obtener la información del hardware</span>
+        </div>
+    </div>
+
+    <!-- Pie de diálogo -->
+    <ng-template pTemplate="footer">
+        <div class="dialog-footer">
+            <button *ngIf="this.hardware!=null" pButton pRipple type="button" icon="pi pi-copy" label="Copiar datos"
+                class="p-button-outlined p-button-secondary" (click)="copiarTexto()"></button>
+            <button pButton pRipple type="button" icon="pi pi-check" label="Aceptar" class="p-button-primary"
+                (click)="visible=false"></button>
+        </div>
+    </ng-template>
+</p-dialog>
+
+<p-dialog header="Cambio de contraseña" [modal]="true" [(visible)]="CambiarContrasena"
+    [style]="{ width: '50rem', borderRadius: '12px' }" [breakpoints]="{'640px': '90vw'}" class="password-dialog">
+
+    <form autocomplete="off" [formGroup]="FormularioContrasena" class="password-form">
+        <!-- Paso 1: Ingreso de email -->
+        <div *ngIf="PasoCambioContrasena==1" class="step-container">
+            <div class="step-header">
+                <i class="pi pi-envelope step-icon"></i>
+                <h4 class="step-title">Recuperación de contraseña</h4>
+                <p class="step-description">
+                    Ingrese su dirección de correo electrónico para recibir instrucciones de recuperación.
+                </p>
+            </div>
+
+            <div class="form-group">
+                <label for="email" class="form-label">Correo electrónico</label>
+                <div class="input-with-icon">
+                    <i class="pi pi-at input-icon"></i>
+                    <input type="email" id="email" pInputText class="form-control" placeholder="tucorreo@ejemplo.com"
+                        formControlName="email">
+                </div>
+
+                <small class="error-message" *ngIf="errorCorreo">
+                    <i class="pi pi-exclamation-circle"></i>
+                    El usuario que desea recuperar no existe
+                </small>
+            </div>
+
+            <div class="form-actions">
+                <button class="btn-login" type="button" [disabled]="FormularioContrasena.get('email')!.invalid"
+                    (click)="enviarCorreo()">Enviar</button>
+            </div>
+        </div>
+
+        <!-- Paso 2: Validación de código -->
+        <div *ngIf="PasoCambioContrasena==2" class="step-container">
+            <div class="step-header">
+                <i class="pi pi-key step-icon"></i>
+                <h4 class="step-title">Verificación de código</h4>
+                <p class="step-description">
+                    Se ha enviado una clave de recuperación a <strong>{{FormularioContrasena.value.email}}</strong>.
+                    Esta clave será válida durante 30 minutos.
+                </p>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">Código de verificación</label>
+                <p-inputMask mask="99999999" [style]="{'width':'100%'}" inputStyleClass="form-control"
+                    formControlName="codigo"></p-inputMask>
+
+                <small class="error-message" *ngIf="errorCorreo">
+                    <i class="pi pi-exclamation-circle"></i>
+                    Clave incorrecta
+                </small>
+            </div>
+
+            <div class="form-actions">
+                <button class="btn-login" type="button" [disabled]="FormularioContrasena.get('codigo')!.invalid"
+                    (click)="validarCodigo()">Validar código</button>
+            </div>
+
+            <!-- Temporizador y reenvío -->
+            <div class="verification-footer">
+                <div class="alert-success" *ngIf="showLabel">
+                    <i class="pi pi-check-circle"></i>
+                    Se reenvió la clave de recuperación nuevamente.
+                </div>
+
+                <div *ngIf="!timeIsUp" class="timer-container">
+                    <div class="timer-circle animate__animated animate__fadeInUp">
+                        <h1>{{ secondsLeft }}</h1>
+                    </div>
+                    <p class="timer-text animate__animated animate__fadeInUp">
+                        Por favor, espere {{secondsLeft}} segundos antes de solicitar un nuevo código.
+                    </p>
+                </div>
+
+                <p class="resend-text">
+                    ¿Sigue sin recibir su clave de recuperación?
+                    <span class="resend-link" *ngIf="timeIsUp" (click)="enviarCorreoNuevo()">
+                        De clic para reenviarla
+                    </span>
+                    <span class="resend-link disabled" *ngIf="!timeIsUp">
+                        Clic para reenviar
+                    </span>
+                </p>
+            </div>
+
+            <div class="change-email" *ngIf="timeIsUp">
+                <button pButton pRipple type="button" label="Cambiar correo electrónico" icon="pi pi-envelope"
+                    class="secondary-button" (click)="this.PasoCambioContrasena=1"></button>
+            </div>
+        </div>
+
+        <!-- Paso 3: Nueva contraseña -->
+        <div *ngIf="PasoCambioContrasena==3" class="step-container">
+            <div class="step-header">
+                <i class="pi pi-lock step-icon"></i>
+                <h4 class="step-title">Crear nueva contraseña</h4>
+                <p class="step-description">
+                    Por favor, ingrese y confirme su nueva contraseña.
+                </p>
+            </div>
+
+            <div class="grid">
+                <div class="col-12 md:col-6 field">
+                    <div class="form-group">
+                        <label class="form-label">Nueva contraseña</label>
+                        <p-password [toggleMask]="true" [style]="{'width':'100%'}" [inputStyle]="{'width':'100%'}"
+                            placeholder="Contraseña" appendTo="body" promptLabel="Ingresa tu contraseña"
+                            weakLabel="Débil" mediumLabel="Medio" goodLabel="Buena" strongLabel="Fuerte"
+                            formControlName="contrasena" [feedback]="true" inputStyleClass="form-control">
+                            <ng-template pTemplate="footer">
+                                <p-divider></p-divider>
+                                <p class="suggestions-title">Requisitos de contraseña:</p>
+                                <ul class="requirement-list m-0 p-0">
+                                    <li [class.valid]="hasMinLength()">
+                                        <i
+                                            [ngClass]="hasMinLength() ? 'pi pi-check text-green-500' : 'pi pi-circle '"></i>
+                                        Mínimo 8 caracteres
+                                    </li>
+                                    <li [class.valid]="hasUpperCase()">
+                                        <i
+                                            [ngClass]="hasUpperCase() ? 'pi pi-check text-green-500' : 'pi pi-circle '"></i>
+                                        Al menos una mayúscula
+                                    </li>
+                                    <li [class.valid]="hasLowerCase()">
+                                        <i
+                                            [ngClass]="hasLowerCase() ? 'pi pi-check text-green-500' : 'pi pi-circle '"></i>
+                                        Al menos una minúscula
+                                    </li>
+                                    <li [class.valid]="hasNumber()">
+                                        <i [ngClass]="hasNumber() ? 'pi pi-check text-green-500' : 'pi pi-circle '"></i>
+                                        Al menos un número
+                                    </li>
+                                    <li [class.valid]="hasSpecialChar()">
+                                        <i
+                                            [ngClass]="hasSpecialChar() ? 'pi pi-check text-green-500' : 'pi pi-circle '"></i>
+                                        Al menos un carácter especial
+                                    </li>
+                                    <li
+                                        [class.valid]="FormularioContrasena.controls['contrasena'].value === FormularioContrasena.controls['contrasenavalidacion'].value && FormularioContrasena.controls['contrasenavalidacion'].value">
+                                        <i
+                                            [ngClass]="FormularioContrasena.controls['contrasena'].value === FormularioContrasena.controls['contrasenavalidacion'].value && FormularioContrasena.controls['contrasenavalidacion'].value ? 'pi pi-check text-green-500' : 'pi pi-circle '"></i>
+                                        Las contraseñas coinciden
+                                    </li>
+                                </ul>
+                            </ng-template>
+                        </p-password>
+                        <p-message severity="error"
+                            *ngIf="FormularioContrasena.controls['contrasena'].errors?.['required'] && FormularioContrasena.controls['contrasena'].touched"
+                            class="p-error block">
+                            <i class="pi pi-exclamation-circle"></i> La contraseña es requerida.
+                        </p-message>
+                        <p-message severity="error"
+                            *ngIf="FormularioContrasena.controls['contrasena'].errors?.['pattern'] && FormularioContrasena.controls['contrasena'].touched"
+                            class="p-error block">
+                            <i class="pi pi-exclamation-circle"></i> La contraseña debe tener mayúscula,
+                            minúscula,
+                            número y
+                            carácter especial.
+                        </p-message>
+                    </div>
+                </div>
+                <div class="col-12 md:col-6 field">
+                    <div class="form-group">
+                        <label class="form-label">Confirmar contraseña</label>
+                        <p-password [style]="{'width':'100%'}" [inputStyle]="{'width':'100%'}"
+                            placeholder="Confirmar contraseña" appendTo="body" promptLabel="Ingresa tu contraseña"
+                            [toggleMask]="true" [feedback]="false" formControlName="contrasenavalidacion"
+                            inputStyleClass="form-control">
+                        </p-password>
+                        <p-message severity="error"
+                            *ngIf="FormularioContrasena.controls['contrasenavalidacion'].errors?.['required'] && FormularioContrasena.controls['contrasenavalidacion'].touched"
+                            class="p-error block">
+                            <i class="pi pi-exclamation-circle"></i> Debes confirmar la contraseña.
+                        </p-message>
+                        <p-message severity="error"
+                            *ngIf="FormularioContrasena.controls['contrasenavalidacion'].errors?.['pattern'] && FormularioContrasena.controls['contrasenavalidacion'].touched"
+                            class="p-error block">
+                            <i class="pi pi-exclamation-circle"></i> La confirmación debe tener mayúscula,
+                            minúscula,
+                            número
+                            y carácter especial.
+                        </p-message>
+                        <p-message severity="error"
+                            *ngIf="FormularioContrasena.errors?.['noCoincide'] && FormularioContrasena.controls['contrasenavalidacion'].touched"
+                            class="p-error block">
+                            <i class="pi pi-exclamation-circle"></i> Las contraseñas no coinciden.
+                        </p-message>
+                    </div>
+                </div>
+
+                <div class="col-12 flex justify-content-end">
+                    <button class="btn-login" type="button" [disabled]="!isPasswordValid()"
+                        (click)="cambiarContraForm()">Guardar nueva contraseña</button>
+                </div>
+            </div>
+        </div>
+    </form>
+</p-dialog>

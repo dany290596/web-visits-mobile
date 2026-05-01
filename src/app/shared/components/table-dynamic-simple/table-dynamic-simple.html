@@ -1,0 +1,118 @@
+<!-- Enhanced Header con diseño corporativo -->
+<div class="p-3 border-bottom-1 surface-border">
+    <div class="flex flex-column md:flex-row justify-content-between align-items-start md:align-items-center gap-2">
+        <!-- Record Count -->
+        <div class="flex align-items-center gap-2">
+            <p-tag [value]="tabla.registros.length.toString()" severity="info" class="font-semibold px-3"></p-tag>
+            <span class="text-900 font-medium">
+                <span *ngIf="tabla.registros.length > 1">registros encontrados</span>
+                <span *ngIf="tabla.registros.length == 1">registro encontrado</span>
+                <span *ngIf="tabla.registros.length == 0">registros encontrados</span>
+            </span>
+        </div>
+
+        <!-- Acciones adicionales si las necesitas -->
+        <div class="flex align-items-center gap-2">
+            <!-- Puedes agregar botones de acción global aquí -->
+        </div>
+    </div>
+</div>
+
+<!-- Tabla PrimeNG sin paginador (como en tu código original) -->
+<p-table [value]="tabla.registros" dataKey="registroId" [responsiveLayout]="'scroll'"
+    [tableStyle]="{ 'min-width': '100%' }" styleClass="p-datatable-sm p-datatable-striped"
+    *ngIf="tabla != null && tabla.registros != null && tabla.registros.length > 0">
+
+    <ng-template pTemplate="header">
+        <tr>
+            <th *ngFor="let titulo of tabla.titulosEnTitulos"
+                class="text-left align-middle py-3 px-4 bg-surface-100 text-600 font-semibold">
+                {{ titulo.texto }}
+            </th>
+            <th *ngIf="tabla.ColumnaAcciones"
+                class="text-center align-middle py-3 px-4 bg-surface-100 text-600 font-semibold" style="width: 150px;">
+                Acciones
+            </th>
+        </tr>
+    </ng-template>
+
+    <ng-template pTemplate="body" let-registro let-i="rowIndex">
+        <!-- Fila principal con diseño mejorado -->
+        <tr [ngClass]="{'bg-surface-50': i % 2 === 0}">
+            <!-- Datos en columnas con estilo corporativo -->
+            <td *ngFor="let campo of registro.camposEnLinea" class="align-middle py-3 px-4">
+                <div class="text-truncate text-900" style="max-width: 250px;" [pTooltip]="campo.texto"
+                    tooltipPosition="bottom">
+                    {{ campo.texto || '-' }}
+                </div>
+            </td>
+
+            <!-- Columna de acciones con diseño corporativo -->
+            <td *ngIf="tabla.ColumnaAcciones" class="text-center align-middle py-3 px-4">
+                <div class="flex justify-content-center gap-1">
+                    <!-- Botón de detalles/expandir -->
+                    <button *ngIf="tabla.AccionDetalle" pButton
+                        [icon]="registro.expandirRegistro ? 'pi pi-chevron-up' : 'pi pi-chevron-down'"
+                        class="p-button-sm p-button-rounded p-button-text text-blue-600"
+                        (click)="cambiarExpandirRegistro(i)"
+                        [pTooltip]="registro.expandirRegistro ? 'Ocultar detalles' : 'Mostrar detalles'"
+                        tooltipPosition="bottom"></button>
+
+                    <!-- Botón de editar -->
+                    <button *ngIf="tabla.AccionVer" pButton icon="pi pi-pencil"
+                        class="p-button-sm p-button-rounded p-button-text text-green-600" (click)="editar(i)"
+                        pTooltip="Editar" tooltipPosition="bottom"></button>
+
+                    <!-- Botón de eliminar -->
+                    <button *ngIf="tabla.AccionEliminar" pButton icon="pi pi-trash"
+                        class="p-button-sm p-button-rounded p-button-text text-red-600" (click)="eliminar(i)"
+                        pTooltip="Eliminar" tooltipPosition="bottom"></button>
+                </div>
+            </td>
+        </tr>
+
+        <!-- Fila de detalles expandibles con diseño corporativo -->
+        <tr *ngIf="registro.expandirRegistro" class="bg-surface-50">
+            <td [attr.colspan]="tabla.titulosEnTitulos.length + (tabla.ColumnaAcciones ? 1 : 0)" class="p-0">
+                <div class="p-4 border-top-1 surface-border">
+                    <div class="grid">
+                        <div *ngFor="let tituloDetalle of tabla.titulosEnDetalle; let j = index"
+                            class="col-12 md:col-6 mb-3">
+                            <div class="flex flex-column">
+                                <span class="text-600 text-sm font-medium mb-1">
+                                    {{ tituloDetalle.texto }}
+                                </span>
+                                <span class="text-900 font-medium"
+                                    [pTooltip]="registro.camposEnDetalle[j].texto || 'N/A'" tooltipPosition="bottom">
+                                    {{ registro.camposEnDetalle[j].texto || 'N/A' }}
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </td>
+        </tr>
+    </ng-template>
+
+    <!-- Empty State Template con diseño corporativo -->
+    <ng-template pTemplate="emptymessage">
+        <tr>
+            <td [attr.colspan]="tabla.titulosEnTitulos.length + (tabla.ColumnaAcciones ? 1 : 0)"
+                class="text-center p-6">
+                <div class="flex flex-column align-items-center justify-content-center gap-3 py-6">
+                    <i class="pi pi-inbox text-300" style="font-size: 4rem"></i>
+                    <div class="text-center">
+                        <h5 class="text-600 font-semibold mb-2">No hay datos disponibles</h5>
+                        <p class="text-500 text-sm">No se encontraron registros</p>
+                    </div>
+                </div>
+            </td>
+        </tr>
+    </ng-template>
+</p-table>
+
+<!-- Loading State -->
+<div *ngIf="tabla != null && (!tabla.registros || tabla.registros.length === 0)" class="text-center p-8">
+    <p-progressSpinner strokeWidth="4" animationDuration=".5s"></p-progressSpinner>
+    <p class="text-500 font-medium mt-3">Cargando registros...</p>
+</div>

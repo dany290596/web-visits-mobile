@@ -1,0 +1,91 @@
+<div>
+    <!-- Header -->
+    <div class="mb-4 flex justify-between">
+        <div class="inline-block">
+            <h3 class="font-semibold text-foreground">Usuarios</h3>
+            <div class="space-x-1 text-xs font-medium text-muted-foreground">
+                <a [routerLink]="['/layout/dashboard/inicio']" class="hover:text-primary">Inicio</a>
+                <!-- <span> - Inicio</span> -->
+            </div>
+        </div>
+
+        <div class="inline-block space-x-4">
+            <button (click)="showAgregar()"
+                class="flex-none rounded-md bg-primary px-4 py-2.5 text-xs font-semibold text-primary-foreground">
+                Agregar
+            </button>
+        </div>
+    </div>
+    <!-- end Header -->
+
+    <div class="grid grid-cols-12 gap-4">
+        <div class="col-span-12 flex-col rounded-lg bg-background px-8 py-8 sm:flex-row">
+            <!--
+            <div class="mb-4 flex items-center justify-between">
+                <div class="flex-col items-center">
+                    <span class="text-xs text-muted-foreground"></span>
+                </div>
+            </div>
+            -->
+
+            <div class="grid grid-cols-12 gap-4">
+                <div class="col-span-12 flex-col rounded-lg bg-background px-4 sm:flex-row">
+                    <form autocomplete="off" [formGroup]="buscarFG" class="w-full">
+                        <div class="grid grid-cols-12 gap-4">
+                            <div class="col-span-12 md:col-span-6 xl:col-span-3 pt-0">
+                                <label class="form-label">Correo</label>
+                                <input pInputText type="text" class="form-control" placeholder="Correo del usuario"
+                                    formControlName="correo" class="w-full">
+                            </div>
+
+                            <div class="col-span-12 md:col-span-6 xl:col-span-3 pt-0">
+                                <app-autoc-estado formControlName="estado"></app-autoc-estado>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-12 gap-4 px-4 mt-4">
+                <div class="col-span-12 flex justify-end space-x-4">
+                    <button (click)="showLimpiar()"
+                        class="flex-none rounded-md bg-muted px-4 py-2.5 text-xs font-semibold text-muted-foreground hover:text-foreground">
+                        Limpiar
+                    </button>
+                    <button (click)="showBuscar(true)"
+                        class="flex-none rounded-md bg-primary px-4 py-2.5 text-xs font-semibold text-primary-foreground">
+                        Buscar
+                    </button>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-12 gap-4">
+                <div class="col-span-12 flex-col rounded-lg bg-background px-4 py-8 sm:flex-row overflow-x-auto">
+                    @if(mostrarTabla){
+                    <div class="grid animate__animated animate__fadeInUp">
+                        @if(mostrarTabla){
+                        <div class="col-12">
+                            <app-table-dynamic [tabla]="tablaResultados" tituloTabla="Perfiles encontrados"
+                                [totalPaginas]="totalPaginas" [paginaActual]="paginaActual"
+                                [totalRegistros]="totalRegistros" (CambiarPaginaEmit)="cambiar($event)"
+                                (onVer)="ver( $event )" (onDet)="detalle( $event )" (onInactivar)="inactivar( $event )"
+                                (onReactivar)="reactivar( $event )"></app-table-dynamic>
+                        </div>
+                        }
+                        @if(!mostrarTabla){
+                        <div class="col-12">
+                            <app-table-dynamic [tabla]="tablaResultados" [totalPaginas]="totalPaginas"
+                                [paginaActual]="paginaActual" [totalRegistros]="totalRegistros"
+                                (CambiarPaginaEmit)="cambiar($event)" (onVer)="ver( $event )"
+                                (onDet)="detalle( $event )" (onInactivar)="inactivar( $event )"
+                                (onReactivar)="reactivar( $event )"></app-table-dynamic>
+                        </div>
+                        }
+                    </div>
+                    }
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>

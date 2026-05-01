@@ -1,6 +1,7 @@
 {
   "name": "web-visits-mobile",
-  "version": "0.0.0",
+  "displayName": "WebVisitsMobile",
+  "version": "1.0.0",
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
@@ -11,21 +12,38 @@
   "private": true,
   "packageManager": "npm@11.5.2",
   "dependencies": {
+    "@angular/animations": "^21.2.9",
     "@angular/common": "^21.2.0",
     "@angular/compiler": "^21.2.0",
     "@angular/core": "^21.2.0",
     "@angular/forms": "^21.2.0",
     "@angular/platform-browser": "^21.2.0",
     "@angular/router": "^21.2.0",
+    "@primeuix/themes": "^2.0.3",
+    "@tailwindcss/aspect-ratio": "^0.4.2",
+    "@tailwindcss/forms": "^0.5.11",
+    "@tailwindcss/typography": "^0.5.19",
+    "angular-svg-icon": "^19.1.1",
+    "apexcharts": "^5.10.6",
+    "ng-apexcharts": "^2.4.0",
+    "ngx-sonner": "^3.1.0",
+    "primeicons": "^7.0.0",
+    "primeng": "^21.1.6",
     "rxjs": "~7.8.0",
-    "tslib": "^2.3.0"
+    "sweetalert2": "^11.26.24",
+    "tailwind-scrollbar": "^3.1.0",
+    "tslib": "^2.3.0",
+    "zone.js": "^0.16.1"
   },
   "devDependencies": {
     "@angular/build": "^21.2.7",
     "@angular/cli": "^21.2.7",
     "@angular/compiler-cli": "^21.2.0",
+    "autoprefixer": "^10.5.0",
     "jsdom": "^28.0.0",
+    "postcss": "^8.5.10",
     "prettier": "^3.8.1",
+    "tailwindcss": "^3.4.19",
     "typescript": "~5.9.2",
     "vitest": "^4.0.8"
   }

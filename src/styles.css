@@ -1,1 +1,201 @@
-/* You can add global styles to this file, and also import other style files */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+@import './assets/styles/apexchart.css';
+
+
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: #FFFFFF;
+    --foreground: #0C1420;
+    --card: #F1F5F9;
+    --card-foreground: #000000;
+    --primary: #E11D48;
+    --primary-foreground: #FFFFFF;
+    --muted: #CFD9E5;
+    --muted-foreground: #64748B;
+    --destructive: #CC0033;
+    --destructive-foreground: #FAFAFA;
+    --border: #E2E8F0;
+  }
+
+  .dark {
+    --background: #0A0A0A;
+    --foreground: #F2F2F2;
+    --card: #121212;
+    --card-foreground: #262626;
+    --muted: #262626;
+    --muted-foreground: #A3A3A3;
+    --border: #262626;
+  }
+
+  [data-theme='violet'] {
+    --primary: #6E56CF;
+  }
+
+  .dark[data-theme='violet'] {
+    --background: #060815;
+    --foreground: #F6F8FB;
+    --card: #0B0F1A;
+    --card-foreground: #F6F8FB;
+    --primary-foreground: #F6F8FB;
+    --muted: #232B3D;
+    --muted-foreground: #A1A8BF;
+    --border: #232B3D;
+  }
+
+  [data-theme='red'] {
+    --primary: #CC0033;
+  }
+
+  .dark[data-theme='red'] {
+    --primary-foreground: #FFE5E5;
+  }
+
+  [data-theme='blue'] {
+    --primary: #2490FF;
+  }
+
+  .dark[data-theme='blue'] {
+    --background: #02080F;
+    --foreground: #F8FAFC;
+    --card: #0B1117;
+    --card-foreground: #F8FAFC;
+    --primary-foreground: #0F1729;
+    --muted: #1E293B;
+    --muted-foreground: #94A3B8;
+    --border: #1E293B;
+  }
+
+  [data-theme='orange'] {
+    --primary: #EA580C;
+  }
+
+  .dark[data-theme='orange'] {
+    --background: #0C0A09;
+    --foreground: #FAFAF9;
+    --card: #141110;
+    --card-foreground: #FAFAF9;
+    --primary-foreground: #FAFAF9;
+    --muted: #292524;
+    --muted-foreground: #A8A29E;
+    --border: #292524;
+  }
+
+  [data-theme='yellow'] {
+    --primary: #FACC15;
+  }
+
+  .dark[data-theme='yellow'] {
+    --background: #0C0A09;
+    --foreground: #FAFAF9;
+    --card: #141110;
+    --card-foreground: #FAFAF9;
+    --primary: #FACC15;
+    --primary-foreground: #422006;
+    --muted: #292524;
+    --muted-foreground: #A8A29E;
+    --border: #292524;
+  }
+
+  [data-theme='green'] {
+    --primary: #22C55E;
+  }
+
+  .dark[data-theme='green'] {
+    --primary: #22C55E;
+    --primary-foreground: #052E16;
+  }
+
+  body {
+    @apply bg-background text-foreground font-poppins;
+  }
+
+  input,
+  textarea,
+  select {
+    @apply w-full rounded-md border border-border bg-background text-xs text-foreground placeholder-muted-foreground focus:z-10 focus:border-primary focus:outline-none focus:ring-primary;
+  }
+
+  [type='checkbox'],
+  [type='radio'] {
+    @apply h-4 w-4 rounded-sm border-border bg-background checked:border-primary checked:bg-primary focus:ring-2 focus:ring-primary;
+  }
+
+  *,
+  ::after,
+  ::before,
+  ::backdrop,
+  ::file-selector-button {
+    border-color: var(--color-gray-200, currentColor);
+  }
+}
+
+@layer components {
+  .form__group {
+    @apply mb-4;
+  }
+
+  .is__invalid-input {
+    @apply border-destructive ring-destructive focus:border-destructive focus:ring-destructive;
+  }
+
+  .is__invalid-error {
+    @apply text-destructive text-xs mt-1;
+  }
+}
+
+@layer utilities {
+  .container {
+    padding-inline: 1rem;
+  }
+
+  @media (min-width: 640px) {
+    .container {
+      padding-inline: 2rem;
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .container {
+      padding-inline: 4rem;
+    }
+  }
+
+  @media (min-width: 1280px) {
+    .container {
+      padding-inline: 5rem;
+    }
+  }
+
+  @media (min-width: 1536px) {
+    .container {
+      padding-inline: 6rem;
+    }
+  }
+
+  .dropdown-content {
+    pointer-events: none;
+    scale: 0.95;
+    opacity: 0;
+    transition-duration: 100ms;
+    transition-timing-function: ease-in;
+  }
+
+  .dropdown:hover > .dropdown-content {
+    pointer-events: auto;
+    display: block;
+    scale: 1;
+    opacity: 1;
+    animation: fade-in-up 0.3s ease-out;
+    transition-duration: 200ms;
+  }
+}
+
+.swal-theme {
+    background-color: var(--highlight-bg) !important;
+    color: var(--textlight-bg) !important;
+}

@@ -1,0 +1,102 @@
+<div>
+    <!-- Cabecera -->
+    <div class="flex justify-between items-center mb-4">
+        <h2 class="text-lg font-semibold text-foreground">Agregar usuario HID</h2>
+        <button (click)="cerrar()" class="text-muted-foreground hover:text-foreground transition-colors">
+            <span class="text-xl font-bold">×</span>
+        </button>
+    </div>
+
+    <!-- Formulario -->
+    <form autocomplete="off" [formGroup]="form" (ngSubmit)="guardar()" class="space-y-6">
+        <div class="grid grid-cols-12 gap-4">
+
+            <!-- Licencia HID -->
+            <div class="col-span-12 md:col-span-6 xl:col-span-3 pt-0">
+                <app-autoc-licencia-hid formControlName="licenciaId"></app-autoc-licencia-hid>
+            </div>
+
+            <!-- Nombre -->
+            <div class="col-span-12 md:col-span-6 xl:col-span-3 pt-0">
+                <label class="form-label fw-semibold">Nombre <span class="text-red-500">*</span></label>
+                <input pInputText type="text" formControlName="nombre" placeholder="Ingrese el nombre" class="w-full" />
+                <p-message severity="error" *ngIf="isInvalid('nombre', 'required')" class="p-error block">
+                    <i class="pi pi-exclamation-circle"></i> El nombre es requerido.
+                </p-message>
+                <p-message severity="error" *ngIf="isInvalid('nombre', 'minlength')" class="p-error block">
+                    <i class="pi pi-exclamation-circle"></i> El nombre debe tener al menos 3 caracteres.
+                </p-message>
+            </div>
+
+            <!-- Apellidos -->
+            <div class="col-span-12 md:col-span-6 xl:col-span-3 pt-0">
+                <label class="form-label fw-semibold">Apellidos <span class="text-red-500">*</span></label>
+                <input pInputText type="text" formControlName="apellidos" placeholder="Ingrese los apellidos"
+                    class="w-full" />
+                <p-message severity="error" *ngIf="isInvalid('apellidos', 'required')" class="p-error block">
+                    <i class="pi pi-exclamation-circle"></i> Los apellidos son requeridos.
+                </p-message>
+                <p-message severity="error" *ngIf="isInvalid('apellidos', 'minlength')" class="p-error block">
+                    <i class="pi pi-exclamation-circle"></i> Los apellidos deben tener al menos 3 caracteres.
+                </p-message>
+            </div>
+
+            <!-- Correo electrónico -->
+            <div class="col-span-12 md:col-span-6 xl:col-span-3 pt-0">
+                <label class="form-label fw-semibold">Correo electrónico <span class="text-red-500">*</span></label>
+                <input pInputText type="email" formControlName="email" placeholder="Ingrese el correo" class="w-full" />
+                <p-message severity="error" *ngIf="isInvalid('email', 'required')" class="p-error block">
+                    <i class="pi pi-exclamation-circle"></i> El correo es requerido.
+                </p-message>
+                <p-message severity="error" *ngIf="isInvalid('email', 'email')" class="p-error block">
+                    <i class="pi pi-exclamation-circle"></i> El formato del correo no es válido.
+                </p-message>
+            </div>
+
+            <!-- Teléfono -->
+            <div class="col-span-12 md:col-span-6 xl:col-span-3 pt-0">
+                <label class="form-label fw-semibold">Teléfono <span class="text-red-500">*</span></label>
+                <input pInputText type="text" formControlName="telefono" placeholder="10 dígitos" class="w-full"
+                    (input)="filtrarTelefono($event)" maxlength="10" />
+                <p-message severity="error" *ngIf="isInvalid('telefono', 'required')" class="p-error block">
+                    <i class="pi pi-exclamation-circle"></i> El teléfono es requerido.
+                </p-message>
+                <p-message severity="error" *ngIf="isInvalid('telefono', 'pattern')" class="p-error block">
+                    <i class="pi pi-exclamation-circle"></i> Debe tener exactamente 10 dígitos.
+                </p-message>
+            </div>
+
+            <!-- Fecha de inicio -->
+            <div class="col-span-12 md:col-span-6 xl:col-span-3 pt-0">
+                <label class="form-label fw-semibold">Fecha de inicio <span class="text-red-500">*</span></label>
+                <p-datepicker formControlName="fechaInicio" [minDate]="currentDate" [showIcon]="true"
+                    inputId="fechaInicio" [showOnFocus]="false" class="w-full"></p-datepicker>
+                <p-message severity="error" *ngIf="isInvalid('fechaInicio', 'required')" class="p-error block">
+                    <i class="pi pi-exclamation-circle"></i> La fecha de inicio es requerida.
+                </p-message>
+            </div>
+
+            <!-- Fecha de fin -->
+            <div class="col-span-12 md:col-span-6 xl:col-span-3 pt-0">
+                <label class="form-label fw-semibold">Fecha de fin <span class="text-red-500">*</span></label>
+                <p-datepicker formControlName="fechaFin" [minDate]="currentDate" [showIcon]="true" inputId="fechaFin"
+                    [showOnFocus]="false" class="w-full"></p-datepicker>
+                <p-message severity="error" *ngIf="isInvalid('fechaFin', 'required')" class="p-error block">
+                    <i class="pi pi-exclamation-circle"></i> La fecha de fin es requerida.
+                </p-message>
+            </div>
+
+        </div>
+
+        <!-- Botones finales -->
+        <div class="flex justify-end space-x-3 pt-4 border-t border-border">
+            <button type="button" (click)="cerrar()"
+                class="rounded-md bg-muted px-4 py-2 text-xs font-semibold text-muted-foreground hover:text-foreground">
+                Cancelar
+            </button>
+            <button type="submit" class="rounded-md bg-primary px-4 py-2 text-xs font-semibold text-primary-foreground">
+                Guardar
+            </button>
+        </div>
+    </form>
+</div>

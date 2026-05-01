@@ -1,0 +1,174 @@
+<!-- Enhanced Header -->
+<div class="p-1 border-bottom-1 surface-border">
+    <div class="grid grid-cols-12 gap-4 items-center">
+        <!-- Record Count & Search -->
+        <div class="col-span-12 md:col-span-6 xl:col-span-3">
+            <div class="flex align-items-center gap-2">
+                <p-tag [value]="totalRegistros.toString()" severity="info" class="font-semibold px-3"></p-tag>
+                <span class="text-900 font-medium">
+                    <span *ngIf="totalRegistros > 1">{{ tituloTabla }}</span>
+                    <span *ngIf="totalRegistros == 1">Registro encontrado</span>
+                    <span *ngIf="totalRegistros == 0">{{ tituloTabla }}</span>
+                </span>
+            </div>
+        </div>
+
+        <!-- CORRECTED: Page Selector using p-select (PrimeNG v20) -->
+        <div class="col-span-12 md:col-span-6 xl:col-span-9 flex justify-end">
+            <div class="flex align-items-center gap-2">
+                <span class="text-600 text-sm font-medium">
+                    Página
+                </span>
+                <p-select size="small" [options]="paginasTotales" [(ngModel)]="paginaActual"
+                    (onChange)="cambiarPagina(paginaActual)" class="w-8rem" appendTo="body"
+                    emptyMessage="No se encontraron resultados">
+                </p-select>
+                <span class="text-600 text-sm">de {{ totalPaginas }}</span>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div *ngIf="cargando && tabla != null" class="text-center p-8">
+    <p-progressSpinner strokeWidth="4" animationDuration=".5s"></p-progressSpinner>
+    <p class="text-500 font-medium mt-3">Cargando registros...</p>
+</div>
+
+<!-- Enhanced Table with Native Paginator -->
+<p-table [value]="registros" stripedRows [scrollable]="true" selectionMode="single" [rowHover]="true"
+    [showCurrentPageReport]="true" dataKey="registroId" [paginator]="false" [rows]="maxFilasPagina"
+    [totalRecords]="totalRegistros" [first]="minimo" (onPage)="onPageChange($event)"
+    [tableStyle]="{ 'min-width': '100%' }" styleClass="p-datatable-sm p-datatable-striped"
+    currentPageReportTemplate="Mostrando {first} a {last} de {totalRecords} registros"
+    *ngIf="!cargando && tabla != null && registros != null">
+
+    <ng-template pTemplate="header">
+        <tr>
+            <th *ngFor="let titulo of tabla.titulosEnTitulos"
+                class="text-left align-middle py-3 px-4 bg-surface-100 text-600 font-semibold">
+                {{ titulo.enTitulos ? titulo.texto : '' }}
+            </th>
+            <th *ngIf="tabla.ColumnaAcciones"
+                class="text-center align-middle py-3 px-4 bg-surface-100 text-600 font-semibold" style="width: 180px;">
+                Acciones
+            </th>
+        </tr>
+    </ng-template>
+
+    <ng-template pTemplate="body" let-registro let-i="rowIndex">
+        <tr *ngIf="registro.visualizar" [ngClass]="{'bg-surface-50': i % 2 === 0}">
+            <td *ngFor="let campo of registro.camposEnLinea" class="align-middle py-3 px-4">
+                <div [ngSwitch]="campo.tipoCampo" class="flex justify-content-start">
+                    <!-- Texto normal -->
+                    <div *ngSwitchCase="1" class="text-truncate text-900" style="max-width: 250px;">
+                        {{ campo.texto || '-' }}
+                    </div>
+                    <!-- Imagen con Avatar -->
+                    <div *ngSwitchCase="2" class="flex justify-content-start">
+                        <p-avatar [image]="campo.texto" shape="circle" size="normal"></p-avatar>
+                    </div>
+                    <!-- Badge con Tag -->
+                    <div *ngSwitchCase="3" class="flex justify-content-start">
+                        <p-tag [value]="campo.texto" [severity]="campo.getBadgeColor()"
+                            styleClass="font-semibold"></p-tag>
+                    </div>
+                    <!-- Array de textos -->
+                    <div *ngSwitchCase="4">
+                        <div *ngFor="let strTexto of campo.arrTexto" class="text-truncate text-900 mb-1">
+                            {{ strTexto || '-' }}
+                        </div>
+                    </div>
+                </div>
+            </td>
+
+            <!-- Enhanced Actions Column -->
+            <td *ngIf="tabla.ColumnaAcciones" class="text-center align-middle py-3 px-4">
+                <div class="flex justify-content-center gap-1">
+                    <button *ngIf="tabla.AccionVer && (registro.mostrarDetalle !== false)" pButton icon="pi pi-eye"
+                        (click)="ver(registro.registroId)" tooltipPosition="bottom" pTooltip="Ver detalles"
+                        severity="info" [rounded]="true" [outlined]="true"></button>
+
+                    <button *ngIf="tabla.AccionEditar && (registro.mostrarEditar !== false) && registro.estado == 1"
+                        pButton icon="pi pi-pencil" (click)="detalle(registro.registroId)" tooltipPosition="bottom"
+                        pTooltip="Editar" severity="warn" [rounded]="true" [outlined]="true"></button>
+
+                    <button
+                        *ngIf="tabla.AccionEliminar && (registro.mostrarInactivar !== false) && registro.estado == 1"
+                        pButton icon="pi pi-times" (click)="inactivar(registro.registroId)" tooltipPosition="bottom"
+                        pTooltip="Desactivar" severity="danger" [rounded]="true" [outlined]="true"></button>
+
+                    <button
+                        *ngIf="tabla.AccionEliminar && (registro.mostrarReactivar !== false) && registro.estado == 2"
+                        pButton icon="pi pi-refresh" (click)="reactivar(registro.registroId)" tooltipPosition="bottom"
+                        pTooltip="Reactivar" severity="success" [rounded]="true" [outlined]="true"></button>
+
+                    <button *ngIf="tabla.AccionDetalle" pButton
+                        [icon]="registro.expandirRegistro ? 'pi pi-chevron-up' : 'pi pi-chevron-down'"
+                        (click)="toggleDetalle(registro)" tooltipPosition="bottom"
+                        [pTooltip]="registro.expandirRegistro ? 'Ocultar detalles' : 'Mostrar detalles'"
+                        severity="secondary" [rounded]="true" [outlined]="true"></button>
+                </div>
+            </td>
+        </tr>
+
+        <!-- Expandable Detail Row -->
+        <tr *ngIf="registro.visualizar && registro.expandirRegistro" class="bg-surface-50">
+            <td [attr.colspan]="tabla.titulosEnTitulos.length + (tabla.ColumnaAcciones ? 1 : 0)" class="p-0">
+                <div class="p-4 border-top-1 surface-border">
+                    <div class="grid">
+                        <div *ngFor="let titulo of tabla.titulosEnDetalle; let j = index"
+                            class="col-12 md:col-6 lg:col-4 mb-3">
+                            <div class="flex flex-column">
+                                <span class="text-600 text-sm font-medium mb-1">{{ titulo.texto }}</span>
+                                <div [ngSwitch]="registro.camposEnDetalle[j].tipoCampo">
+                                    <span *ngSwitchCase="1" class="text-900 font-medium">
+                                        {{ registro.camposEnDetalle[j].texto || 'N/A' }}
+                                    </span>
+                                    <span *ngSwitchCase="3">
+                                        <p-tag [value]="registro.camposEnDetalle[j].texto"
+                                            [severity]="registro.camposEnDetalle[j].getBadgeColor()"
+                                            styleClass="font-semibold"></p-tag>
+                                    </span>
+                                    <div *ngSwitchCase="4">
+                                        <div *ngFor="let strTexto of registro.camposEnDetalle[j].arrTexto"
+                                            class="text-900 font-medium mb-1">
+                                            {{ strTexto || 'N/A' }}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </td>
+        </tr>
+    </ng-template>
+
+    <!-- Empty State Template -->
+    <ng-template pTemplate="emptymessage">
+        <tr>
+            <td [attr.colspan]="tabla.titulosEnTitulos.length + (tabla.ColumnaAcciones ? 1 : 0)"
+                class="text-center p-6">
+
+                <div class="grid grid-cols-12 gap-4">
+                    <div class="col-span-12 flex-col rounded-lg bg-background px-4 sm:flex-row">
+
+                        <div class="text-center">
+                            <i class="pi pi-inbox text-300" style="font-size: 4rem"></i>
+                            <h5 class="text-600 font-semibold mb-2">No hay datos disponibles</h5>
+                            <p class="text-500 text-sm">No se encontraron registros que coincidan con los
+                                criterios</p>
+                        </div>
+                    </div>
+                </div>
+
+            </td>
+        </tr>
+    </ng-template>
+</p-table>
+
+<!-- Loading State -->
+<div *ngIf="tabla != null && (!registros || registros.length === 0) && totalRegistros > 0" class="text-center p-8">
+    <p-progressSpinner strokeWidth="4" animationDuration=".5s"></p-progressSpinner>
+    <p class="text-500 font-medium mt-3">Cargando registros...</p>
+</div>
