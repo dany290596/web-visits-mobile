@@ -4,10 +4,10 @@ import { ControlContainer, FormsModule, ReactiveFormsModule, Validators } from '
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { AutoCompleteModule } from 'primeng/autocomplete';
 
-import { LicenciaHIDService } from '../../../services/licencia-hid.service';
+import { DispositivoHIDService } from '../../../services/dispositivo-hid.service';
 
 @Component({
-  selector: 'app-autoc-licencia-hid',
+  selector: 'app-autoc-dispositivo-hid',
   imports: [
     CommonModule,
     FormsModule,
@@ -15,7 +15,7 @@ import { LicenciaHIDService } from '../../../services/licencia-hid.service';
     AutoCompleteModule
   ],
   template: `
-    <label class="form-label">Licencia HID <span class="text-red-500" *ngIf="isRequired">*</span></label>
+    <label class="form-label">Dispositivo HID <span class="text-red-500" *ngIf="isRequired">*</span></label>
     <p-autoComplete
       [ngModel]="valorSeleccionado"
       [suggestions]="filteredItems"
@@ -23,7 +23,7 @@ import { LicenciaHIDService } from '../../../services/licencia-hid.service';
       optionLabel="nombre"
       dataKey="id"
       [dropdown]="true"
-      placeholder="Busque licencia HID"
+      placeholder="Busque dispositivo HID"
       (onSelect)="onSelect($event)"
       (onClear)="onClear()"
       styleClass="w-full"
@@ -34,20 +34,20 @@ import { LicenciaHIDService } from '../../../services/licencia-hid.service';
       </ng-template>
     </p-autoComplete>
   `,
-  styleUrl: './autoc-licencia-hid.css',
+  styleUrl: './autoc-dispositivo-hid.css',
   providers: [{
     provide: NG_VALUE_ACCESSOR,
-    useExisting: forwardRef(() => AutocLicenciaHid),
+    useExisting: forwardRef(() => AutocDispositivoHid),
     multi: true
   }]
 })
-export class AutocLicenciaHid implements OnInit, ControlValueAccessor {
+export class AutocDispositivoHid implements OnInit, ControlValueAccessor {
   items: any[] = [];
   filteredItems: any[] = [];
   valorSeleccionado: any = null;
   private pendingValue: any = null;
 
-  private srvLicenciaHID = inject(LicenciaHIDService);
+  private srvDispositivoHID = inject(DispositivoHIDService);
 
   private onChange: (value: any) => void = () => { };
   private onTouched: () => void = () => { };
@@ -71,7 +71,7 @@ export class AutocLicenciaHid implements OnInit, ControlValueAccessor {
 
   cargarPerfiles() {
     const idExcluir = '442aeb8f-f667-4210-be63-f7f2822dfdf5';
-    this.srvLicenciaHID.getAll({ Estado: 1, PageNumber: 1, PageSize: 1000 }).subscribe((res: any) => {
+    this.srvDispositivoHID.getAll({ Estado: 1, PageNumber: 1, PageSize: 1000 }).subscribe((res: any) => {
       if (res?.respuesta) {
         // this.items = res.data.map((m: any) => ({ id: m.id, nombre: m.nombre }));
         this.items = res.data.map((m: any) => ({ id: m.id, nombre: m.nombre })).filter((item: any) => item.id !== idExcluir);

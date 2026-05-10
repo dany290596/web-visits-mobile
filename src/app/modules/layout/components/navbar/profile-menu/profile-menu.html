@@ -8,14 +8,30 @@
     <!-- Dropdown -->
     <div [@openClose]="isOpen ? 'open' : 'closed'"
         class="bg-background shadow-custom border-muted absolute z-20 mt-2 w-60 origin-top-right transform rounded-md border border-dashed py-4 ring-1 ring-transparent ring-opacity-5 transition focus:outline-hidden ltr:right-0 rtl:left-0">
+        <!--
         <div class="flext-row flex items-center px-4 pb-4">
             <div class="w-10 shrink-0">
                 <img class="rounded-md" src="https://avatars.githubusercontent.com/u/12519008?v=4" alt="" />
             </div>
+
             <div class="text-foreground overflow-hidden px-2 text-sm font-semibold">
                 Daniel Benito Rosales
                 <p class="text-muted-foreground truncate text-ellipsis text-xs font-semibold">danielbr.estatus&#64;gmail.com</p>
             </div>
+        </div>
+        -->
+
+        <div class="flex flex-col items-center px-4 pb-4">
+            <div class="w-10 shrink-0">
+                <img class="rounded-md" src="https://avatars.githubusercontent.com/u/12519008?v=4" alt="" />
+            </div>
+            @if (user !== undefined && user !== null){
+            <div class="text-foreground overflow-hidden px-2">
+                <p class="text-muted-foreground text-xs font-semibold">
+                    {{user.email}}
+                </p>
+            </div>
+            }
         </div>
 
         <div class="border-border border-b border-dashed"></div>

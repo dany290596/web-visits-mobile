@@ -1,12 +1,12 @@
 import { animate, state, style, transition, trigger } from '@angular/animations';
 import { NgClass } from '@angular/common';
 import { Component, inject, OnInit } from '@angular/core';
-import { RouterLink } from '@angular/router';
 import { AngularSvgIconModule } from 'angular-svg-icon';
 import { ThemeService } from '../../../../../core/services/theme.service';
 import { ClickOutsideDirective } from '../../../../../shared/directives/click-outside.directive';
 
 import { StorageService } from '../../../../auth/services/storage.service';
+import { IUsuarioAutenticado } from '../../../../protected/authentication/interfaces/usuario.interface';
 
 @Component({
   selector: 'app-profile-menu',
@@ -37,6 +37,9 @@ import { StorageService } from '../../../../auth/services/storage.service';
   styleUrl: './profile-menu.css',
 })
 export class ProfileMenu implements OnInit {
+  user: IUsuarioAutenticado | undefined;
+  userId: string = '';
+
   private srvStorage = inject(StorageService);
 
   public isOpen = false;
@@ -97,7 +100,12 @@ export class ProfileMenu implements OnInit {
 
   constructor(public themeService: ThemeService) { }
 
-  ngOnInit(): void { }
+  ngOnInit(): void {
+    this.srvStorage.userData$.pipe(
+    ).subscribe((menu: any) => {
+      this.user = menu;
+    });
+  }
 
   public toggleMenu(): void {
     this.isOpen = !this.isOpen;

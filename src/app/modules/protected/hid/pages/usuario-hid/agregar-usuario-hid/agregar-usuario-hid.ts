@@ -17,6 +17,9 @@ import { PlataformaService } from '../../../../../../shared/services/plataforma.
 import { IUsuarioHIDRequest } from '../../../interfaces/usuario-hid.interface';
 
 import { AutocLicenciaHid } from '../../../components/autoc/autoc-licencia-hid/autoc-licencia-hid';
+import { AutocTipoCredencialHid } from '../../../components/autoc/autoc-tipo-credencial-hid/autoc-tipo-credencial-hid';
+import { StorageService } from '../../../../../auth/services/storage.service';
+import { IUsuarioResponse } from '../../../../authentication/interfaces/usuario.interface';
 
 interface LicenciaOption {
   id: string;
@@ -32,13 +35,17 @@ interface LicenciaOption {
     MessageModule,
     TooltipModule,
     DatePickerModule,
-    AutocLicenciaHid
+    AutocLicenciaHid,
+    AutocTipoCredencialHid
   ],
   templateUrl: './agregar-usuario-hid.html',
   styleUrl: './agregar-usuario-hid.css',
   providers: [MessageService]
 })
 export class AgregarUsuarioHid implements OnInit {
+  user: IUsuarioResponse | undefined;
+  userId: string = '';
+
   @Output() closeModal = new EventEmitter<void>();
   @Output() guardadoExitoso = new EventEmitter<void>();
 
@@ -46,6 +53,8 @@ export class AgregarUsuarioHid implements OnInit {
   private srvUsuarioHid = inject(UsuarioHIDService);
   private srvMessage = inject(MessageService);
   private srvPlataforma = inject(PlataformaService);
+  private srvStorage = inject(StorageService);
+
   private router = inject(Router);
 
   currentDate = new Date();
@@ -59,10 +68,15 @@ export class AgregarUsuarioHid implements OnInit {
     email: ['', [Validators.required, Validators.email]],
     telefono: ['', [Validators.required, Validators.pattern(/^\d{10}$/)]],
     fechaInicio: ['', Validators.required],
-    fechaFin: ['', Validators.required]
+    fechaFin: ['', Validators.required],
+    tipoCredencial: ['', Validators.required]
   });
 
   ngOnInit(): void {
+    if (this.srvStorage.getUserDetailData() !== undefined && this.srvStorage.getUserDetailData() !== null) {
+      this.user = this.srvStorage.getUserDetailData()!;
+      this.userId = this.user.id!;
+    }
   }
 
   isInvalid(controlName: string, errorType: string): boolean {
@@ -108,6 +122,8 @@ export class AgregarUsuarioHid implements OnInit {
     request.telefono = formValue.telefono;
     request.fechaInicio = formValue.fechaInicio;
     request.fechaFin = formValue.fechaFin;
+    request.tipoCredencial = formValue.tipoCredencial;
+    request.usuarioCreadorId = this.userId;
 
     console.log("REQUEST ::: ", request);
 

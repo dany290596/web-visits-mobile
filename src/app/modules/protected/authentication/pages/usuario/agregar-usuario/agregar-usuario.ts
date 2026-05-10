@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Output, inject } from '@angular/core';
+import { Component, EventEmitter, Input, Output, inject } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
@@ -45,12 +45,13 @@ import { AutocTipoUsuario } from '../../../components/autoc/autoc-tipo-usuario/a
 export class AgregarUsuario {
   @Output() closeModal = new EventEmitter<void>();
   @Output() guardadoExitoso = new EventEmitter<void>(); // para refrescar tabla
+  @Input() id!: string;
+  @Input() nombre!: string;
 
   private fb = inject(FormBuilder);
   private srvUsuario = inject(UsuarioService);
   private srvPlataforma = inject(PlataformaService);
   private srvMessage = inject(MessageService);
-  private router = inject(Router);
 
   formSubmitted = false;
   showPasswordExamples = false;
@@ -74,7 +75,21 @@ export class AgregarUsuario {
     ]
   });
 
-  ngOnInit(): void { }
+  ngOnInit(): void {
+    if (this.id !== undefined && this.id !== null && this.id !== "") {
+      this.srvUsuario.getById(this.id).subscribe((s: any) => {
+        if (s.respuesta === true) {
+          console.log(s);
+          this.form.controls['email'].setValue(s.data.correo);
+          this.form.controls['contrasena'].setValue("*********");
+          this.form.controls['contrasenavalidacion'].setValue("*********");
+          this.form.controls['perfilId'].setValue(s.data.perfilId);
+          this.form.controls['tipoUsuarioId'].setValue(s.data.tipoUsuarioId);
+          this.form.controls['vence'].setValue(false);
+        }
+      });
+    }
+  }
 
   passwordsIgualesValidator(group: FormGroup) {
     const pass = group.get('contrasena')?.value;
@@ -144,7 +159,7 @@ export class AgregarUsuario {
     request.idioma = "";
     request.vence = formValue.vence ? 1 : 2;
     request.fechaVencimiento = formValue.fechaVencimiento
-      ? this.srvPlataforma.formatFechaVencimiento(formValue.fechaVencimiento)
+      ? formValue.fechaVencimiento
       : null;
     console.log("REQUEST ::: ", request);
     this.srvUsuario.create(request).subscribe((resp: any) => {

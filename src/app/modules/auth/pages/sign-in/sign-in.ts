@@ -144,6 +144,7 @@ export class SignIn implements OnInit {
       });
     }
 
+    /*
     if (localStorage.getItem("codigoDeAccesibilidad") === null) {
       this.licencia = false;
       this.validarLicencia();
@@ -153,6 +154,9 @@ export class SignIn implements OnInit {
       this.licencia = true;
       this.validarCaducidad();
     }
+    */
+
+    this.licencia = true;
 
     this.FormularioContrasena.get('contrasenavalidacion')?.setValidators([
       Validators.required,
@@ -169,8 +173,22 @@ export class SignIn implements OnInit {
     const { email, contrasena } = this.miFormulario.value;
     this.displayModal2 = true;
 
+    Swal.fire({
+      title: 'Iniciando sesión...',
+      text: 'Por favor espera',
+      allowOutsideClick: false,
+      allowEscapeKey: false,
+      didOpen: () => {
+        Swal.showLoading();
+      },
+      customClass: {
+        popup: 'swal-theme',
+      }
+    });
+
     this.srvAuth.login(email, contrasena).pipe(
       switchMap((resp: any) => {
+        Swal.close();
         if (resp.respuesta === true) {
           // this.srvRouter.navigateByUrl('/layout/dashboard');
           return this.srvAuth.getDataUsuario();
@@ -188,6 +206,7 @@ export class SignIn implements OnInit {
         }
       }),
       tap((userResp: any) => {
+        Swal.close();
         localStorage.setItem('empresa', userResp.data.empresaId);
 
         if (this.miFormulario.value.recuerdame) {
@@ -203,6 +222,7 @@ export class SignIn implements OnInit {
       })
     ).subscribe({
       next: (user) => {
+        Swal.close();
         // if (user.data.tipoUsuarioId === '9019a67a-1f11-4876-bceb-629c327bf659') {
         //   this.srvRouter.navigateByUrl('/portal/proveedor/agenda-proveedor');
         // } else {
@@ -211,6 +231,7 @@ export class SignIn implements OnInit {
         this.srvRouter.navigateByUrl('/layout/dashboard');
       },
       error: (error) => {
+        Swal.close();
         if (error.message === 'Credenciales inválidas') {
           Swal.fire({
             icon: 'warning',

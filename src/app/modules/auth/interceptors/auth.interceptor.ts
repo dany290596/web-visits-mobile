@@ -97,6 +97,55 @@ export const AuthInterceptor: HttpInterceptorFn = (
                         });
                         return EMPTY;
                     }
+
+                    if (error.error.codigo === 408 && error.error.respuesta === false) {
+
+                        Swal.fire({
+                            icon: 'warning',
+                            title: '¡Advertencia!',
+                            text: error.error.mensaje,
+                            confirmButtonText: 'Aceptar',
+                            allowOutsideClick: false,
+                            allowEscapeKey: false,
+                            customClass: { popup: 'swal-theme' }
+                        });
+                        return EMPTY;
+                    }
+                }
+
+                if (
+                    error.status === 403 &&
+                    error.error !== null &&
+                    error.statusText === 'Forbidden' &&
+                    error.ok === false &&
+                    error.type === undefined
+                ) {
+                    if (error.error.codigo === 407 && error.error.respuesta === false) {
+                        Swal.fire({
+                            icon: 'warning',
+                            title: '¡Advertencia!',
+                            text: error.error.mensaje,
+                            confirmButtonText: 'Aceptar',
+                            allowOutsideClick: false,
+                            allowEscapeKey: false,
+                            customClass: { popup: 'swal-theme' }
+                        });
+                        return EMPTY;
+                    }
+
+                    if (error.error.codigo === 408 && error.error.respuesta === false) {
+
+                        Swal.fire({
+                            icon: 'warning',
+                            title: '¡Advertencia!',
+                            text: error.error.mensaje,
+                            confirmButtonText: 'Aceptar',
+                            allowOutsideClick: false,
+                            allowEscapeKey: false,
+                            customClass: { popup: 'swal-theme' }
+                        });
+                        return EMPTY;
+                    }
                 }
 
                 if (error.status === 0) {

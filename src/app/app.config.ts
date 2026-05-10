@@ -11,6 +11,7 @@ import { providePrimeNG } from 'primeng/config';
 import Blanc from '../theme/tokens/blanc.preset';
 
 import { AuthInterceptor } from './modules/auth/interceptors/auth.interceptor';
+import { HashLocationStrategy, LocationStrategy } from '@angular/common';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -44,6 +45,7 @@ export const appConfig: ApplicationConfig = {
     provideAngularSvgIcon(),
     importProvidersFrom(
       AngularSvgIconModule.forRoot()
-    )
+    ),
+    { provide: LocationStrategy, useClass: HashLocationStrategy }
   ]
 };

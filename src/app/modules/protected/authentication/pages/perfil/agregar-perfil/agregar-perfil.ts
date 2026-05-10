@@ -1,4 +1,4 @@
-import { Component, inject, OnInit, EventEmitter, Output } from '@angular/core';
+import { Component, inject, OnInit, EventEmitter, Output, Input } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
@@ -40,6 +40,8 @@ export class AgregarPerfil implements OnInit {
 
   @Output() closeModal = new EventEmitter<void>();
   @Output() guardadoExitoso = new EventEmitter<any>(); // para refrescar la tabla
+  @Input() id!: string;
+  @Input() nombre!: string;
 
   private fb = inject(FormBuilder);
   private router = inject(Router);
@@ -55,6 +57,14 @@ export class AgregarPerfil implements OnInit {
 
   ngOnInit(): void {
     this.cargarSecciones();
+    if (this.id !== undefined && this.id !== null && this.id !== "") {
+      this.srvPerfil.getById(this.id).subscribe((s: any) => {
+        if (s.respuesta === true) {
+          console.log(s);
+          this.miFormulario.controls['nombre'].setValue(s.data.nombre);
+        }
+      });
+    }
   }
 
   private cargarSecciones(): void {

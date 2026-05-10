@@ -10,7 +10,7 @@ import { IUsuarioResponse } from '../../interfaces/usuario.interface';
 
 import { DataTable, DataTableRegistroCampo } from '../../../../../shared/clases/table-dynamic.clase';
 
-import { IDataTable, IDataTableRegistroCampo } from '../../../../../shared/interfaces/table-dynamic.interface';
+import { IDataTable, IDataTableRegistroCampo, IDTRCampoPropiedad } from '../../../../../shared/interfaces/table-dynamic.interface';
 
 import { TableDynamic } from '../../../../../shared/components/table-dynamic/table-dynamic';
 
@@ -20,10 +20,13 @@ import { InputTextModule } from 'primeng/inputtext';
 import { ModalService } from '../../../../../shared/services/modal.service';
 
 import { AgregarUsuario } from './agregar-usuario/agregar-usuario';
+import { DetalleUsuario } from './detalle-usuario/detalle-usuario';
 
 import Swal from 'sweetalert2';
 
 import { AutocEstado } from '../../../../../shared/components/autoc-estado/autoc-estado';
+import { AutocPerfil } from '../../components/autoc/autoc-perfil/autoc-perfil';
+import { AutocTipoUsuario } from '../../components/autoc/autoc-tipo-usuario/autoc-tipo-usuario';
 
 @Component({
   selector: 'app-usuario',
@@ -35,7 +38,9 @@ import { AutocEstado } from '../../../../../shared/components/autoc-estado/autoc
     TableDynamic,
     InputNumberModule,
     InputTextModule,
-    AutocEstado
+    AutocEstado,
+    AutocPerfil,
+    AutocTipoUsuario
   ],
   templateUrl: './usuario.html',
   styleUrl: './usuario.css',
@@ -90,6 +95,7 @@ export class Usuario {
     this.tablaResultados.addTitulo('Tipo usuario', true, true, true, true, true, 3, 3, 2);
     this.tablaResultados.addTitulo('Fecha de creación', true, true, true, true, true, 1, 1, 1);
     this.tablaResultados.addTitulo('Fecha de vencimiento', false, true, true, true, true, 1, 1, 1);
+    this.tablaResultados.addTitulo('Estado', true, true, true, true, true, 1, 1, 1);
     this.tablaResultados.registros = [];
   }
 
@@ -169,9 +175,11 @@ export class Usuario {
               if (vst.tipoUsuario !== undefined && vst.tipoUsuario !== null && vst.tipoUsuario !== '') {
                 strTipoUsuario = vst.tipoUsuario.nombre;
               }
-              // let strPerfil: string = vst.perfil.nombre;
-              // let strTipoUsuario: string = vst.tipoUsuario.nombre;
-
+              let strEstado: string = vst.estado === 1 ? 'Activo' : vst.estado === 2 ? 'Inactivo' : '';
+              let listEstado: IDTRCampoPropiedad[] = [
+                { condicion: 'Activo', aplicar: DataTableRegistroCampo.COLOR_BADGE_PRIMARY },
+                { condicion: 'Inactivo', aplicar: DataTableRegistroCampo.COLOR_BADGE_DANGER }
+              ];
               let campos: IDataTableRegistroCampo[] = [];
               let campoNombre: IDataTableRegistroCampo = new DataTableRegistroCampo();
               let campoPerfil: IDataTableRegistroCampo = new DataTableRegistroCampo();
@@ -179,6 +187,7 @@ export class Usuario {
               let campoTipoUsuario: IDataTableRegistroCampo = new DataTableRegistroCampo();
               let campoFechaCreacion: IDataTableRegistroCampo = new DataTableRegistroCampo();
               let campoFechaVencimiento: IDataTableRegistroCampo = new DataTableRegistroCampo();
+              let campoEstado: IDataTableRegistroCampo = new DataTableRegistroCampo();
 
               if (vst.fechaCreacion) {
                 const fecha = new Date(vst.fechaCreacion);
@@ -215,19 +224,16 @@ export class Usuario {
                 false, true, true, true, true, 1, 1, 1
               );
 
-              // // campos que aparecerán en línea
-              // campos.push(campoNombre);
-              // campos.push(campoCorreo);
-              // campos.push(campoCorreoSecundario);
+              campoEstado.setValores(strEstado, DataTableRegistroCampo.CAMPO_BADGE, true, true, false, false, true, 0, 0, 1, listEstado);
 
               // // campos que aparecerán en detalle
               // campos.push(campoNombre);
               campos.push(campoCorreo);
               campos.push(campoPerfil);
-
               campos.push(campoTipoUsuario);
               campos.push(campoFechaCreacion);
               campos.push(campoFechaVencimiento);
+              campos.push(campoEstado);
 
               if (vst.id !== this.userId) {
                 this.tablaResultados?.addRegistro(strId, vst.estado!, campos);
@@ -311,12 +317,31 @@ export class Usuario {
 
   ver(id: string) {
     if (id.trim().length == 0) { return }
+    const ref = this.srvModal.open(DetalleUsuario, {
+      id: id,
+      nombre: "Detalle del usuario"
+    }, 'max-w-5xl');
 
+    if (ref && ref.instance) {
+      ref.instance.guardadoExitoso.subscribe((s: any) => {
+        console.log("DATA ::: ", s);
+        this.buscar(true); // refresca la tabla
+      });
+    }
   }
 
   detalle(id: string) {
     if (id.trim().length == 0) { return }
+    const ref = this.srvModal.open(AgregarUsuario, {
+      id: id,
+      nombre: "Editar usuario"
+    }, 'max-w-5xl');
 
+    if (ref && ref.instance) {
+      ref.instance.guardadoExitoso.subscribe((s: any) => {
+        this.buscar(true);
+      });
+    }
   }
 
   cambiar(numero: number) {
@@ -337,7 +362,7 @@ export class Usuario {
 
   showAgregar(): void {
     const ref = this.srvModal.open(AgregarUsuario, {
-      // puedes pasar inputs si los necesitas
+      nombre: "Agregar usuario"
     }, 'max-w-5xl');
 
     if (ref && ref.instance) {

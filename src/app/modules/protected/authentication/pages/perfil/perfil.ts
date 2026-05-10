@@ -7,7 +7,7 @@ import { PerfilService } from '../../services/perfil.service';
 
 import { DataTable, DataTableRegistroCampo } from '../../../../../shared/clases/table-dynamic.clase';
 
-import { IDataTable, IDataTableRegistroCampo } from '../../../../../shared/interfaces/table-dynamic.interface';
+import { IDataTable, IDataTableRegistroCampo, IDTRCampoPropiedad } from '../../../../../shared/interfaces/table-dynamic.interface';
 
 import { TableDynamic } from '../../../../../shared/components/table-dynamic/table-dynamic';
 
@@ -17,6 +17,7 @@ import { InputTextModule } from 'primeng/inputtext';
 import { ModalService } from '../../../../../shared/services/modal.service';
 
 import { AgregarPerfil } from './agregar-perfil/agregar-perfil';
+import { DetallePerfil } from './detalle-perfil/detalle-perfil';
 
 import Swal from 'sweetalert2';
 
@@ -66,6 +67,7 @@ export class Perfil implements OnInit {
     this.tablaResultados.setTieneAcciones(true, true, true, true);
     this.tablaResultados.addTitulo('Nombre', true, true, true, true, true, 4, 3, 2);
     this.tablaResultados.addTitulo('Fecha de creación', true, true, true, true, true, 1, 1, 1);
+    this.tablaResultados.addTitulo('Estado', true, true, true, true, true, 1, 1, 1);
     this.tablaResultados.registros = [];
   }
 
@@ -109,10 +111,18 @@ export class Perfil implements OnInit {
             if (dataById.respuesta === true) {
               let strId: string = vst.id ? vst.id : '';
               let strNombre: string = vst.nombre;
+              let strEstado: string = vst.estado === 1 ? 'Activo' : vst.estado === 2 ? 'Inactivo' : '';
+              let listEstado: IDTRCampoPropiedad[] = [
+                { condicion: 'Activo', aplicar: DataTableRegistroCampo.COLOR_BADGE_PRIMARY },
+                { condicion: 'Inactivo', aplicar: DataTableRegistroCampo.COLOR_BADGE_DANGER }
+              ];
+
 
               let campos: IDataTableRegistroCampo[] = [];
               let campoNombre: IDataTableRegistroCampo = new DataTableRegistroCampo();
               let campoFechaCreacion: IDataTableRegistroCampo = new DataTableRegistroCampo();
+              let campoEstado: IDataTableRegistroCampo = new DataTableRegistroCampo();
+
 
               if (vst.fechaCreacion) {
                 const fecha = new Date(vst.fechaCreacion);
@@ -129,9 +139,12 @@ export class Perfil implements OnInit {
               campoNombre.setValores(strNombre, DataTableRegistroCampo.CAMPO_TEXTO, true, true, true, true, true, 4, 3, 2);
               campoFechaCreacion.setValores(vst.fechaCreacion, DataTableRegistroCampo.CAMPO_TEXTO, true, true, true, true, true, 1, 1, 1);
 
+              campoEstado.setValores(strEstado, DataTableRegistroCampo.CAMPO_BADGE, true, true, false, false, true, 0, 0, 1, listEstado);
+
               // campos que aparecerán en línea
               campos.push(campoNombre);
               campos.push(campoFechaCreacion);
+              campos.push(campoEstado);
 
               this.tablaResultados?.addRegistro(strId, vst.estado!, campos);
             }
@@ -213,12 +226,32 @@ export class Perfil implements OnInit {
 
   ver(id: string) {
     if (id.trim().length == 0) { return }
+    const ref = this.srvModal.open(DetallePerfil, {
+      id: id,
+      nombre: "Detalle del perfil"
+    }, 'max-w-5xl');
 
+    if (ref && ref.instance) {
+      ref.instance.guardadoExitoso.subscribe((s: any) => {
+        console.log("DATA ::: ", s);
+        this.buscar(true); // refresca la tabla
+      });
+    }
   }
 
   detalle(id: string) {
     if (id.trim().length == 0) { return }
+    if (id.trim().length == 0) { return }
+    const ref = this.srvModal.open(AgregarPerfil, {
+      id: id,
+      nombre: "Editar perfil"
+    }, 'max-w-5xl');
 
+    if (ref && ref.instance) {
+      ref.instance.guardadoExitoso.subscribe((s: any) => {
+        this.buscar(true);
+      });
+    }
   }
 
   cambiar(numero: number) {
@@ -239,7 +272,7 @@ export class Perfil implements OnInit {
 
   showAgregar(): void {
     const ref = this.srvModal.open(AgregarPerfil, {
-      // puedes pasar inputs si los necesitas
+      nombre: "Agregar perfil"
     }, 'max-w-5xl');
 
     if (ref && ref.instance) {

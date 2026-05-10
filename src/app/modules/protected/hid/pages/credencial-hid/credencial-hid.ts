@@ -20,6 +20,8 @@ import { InputNumberModule } from 'primeng/inputnumber';
 import { InputTextModule } from 'primeng/inputtext';
 
 import { AutocEstado } from '../../../../../shared/components/autoc-estado/autoc-estado';
+import { AutocUsuarioHid } from '../../components/autoc/autoc-usuario-hid/autoc-usuario-hid';
+import { AutocDispositivoHid } from '../../components/autoc/autoc-dispositivo-hid/autoc-dispositivo-hid';
 
 @Component({
   selector: 'app-credencial-hid',
@@ -31,7 +33,9 @@ import { AutocEstado } from '../../../../../shared/components/autoc-estado/autoc
     TableDynamic,
     InputNumberModule,
     InputTextModule,
-    AutocEstado
+    AutocEstado,
+    AutocUsuarioHid,
+    AutocDispositivoHid
   ],
   templateUrl: './credencial-hid.html',
   styleUrl: './credencial-hid.css',
@@ -56,6 +60,9 @@ export class CredencialHid {
   tablaResultados: IDataTable = new DataTable();
 
   buscarFG: FormGroup = this.srvForm.group({
+    UsuarioId: [''],
+    DispositivoId: [''],
+    CredencialValor: [''],
     Estado: [''],
   });
 
@@ -72,7 +79,7 @@ export class CredencialHid {
   prepararTablaResultados() {
     this.tablaResultados = new DataTable();
     this.tablaResultados.setTieneAcciones(true, true, true, true);
-    
+
     this.tablaResultados.addTitulo('Tipo de credencial', true, true, true, true, true, 3, 3, 2);
     this.tablaResultados.addTitulo('Dispositivo HID', true, true, true, true, true, 3, 3, 2);
     this.tablaResultados.addTitulo('Fecha de creación', true, true, true, true, true, 1, 1, 1);
@@ -158,8 +165,8 @@ export class CredencialHid {
               }
               let strTipoCredencial: string = registro.tipoCredencial;
               let strDispositivoHID: string = "";
-              if(registro.dipositivosHID !== null && registro.dipositivosHID !== undefined && registro.dipositivosHID !== ""){
-strDispositivoHID = registro.dipositivosHID.nombreDispositivo;
+              if (registro.dipositivosHID !== null && registro.dipositivosHID !== undefined && registro.dipositivosHID !== "") {
+                strDispositivoHID = registro.dipositivosHID.nombreDispositivo;
               }
               let strEstadoHID: string = registro.statusDescripcion;
               let strEstadoInvitacion: string = registro.descripcionEstadoInvitacion;

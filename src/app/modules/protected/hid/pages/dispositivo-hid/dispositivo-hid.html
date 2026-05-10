@@ -31,6 +31,34 @@
 
                         <div class="grid grid-cols-12 gap-4">
                             <div class="col-span-12 md:col-span-6 xl:col-span-3 pt-0">
+                                <app-autoc-usuario-hid formControlName="UsuarioId"></app-autoc-usuario-hid>
+                            </div>
+
+                            <div class="col-span-12 md:col-span-6 xl:col-span-3 pt-0">
+                                <label class="form-label fw-semibold">Código de invitación</label>
+                                <input pInputText type="text" formControlName="CodigoInvitacion"
+                                    placeholder="Código de invitación" class="w-full" />
+                            </div>
+
+                            <div class="col-span-12 md:col-span-6 xl:col-span-3 pt-0">
+                                <label class="form-label fw-semibold">Nombre del dispositivo</label>
+                                <input pInputText type="text" formControlName="NombreDispositivo"
+                                    placeholder="Nombre del dispositivo" class="w-full" />
+                            </div>
+
+                            <div class="col-span-12 md:col-span-6 xl:col-span-3 pt-0">
+                                <label class="form-label fw-semibold">Sistema operativo</label>
+                                <input pInputText type="text" formControlName="SistemaOperativo"
+                                    placeholder="Sistema operativo" class="w-full" />
+                            </div>
+
+                            <div class="col-span-12 md:col-span-6 xl:col-span-3 pt-0">
+                                <label class="form-label fw-semibold">Versión SDK</label>
+                                <input pInputText type="text" formControlName="SdkVersion" placeholder="Versión SDK"
+                                    class="w-full" />
+                            </div>
+
+                            <div class="col-span-12 md:col-span-6 xl:col-span-3 pt-0">
                                 <app-autoc-estado formControlName="Estado"></app-autoc-estado>
                             </div>
                         </div>

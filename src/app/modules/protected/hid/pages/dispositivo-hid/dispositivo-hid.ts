@@ -20,6 +20,7 @@ import { InputNumberModule } from 'primeng/inputnumber';
 import { InputTextModule } from 'primeng/inputtext';
 
 import { AutocEstado } from '../../../../../shared/components/autoc-estado/autoc-estado';
+import { AutocUsuarioHid } from '../../components/autoc/autoc-usuario-hid/autoc-usuario-hid';
 
 @Component({
   selector: 'app-dispositivo-hid',
@@ -31,7 +32,8 @@ import { AutocEstado } from '../../../../../shared/components/autoc-estado/autoc
     TableDynamic,
     InputNumberModule,
     InputTextModule,
-    AutocEstado
+    AutocEstado,
+    AutocUsuarioHid
   ],
   templateUrl: './dispositivo-hid.html',
   styleUrl: './dispositivo-hid.css',
@@ -56,6 +58,11 @@ export class DispositivoHid {
   tablaResultados: IDataTable = new DataTable();
 
   buscarFG: FormGroup = this.srvForm.group({
+    UsuarioId: [''],
+    CodigoInvitacion: [''],
+    NombreDispositivo: [''],
+    SistemaOperativo: [''],
+    SdkVersion: [''],
     Estado: [''],
   });
 
