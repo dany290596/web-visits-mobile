@@ -2,11 +2,13 @@ import { Component, EventEmitter, inject, Input, Output } from '@angular/core';
 import { UsuarioService } from '../../../services/usuario.service';
 
 import { TagModule } from 'primeng/tag';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-detalle-usuario',
   imports: [
     TagModule,
+    CommonModule,
   ],
   templateUrl: './detalle-usuario.html',
   styleUrl: './detalle-usuario.css',

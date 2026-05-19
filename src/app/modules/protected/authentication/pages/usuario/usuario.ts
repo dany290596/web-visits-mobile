@@ -21,6 +21,7 @@ import { ModalService } from '../../../../../shared/services/modal.service';
 
 import { AgregarUsuario } from './agregar-usuario/agregar-usuario';
 import { DetalleUsuario } from './detalle-usuario/detalle-usuario';
+import { EditarUsuario } from './editar-usuario/editar-usuario';
 
 import Swal from 'sweetalert2';
 
@@ -332,7 +333,7 @@ export class Usuario {
 
   detalle(id: string) {
     if (id.trim().length == 0) { return }
-    const ref = this.srvModal.open(AgregarUsuario, {
+    const ref = this.srvModal.open(EditarUsuario, {
       id: id,
       nombre: "Editar usuario"
     }, 'max-w-5xl');

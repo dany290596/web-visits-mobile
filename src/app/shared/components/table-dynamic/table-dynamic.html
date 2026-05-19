@@ -69,8 +69,10 @@
                     </div>
                     <!-- Badge con Tag -->
                     <div *ngSwitchCase="3" class="flex justify-content-start">
-                        <p-tag [value]="campo.texto" [severity]="campo.getBadgeColor()"
-                            styleClass="font-semibold"></p-tag>
+                        <p-tag [value]="campo.texto" [severity]="campo.getBadgeColor()" styleClass="!text-xs"
+                            [style]="{ 'font-weight': '400' }" [rounded]="true"></p-tag>
+                        <!-- <p-badge [value]="campo.texto" badgeSize="xlarge" [severity]="campo.getBadgeColor()"
+                            styleClass="font-semibold"></p-badge> -->
                     </div>
                     <!-- Array de textos -->
                     <div *ngSwitchCase="4">

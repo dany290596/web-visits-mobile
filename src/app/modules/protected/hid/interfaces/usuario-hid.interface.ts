@@ -1,3 +1,5 @@
+import { IUsuarioHidTipoCredencialRequest } from '../interfaces/usuario-hid-tipo-credencial.interface';
+
 export class IUsuarioHIDFilter {
     LicenciaId?: string = "";
     Nombre?: string = "";
@@ -59,14 +61,12 @@ export class IUsuarioHIDRequest {
     licenciaId: any;
     nombre: any;
     email: any;
-    // site: any;
-    // alert: any;
-    // licenseCount: any;
     telefono: any;
     apellidos: any;
     fechaInicio: any;
     fechaFin: any;
-    // externalId: any;
-    tipoCredencial: any;
     usuarioCreadorId: any;
+    imagen: any;
+    extensionImagen: any;
+    usuarioHidTipoCredencial: IUsuarioHidTipoCredencialRequest[] = [];
 }

@@ -25,6 +25,8 @@
                     <form autocomplete="off" [formGroup]="buscarFG" class="w-full">
 
                         <div class="grid grid-cols-12 gap-4">
+                            
+
                             <div class="col-span-12 md:col-span-6 xl:col-span-3 pt-0">
                                 <label class="form-label">Nombre</label>
                                 <input pInputText type="text" class="form-control" placeholder="Ingrese el nombre"
@@ -41,6 +43,11 @@
                                 <label class="form-label">Teléfono</label>
                                 <input pInputText type="text" class="form-control" placeholder="Ingrese el teléfono"
                                     formControlName="Telefono" class="w-full">
+                            </div>
+
+                            <div class="col-span-12 md:col-span-6 xl:col-span-3 pt-0">
+                                <app-autoc-tipo-credencial-hid
+                                    formControlName="TipoCredencialId"></app-autoc-tipo-credencial-hid>
                             </div>
 
                             <div class="col-span-12 md:col-span-6 xl:col-span-3 pt-0">
@@ -71,7 +78,7 @@
                     <div class="grid animate__animated animate__fadeInUp">
                         @if(mostrarTabla){
                         <div class="col-12">
-                            <app-table-dynamic [tabla]="tablaResultados" tituloTabla="Perfiles encontrados"
+                            <app-table-dynamic [tabla]="tablaResultados" tituloTabla="Usuarios encontrados"
                                 [totalPaginas]="totalPaginas" [paginaActual]="paginaActual"
                                 [totalRegistros]="totalRegistros" (CambiarPaginaEmit)="cambiar($event)"
                                 (onVer)="ver( $event )" (onDet)="detalle( $event )" (onInactivar)="inactivar( $event )"

@@ -19,6 +19,7 @@ import { SelectModule } from 'primeng/select';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { TagModule } from 'primeng/tag';
 import { AvatarModule } from 'primeng/avatar';
+import { ChipModule } from 'primeng/chip';
 
 @Component({
   selector: 'app-table-dynamic',
@@ -40,6 +41,7 @@ import { AvatarModule } from 'primeng/avatar';
     SelectModule,
     TagModule,
     AvatarModule,
+    ChipModule,
     FormsModule
   ],
   templateUrl: './table-dynamic.html',

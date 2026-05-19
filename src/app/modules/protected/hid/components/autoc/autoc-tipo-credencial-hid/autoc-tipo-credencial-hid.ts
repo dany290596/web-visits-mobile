@@ -1,8 +1,10 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit, inject, forwardRef, Optional, Attribute } from '@angular/core';
+import { Component, OnInit, inject, forwardRef, Optional, Attribute, Inject } from '@angular/core';
 import { ControlContainer, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { AutoCompleteModule } from 'primeng/autocomplete';
+
+import { TipoCredencialService } from '../../../services/tipo-credencial.service';
 
 @Component({
   selector: 'app-autoc-tipo-credencial-hid',
@@ -45,6 +47,8 @@ export class AutocTipoCredencialHid implements OnInit, ControlValueAccessor {
   valorSeleccionado: any = null;
   private pendingValue: any = null;
 
+  private srvTipoCredencial = inject(TipoCredencialService);
+
   private onChange: (value: any) => void = () => { };
   private onTouched: () => void = () => { };
 
@@ -54,7 +58,7 @@ export class AutocTipoCredencialHid implements OnInit, ControlValueAccessor {
   ) { }
 
   ngOnInit() {
-    this.cargarPerfiles();
+    this.cargarTipoCredenciales();
   }
 
   get isRequired(): boolean {
@@ -65,11 +69,18 @@ export class AutocTipoCredencialHid implements OnInit, ControlValueAccessor {
     return false;
   }
 
-  cargarPerfiles() {
-    this.items = [
-      { id: 1, nombre: "Credenciales HID" },
-      { id: 2, nombre: "Credenciales Wallet" }
-    ];
+  cargarTipoCredenciales() {
+    const idExcluir = '442aeb8f-f667-4210-be63-f7f2822dfdf5';
+    this.srvTipoCredencial.getAll({ Estado: 1, PageNumber: 1, PageSize: 1000 }).subscribe((res: any) => {
+      if (res?.respuesta) {
+        // this.items = res.data.map((m: any) => ({ id: m.id, nombre: m.nombre }));
+        this.items = res.data.map((m: any) => ({ id: m.id, nombre: m.nombre })).filter((item: any) => item.id !== idExcluir);
+        if (this.pendingValue) {
+          this.valorSeleccionado = this.items.find(item => item.id === this.pendingValue) || null;
+          this.pendingValue = null;
+        }
+      }
+    });
   }
 
   filtrar(event: any) {

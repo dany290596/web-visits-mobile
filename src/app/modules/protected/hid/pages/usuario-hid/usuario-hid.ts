@@ -8,6 +8,7 @@ import { AgregarUsuarioHid } from './agregar-usuario-hid/agregar-usuario-hid';
 import { ModalService } from '../../../../../shared/services/modal.service';
 import { UsuarioHIDService } from '../../services/usuario-hid.service';
 import { StorageService } from '../../../../auth/services/storage.service';
+import { UsuarioHidTipoCredencialService } from '../../services/usuario-hid-tipo-credencial.service';
 
 import { DataTable, DataTableRegistroCampo } from '../../../../../shared/clases/table-dynamic.clase';
 
@@ -16,12 +17,14 @@ import { IDataTable, IDataTableRegistroCampo, IDTRCampoPropiedad } from '../../.
 import { TableDynamic } from '../../../../../shared/components/table-dynamic/table-dynamic';
 
 import { IUsuarioResponse } from '../../../authentication/interfaces/usuario.interface';
-import { IUsuarioHIDFilter } from '../../interfaces/usuario-hid.interface';
 
 import { InputNumberModule } from 'primeng/inputnumber';
 import { InputTextModule } from 'primeng/inputtext';
 
+import { AutocTipoCredencialHid } from '../../components/autoc/autoc-tipo-credencial-hid/autoc-tipo-credencial-hid';
 import { AutocEstado } from '../../../../../shared/components/autoc-estado/autoc-estado';
+
+import { DetalleUsuarioHid } from './detalle-usuario-hid/detalle-usuario-hid';
 
 @Component({
   selector: 'app-usuario-hid',
@@ -33,7 +36,8 @@ import { AutocEstado } from '../../../../../shared/components/autoc-estado/autoc
     TableDynamic,
     InputNumberModule,
     InputTextModule,
-    AutocEstado
+    AutocEstado,
+    AutocTipoCredencialHid
   ],
   templateUrl: './usuario-hid.html',
   styleUrl: './usuario-hid.css',
@@ -43,6 +47,7 @@ export class UsuarioHid {
   private srvForm = inject(FormBuilder);
   private srvUsuarioHID = inject(UsuarioHIDService);
   private srvStorage = inject(StorageService);
+  private srvUsuarioHidTipoCredencial = inject(UsuarioHidTipoCredencialService);
 
   user: IUsuarioResponse | undefined;
   userId: string = '';
@@ -57,6 +62,7 @@ export class UsuarioHid {
   tablaResultados: IDataTable = new DataTable();
 
   buscarFG: FormGroup = this.srvForm.group({
+    TipoCredencialId: [''],
     LicenciaId: [''],
     Nombre: [''],
     Email: [''],
@@ -89,11 +95,12 @@ export class UsuarioHid {
     this.tablaResultados.setTieneAcciones(true, true, true, true);
 
     this.tablaResultados.addTitulo('Licencia', true, true, true, true, true, 3, 3, 2);
-    this.tablaResultados.addTitulo('Nombre', true, true, true, true, true, 2, 2, 2);
+    this.tablaResultados.addTitulo('Usuario', true, true, true, true, true, 2, 2, 2);
     this.tablaResultados.addTitulo('Correo electrónico', true, true, true, true, true, 3, 3, 2);
     // this.tablaResultados.addTitulo('Estado HID', true, true, true, true, true, 3, 3, 2);
     this.tablaResultados.addTitulo('Estado de la invitación', true, true, true, true, true, 1, 1, 1);
     this.tablaResultados.addTitulo('Código de invitación', true, true, true, true, true, 1, 1, 1);
+    this.tablaResultados.addTitulo('Tipo de credencial', true, true, true, true, true, 1, 1, 1);
     this.tablaResultados.addTitulo('Fecha de creación', true, true, true, true, true, 1, 1, 1);
     // this.tablaResultados.addTitulo('Fecha de vencimiento', false, true, true, true, true, 1, 1, 1);
     this.tablaResultados.registros = [];
@@ -102,6 +109,7 @@ export class UsuarioHid {
   buscar(pagina?: boolean) {
     this.cargando = true;
     const {
+      TipoCredencialId,
       LicenciaId,
       Nombre,
       Email,
@@ -123,6 +131,7 @@ export class UsuarioHid {
     }
 
     let filtroBusqueda: any = {
+      TipoCredencialId: TipoCredencialId,
       LicenciaId: LicenciaId,
       Nombre: Nombre,
       Email: Email,
@@ -143,7 +152,7 @@ export class UsuarioHid {
     };
 
     this.tablaResultados!.registros = [];
-    this.srvUsuarioHID.getAll(filtroBusqueda).subscribe((resp: any) => {
+    this.srvUsuarioHidTipoCredencial.getAll(filtroBusqueda).subscribe((resp: any) => {
       if (resp.respuesta === true) {
         console.log("DATA ::: ", resp.data);
         let listado: any[] = resp.data.filter(
@@ -169,93 +178,113 @@ export class UsuarioHid {
         this.sinDatos = false;
 
         listado.forEach(registro => {
-          this.srvUsuarioHID.getById(registro.id).subscribe((dataById: any) => {
-            if (dataById.respuesta === true) {
-              let strId: string = registro.id ? registro.id : '';
-              let strLicencia: string = "";
-              if (registro.licenciaHID !== undefined && registro.licenciaHID !== null && registro.licenciaHID !== "") {
-                strLicencia = registro.licenciaHID.nombre;
-              }
-              let strNombre: string = registro.nombreCompleto;
-              let strEmail: string = registro.email;
-              let strEstadoHID: string = registro.statusDescripcion;
-              let strEstadoInvitacion: string = registro.descripcionEstadoInvitacion;
-              let strCodigoInvitacion: string = registro.invitacionDetalle;
+          let strId: string = registro.id ? registro.id : '';
+          let strLicencia: string = "";
+          if (registro.licenciaHidUser !== undefined && registro.licenciaHidUser !== null && registro.licenciaHidUser !== "") {
+            if (registro.licenciaHidUser.licenciaHID !== undefined && registro.licenciaHidUser.licenciaHID !== null && registro.licenciaHidUser.licenciaHID !== "") {
+              strLicencia = registro.licenciaHidUser.licenciaHID.nombre;
+            }
+          }
+          let strNombre: string = "";
+          if (registro.licenciaHidUser !== undefined && registro.licenciaHidUser !== null && registro.licenciaHidUser !== "") {
+            strNombre = registro.licenciaHidUser.nombreCompleto
+          }
+          let strEmail: string = "";
+          if (registro.licenciaHidUser !== undefined && registro.licenciaHidUser !== null && registro.licenciaHidUser !== "") {
+            strEmail = registro.licenciaHidUser.email;
+          }
+          let strEstadoHID: string = "";
+          if (registro.licenciaHidUser !== undefined && registro.licenciaHidUser !== null && registro.licenciaHidUser !== "") {
+            strEstadoHID = registro.licenciaHidUser.statusDescripcion;
+          }
+          let strEstadoInvitacion: string = "";
+          if (registro.licenciaHidUser !== undefined && registro.licenciaHidUser !== null && registro.licenciaHidUser !== "") {
+            strEstadoInvitacion = registro.licenciaHidUser.descripcionEstadoInvitacion;
+          }
+          let strCodigoInvitacion: string = "";
+          if (registro.licenciaHidUser !== undefined && registro.licenciaHidUser !== null && registro.licenciaHidUser !== "") {
+            strCodigoInvitacion = registro.licenciaHidUser.invitacionDetalle;
+          }
+          let strTipoCredencial: string = "";
+          if (registro.tipoCredencial !== undefined && registro.tipoCredencial !== null && registro.tipoCredencial !== "") {
+            strTipoCredencial = registro.tipoCredencial.nombre;
+          }
+          let listEstadoInvitacion: IDTRCampoPropiedad[] = [
+            { condicion: 'Pendiente', aplicar: DataTableRegistroCampo.COLOR_BADGE_WARNING },
+            { condicion: 'Cancelado', aplicar: DataTableRegistroCampo.COLOR_BADGE_SECONDARY },
+            { condicion: 'Reconocido', aplicar: DataTableRegistroCampo.COLOR_BADGE_PRIMARY },
+            { condicion: 'Eliminado', aplicar: DataTableRegistroCampo.COLOR_BADGE_DANGER },
+            { condicion: 'Sin estado', aplicar: DataTableRegistroCampo.COLOR_BADGE_DARK }
+          ];
 
-              let listEstadoInvitacion: IDTRCampoPropiedad[] = [
-                { condicion: 'Pendiente', aplicar: DataTableRegistroCampo.COLOR_BADGE_WARNING },
-                { condicion: 'Cancelado', aplicar: DataTableRegistroCampo.COLOR_BADGE_SECONDARY },
-                { condicion: 'Reconocido', aplicar: DataTableRegistroCampo.COLOR_BADGE_PRIMARY },
-                { condicion: 'Eliminado', aplicar: DataTableRegistroCampo.COLOR_BADGE_DANGER },
-                { condicion: 'Sin estado', aplicar: DataTableRegistroCampo.COLOR_BADGE_DARK }
-              ];
+          let campos: IDataTableRegistroCampo[] = [];
+          let campoLicencia: IDataTableRegistroCampo = new DataTableRegistroCampo();
+          let campoNombre: IDataTableRegistroCampo = new DataTableRegistroCampo();
+          let campoEmail: IDataTableRegistroCampo = new DataTableRegistroCampo();
+          let campoEstadoHID: IDataTableRegistroCampo = new DataTableRegistroCampo();
+          let campoEstadoInvitacion: IDataTableRegistroCampo = new DataTableRegistroCampo();
+          let campoCodigoInvitacion: IDataTableRegistroCampo = new DataTableRegistroCampo();
+          let campoTipoCredencial: IDataTableRegistroCampo = new DataTableRegistroCampo();
+          let campoFechaCreacion: IDataTableRegistroCampo = new DataTableRegistroCampo();
+          let campoFechaVencimiento: IDataTableRegistroCampo = new DataTableRegistroCampo();
 
-              let campos: IDataTableRegistroCampo[] = [];
-              let campoLicencia: IDataTableRegistroCampo = new DataTableRegistroCampo();
-              let campoNombre: IDataTableRegistroCampo = new DataTableRegistroCampo();
-              let campoEmail: IDataTableRegistroCampo = new DataTableRegistroCampo();
-              let campoEstadoHID: IDataTableRegistroCampo = new DataTableRegistroCampo();
-              let campoEstadoInvitacion: IDataTableRegistroCampo = new DataTableRegistroCampo();
-              let campoCodigoInvitacion: IDataTableRegistroCampo = new DataTableRegistroCampo();
-              let campoFechaCreacion: IDataTableRegistroCampo = new DataTableRegistroCampo();
-              let campoFechaVencimiento: IDataTableRegistroCampo = new DataTableRegistroCampo();
+          if (registro.fechaCreacion) {
+            const fecha = new Date(registro.fechaCreacion);
+            const dia = String(fecha.getDate()).padStart(2, '0');
+            const mes = String(fecha.getMonth() + 1).padStart(2, '0');
+            const año = fecha.getFullYear();
+            const horas = String(fecha.getHours()).padStart(2, '0');
+            const minutos = String(fecha.getMinutes()).padStart(2, '0');
 
-              if (registro.fechaCreacion) {
-                const fecha = new Date(registro.fechaCreacion);
+            registro.fechaCreacion = `${dia}/${mes}/${año} ${horas}:${minutos}`;
+          }
+
+          campoLicencia.setValores(strLicencia, DataTableRegistroCampo.CAMPO_TEXTO, true, true, true, true, true, 4, 3, 2);
+          campoNombre.setValores(strNombre, DataTableRegistroCampo.CAMPO_TEXTO, true, true, true, true, true, 2, 2, 2);
+          campoEmail.setValores(strEmail, DataTableRegistroCampo.CAMPO_TEXTO, true, true, true, true, true, 3, 3, 2);
+          campoEstadoHID.setValores(strEstadoHID, DataTableRegistroCampo.CAMPO_TEXTO, true, true, true, true, true, 3, 3, 2);
+          campoEstadoInvitacion.setValores(strEstadoInvitacion, DataTableRegistroCampo.CAMPO_BADGE, true, true, false, false, true, 0, 0, 1, listEstadoInvitacion);
+          campoCodigoInvitacion.setValores(strCodigoInvitacion, DataTableRegistroCampo.CAMPO_TEXTO, true, true, true, true, true, 3, 3, 2);
+          campoTipoCredencial.setValores(strTipoCredencial, DataTableRegistroCampo.CAMPO_TEXTO, true, true, true, true, true, 3, 3, 2);
+          campoFechaCreacion.setValores(registro.fechaCreacion, DataTableRegistroCampo.CAMPO_TEXTO, true, true, true, true, true, 1, 1, 1);
+          campoFechaVencimiento.setValores(
+            (!registro.fechaVencimiento)
+              ? "N/A"
+              : (() => {
+                const fecha = new Date(registro.fechaVencimiento);
+                if (isNaN(fecha.getTime())) return "NA"; // Validar fecha
                 const dia = String(fecha.getDate()).padStart(2, '0');
                 const mes = String(fecha.getMonth() + 1).padStart(2, '0');
-                const año = fecha.getFullYear();
+                const anio = fecha.getFullYear();
                 const horas = String(fecha.getHours()).padStart(2, '0');
                 const minutos = String(fecha.getMinutes()).padStart(2, '0');
+                const segundos = String(fecha.getSeconds()).padStart(2, '0');
+                return `${dia}/${mes}/${anio} ${horas}:${minutos}:${segundos}`; // <-- string
+              })(),
+            DataTableRegistroCampo.CAMPO_TEXTO,
+            false, true, true, true, true, 1, 1, 1
+          );
 
-                registro.fechaCreacion = `${dia}/${mes}/${año} ${horas}:${minutos}`;
-              }
+          // // campos que aparecerán en línea
+          // campos.push(campoNombre);
+          // campos.push(campoCorreo);
+          // campos.push(campoCorreoSecundario);
 
-              campoLicencia.setValores(strLicencia, DataTableRegistroCampo.CAMPO_TEXTO, true, true, true, true, true, 4, 3, 2);
-              campoNombre.setValores(strNombre, DataTableRegistroCampo.CAMPO_TEXTO, true, true, true, true, true, 2, 2, 2);
-              campoEmail.setValores(strEmail, DataTableRegistroCampo.CAMPO_TEXTO, true, true, true, true, true, 3, 3, 2);
-              campoEstadoHID.setValores(strEstadoHID, DataTableRegistroCampo.CAMPO_TEXTO, true, true, true, true, true, 3, 3, 2);
-              campoEstadoInvitacion.setValores(strEstadoInvitacion, DataTableRegistroCampo.CAMPO_BADGE, true, true, false, false, true, 0, 0, 1, listEstadoInvitacion);
-              campoCodigoInvitacion.setValores(strCodigoInvitacion, DataTableRegistroCampo.CAMPO_TEXTO, true, true, true, true, true, 3, 3, 2);
-              campoFechaCreacion.setValores(registro.fechaCreacion, DataTableRegistroCampo.CAMPO_TEXTO, true, true, true, true, true, 1, 1, 1);
-              campoFechaVencimiento.setValores(
-                (!registro.fechaVencimiento)
-                  ? "N/A"
-                  : (() => {
-                    const fecha = new Date(registro.fechaVencimiento);
-                    if (isNaN(fecha.getTime())) return "NA"; // Validar fecha
-                    const dia = String(fecha.getDate()).padStart(2, '0');
-                    const mes = String(fecha.getMonth() + 1).padStart(2, '0');
-                    const anio = fecha.getFullYear();
-                    const horas = String(fecha.getHours()).padStart(2, '0');
-                    const minutos = String(fecha.getMinutes()).padStart(2, '0');
-                    const segundos = String(fecha.getSeconds()).padStart(2, '0');
-                    return `${dia}/${mes}/${anio} ${horas}:${minutos}:${segundos}`; // <-- string
-                  })(),
-                DataTableRegistroCampo.CAMPO_TEXTO,
-                false, true, true, true, true, 1, 1, 1
-              );
+          // // campos que aparecerán en detalle
+          // 
+          campos.push(campoLicencia);
+          campos.push(campoNombre);
+          campos.push(campoEmail);
+          campos.push(campoEstadoInvitacion);
+          campos.push(campoCodigoInvitacion);
+          campos.push(campoTipoCredencial);
+          campos.push(campoFechaCreacion);
+          campos.push(campoFechaVencimiento);
 
-              // // campos que aparecerán en línea
-              // campos.push(campoNombre);
-              // campos.push(campoCorreo);
-              // campos.push(campoCorreoSecundario);
+          if (registro.id !== this.userId) {
+            this.tablaResultados?.addRegistro(strId, registro.estado!, campos);
+          }
 
-              // // campos que aparecerán en detalle
-              // 
-              campos.push(campoLicencia);
-              campos.push(campoNombre);
-              campos.push(campoEmail);
-              campos.push(campoEstadoInvitacion);
-              campos.push(campoCodigoInvitacion);
-              campos.push(campoFechaCreacion);
-              campos.push(campoFechaVencimiento);
-
-              if (registro.id !== this.userId) {
-                this.tablaResultados?.addRegistro(strId, registro.estado!, campos);
-              }
-            }
-          });
         });
       }
     });
@@ -333,7 +362,17 @@ export class UsuarioHid {
 
   ver(id: string) {
     if (id.trim().length == 0) { return }
+    const ref = this.srvModal.open(DetalleUsuarioHid, {
+      id: id,
+      nombre: "Detalle del usuario HID"
+    }, 'max-w-5xl');
 
+    if (ref && ref.instance) {
+      ref.instance.guardadoExitoso.subscribe((s: any) => {
+        console.log("DATA ::: ", s);
+        this.buscar(true); // refresca la tabla
+      });
+    }
   }
 
   detalle(id: string) {

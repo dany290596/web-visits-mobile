@@ -244,7 +244,8 @@ export class Perfil implements OnInit {
     if (id.trim().length == 0) { return }
     const ref = this.srvModal.open(AgregarPerfil, {
       id: id,
-      nombre: "Editar perfil"
+      nombre: "Editar perfil",
+      action: "UPDATE"
     }, 'max-w-5xl');
 
     if (ref && ref.instance) {
@@ -272,7 +273,8 @@ export class Perfil implements OnInit {
 
   showAgregar(): void {
     const ref = this.srvModal.open(AgregarPerfil, {
-      nombre: "Agregar perfil"
+      nombre: "Agregar perfil",
+      action: "ADD"
     }, 'max-w-5xl');
 
     if (ref && ref.instance) {

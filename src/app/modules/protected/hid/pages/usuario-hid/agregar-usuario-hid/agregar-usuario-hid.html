@@ -10,6 +10,60 @@
     <!-- Formulario -->
     <form autocomplete="off" [formGroup]="form" (ngSubmit)="guardar()" class="space-y-6">
         <div class="grid grid-cols-12 gap-4">
+            <div class="col-span-12 md:col-span-12 xl:col-span-12 pt-0">
+                <!-- Imagen de Fondo -->
+                <div class="rounded-xl border border-slate-200 shadow-sm hover:shadow-md transition-shadow p-5">
+                    <div class="flex items-center gap-2 mb-4">
+                        <div class="w-8 h-8 rounded-md bg-blue-50 flex items-center justify-center">
+                            <i class="pi pi-image text-blue-600 text-sm"></i>
+                        </div>
+                        <div>
+                            <h3 class="text-sm font-semibold text-slate-700">Foto</h3>
+                            <p class="text-[11px] text-slate-400">Foto del usuario</p>
+                        </div>
+                    </div>
+
+                    <!-- Uploader oculto -->
+                    <p-fileUpload #fondoUpload mode="basic" name="fondo" accept="image/*" [maxFileSize]="5000000"
+                        (onSelect)="onFileSelected($event, 'foto')" [style]="{ display: 'none' }" [auto]="true">
+                    </p-fileUpload>
+
+                    <!-- Área de carga corporativa -->
+                    <div *ngIf="!imagenPreview" (click)="forzarCargaPrimeNG(fondoUpload)"
+                        class="flex flex-col items-center justify-center py-8 px-4 text-slate-400 bg-slate-50/80 rounded-xl border-2 border-dashed border-slate-300 hover:border-primary hover:bg-blue-50/30 hover:text-primary transition-all cursor-pointer group">
+                        <div
+                            class="w-14 h-14 rounded-full bg-slate-100 flex items-center justify-center mb-3 group-hover:bg-blue-100 group-hover:scale-110 transition-transform">
+                            <i class="pi pi-cloud-upload text-2xl"></i>
+                        </div>
+                        <p class="text-sm font-medium text-slate-600 group-hover:text-primary">Arrastra o selecciona una
+                            imagen</p>
+                        <p class="text-xs mt-1">SVG, PNG, JPG o WEBP (máx. 5 MB)</p>
+                    </div>
+
+                    <!-- Previsualización del fondo -->
+                    <div *ngIf="imagenPreview"
+                        class="relative group overflow-hidden rounded-lg border border-slate-200 bg-slate-50 p-4">
+                        <div class="flex items-start gap-4">
+                            <div
+                                class="w-24 h-16 rounded-md border border-slate-200 bg-white overflow-hidden flex-shrink-0">
+                                <img [src]="imagenPreview" alt="Fondo" class="w-full h-full object-contain p-1" />
+                            </div>
+                            <div class="flex-1 min-w-0">
+                                <p class="text-xs font-medium text-slate-700 truncate">Vista previa</p>
+                                <p class="text-[11px] text-slate-400 mt-1">Formato:
+                                    <span class="font-mono font-medium text-slate-600">
+                                        {{ form.get('extensionImagen')?.value?.toUpperCase() || '—' }}
+                                    </span>
+                                </p>
+                                <button (click)="onClearImage('fondo'); $event.stopPropagation()" type="button"
+                                    class="mt-2 inline-flex items-center gap-1 px-2 py-1 text-[11px] font-medium text-red-600 bg-red-50 rounded hover:bg-red-100 transition-colors">
+                                    <i class="pi pi-trash text-xs"></i> Quitar
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
             <!-- Licencia HID -->
             <div class="col-span-12 md:col-span-6 xl:col-span-3 pt-0">
@@ -87,7 +141,9 @@
             </div>
 
             <div class="col-span-12 md:col-span-6 xl:col-span-3 pt-0">
-                <app-autoc-tipo-credencial-hid formControlName="tipoCredencial"></app-autoc-tipo-credencial-hid>
+                <!-- <app-autoc-tipo-credencial-hid formControlName="tipoCredencial"></app-autoc-tipo-credencial-hid> -->
+                <app-mselect-tipo-credencial-hid
+                    formControlName="usuarioHidTipoCredencial"></app-mselect-tipo-credencial-hid>
             </div>
 
         </div>

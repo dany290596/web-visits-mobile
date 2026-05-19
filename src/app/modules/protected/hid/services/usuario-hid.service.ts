@@ -109,6 +109,24 @@ export class UsuarioHIDService {
         );
     }
 
+    getByPhoto(id: string) {
+        return this.http.get(`${url}UsuarioHID/Photo/${id}`, {
+            headers: new HttpHeaders(
+                {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${localStorage.getItem('token')}`,
+                    'Empresa': `${localStorage.getItem('empresa')}`
+                })
+        }).pipe(
+            catchError((e: any) =>
+                of(e)
+            ),
+            switchMap((response: any) => {
+                return of(response);
+            })
+        );
+    }
+
     create(request: IUsuarioHIDRequest): Observable<any> {
         return this.http.post(`${url}UsuarioHID`, request, {
             headers: new HttpHeaders(

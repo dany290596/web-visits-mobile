@@ -1,7 +1,6 @@
-import { Component, EventEmitter, OnInit, Output, inject } from '@angular/core';
+import { Component, EventEmitter, OnInit, Output, ViewChild, inject } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-import { Router } from '@angular/router';
 
 import { InputTextModule } from 'primeng/inputtext';
 import { MessageModule } from 'primeng/message';
@@ -12,14 +11,15 @@ import Swal from 'sweetalert2';
 
 import { MessageService } from 'primeng/api';
 import { UsuarioHIDService } from '../../../services/usuario-hid.service';
-import { PlataformaService } from '../../../../../../shared/services/plataforma.service';
 
 import { IUsuarioHIDRequest } from '../../../interfaces/usuario-hid.interface';
 
 import { AutocLicenciaHid } from '../../../components/autoc/autoc-licencia-hid/autoc-licencia-hid';
-import { AutocTipoCredencialHid } from '../../../components/autoc/autoc-tipo-credencial-hid/autoc-tipo-credencial-hid';
 import { StorageService } from '../../../../../auth/services/storage.service';
 import { IUsuarioResponse } from '../../../../authentication/interfaces/usuario.interface';
+
+import { MselectTipoCredencialHid } from '../../../components/mselect/mselect-tipo-credencial-hid/mselect-tipo-credencial-hid';
+import { FileUpload, FileUploadModule } from 'primeng/fileupload';
 
 interface LicenciaOption {
   id: string;
@@ -36,7 +36,8 @@ interface LicenciaOption {
     TooltipModule,
     DatePickerModule,
     AutocLicenciaHid,
-    AutocTipoCredencialHid
+    MselectTipoCredencialHid,
+    FileUploadModule
   ],
   templateUrl: './agregar-usuario-hid.html',
   styleUrl: './agregar-usuario-hid.css',
@@ -49,13 +50,14 @@ export class AgregarUsuarioHid implements OnInit {
   @Output() closeModal = new EventEmitter<void>();
   @Output() guardadoExitoso = new EventEmitter<void>();
 
+  imagenPreview: string | ArrayBuffer | null = null;
+
+  @ViewChild('fondoUpload') fondoUpload!: FileUpload;
+
   private fb = inject(FormBuilder);
   private srvUsuarioHid = inject(UsuarioHIDService);
   private srvMessage = inject(MessageService);
-  private srvPlataforma = inject(PlataformaService);
   private srvStorage = inject(StorageService);
-
-  private router = inject(Router);
 
   currentDate = new Date();
   licencias: LicenciaOption[] = [];
@@ -69,7 +71,9 @@ export class AgregarUsuarioHid implements OnInit {
     telefono: ['', [Validators.required, Validators.pattern(/^\d{10}$/)]],
     fechaInicio: ['', Validators.required],
     fechaFin: ['', Validators.required],
-    tipoCredencial: ['', Validators.required]
+    usuarioHidTipoCredencial: ['', Validators.required],
+    imagen: [null],
+    extensionImagen: [null],
   });
 
   ngOnInit(): void {
@@ -77,6 +81,78 @@ export class AgregarUsuarioHid implements OnInit {
       this.user = this.srvStorage.getUserDetailData()!;
       this.userId = this.user.id!;
     }
+  }
+
+  onClearImage(tipo: 'fondo' | 'logo') {
+    if (tipo === 'fondo') {
+      this.form.patchValue({ imagen: null, extensionImagen: null });
+      this.imagenPreview = null;
+    }
+  }
+
+  forzarCargaPrimeNG(uploader: FileUpload): void {
+    if (uploader) {
+      // Rompemos la limitación de PrimeNG accediendo directamente a la propiedad nativa del input del navegador
+      const inputNativo = uploader.basicFileInput?.nativeElement;
+
+      if (inputNativo) {
+        inputNativo.click(); // Dispara el explorador del S.O de forma obligatoria
+      }
+    }
+  }
+
+  onFileSelected(event: any, tipo: 'foto') {
+    const file = event.files[0];
+    if (!file) return;
+
+    // Validar tipo de imagen profesional
+    const validTypes = ['image/jpeg', 'image/png', 'image/webp', 'image/svg+xml'];
+    if (!validTypes.includes(file.type)) {
+      Swal.fire({
+        toast: true,
+        position: 'top-end',
+        icon: 'error',
+        title: 'Formato inválido',
+        text: 'Solo se permiten JPEG, PNG, WEBP o SVG',
+        showConfirmButton: false,
+        timer: 3000,
+        customClass: {
+          popup: 'swal-theme',
+        }
+      });
+      return;
+    }
+
+    const reader = new FileReader();
+    reader.onload = () => {
+      const base64WithPrefix = reader.result as string;
+      const base64 = base64WithPrefix.split(',')[1];
+      if (tipo === 'foto') {
+        this.form.patchValue({
+          imagen: base64,
+          extensionImagen: this.getExtension(file.name)
+        });
+        this.imagenPreview = base64WithPrefix;
+      } else {
+      }
+      Swal.fire({
+        toast: true,
+        position: 'top-end',
+        icon: 'success',
+        title: 'Imagen cargada',
+        text: file.name,
+        showConfirmButton: false,
+        timer: 2000,
+        customClass: {
+          popup: 'swal-theme',
+        }
+      });
+    };
+    reader.readAsDataURL(file);
+  }
+
+  private getExtension(filename: string): string {
+    return filename.split('.').pop()?.toLowerCase() || '';
   }
 
   isInvalid(controlName: string, errorType: string): boolean {
@@ -122,8 +198,23 @@ export class AgregarUsuarioHid implements OnInit {
     request.telefono = formValue.telefono;
     request.fechaInicio = formValue.fechaInicio;
     request.fechaFin = formValue.fechaFin;
-    request.tipoCredencial = formValue.tipoCredencial;
+
+    request.imagen = formValue.imagen;
+    request.extensionImagen = formValue.extensionImagen;
+
     request.usuarioCreadorId = this.userId;
+
+    if (formValue.usuarioHidTipoCredencial !== null) {
+      if (
+        Array.isArray(formValue.usuarioHidTipoCredencial) &&
+        formValue.usuarioHidTipoCredencial.every((x: any) => typeof x === 'string')
+      ) {
+        request.usuarioHidTipoCredencial =
+          formValue.usuarioHidTipoCredencial.map((id: string) => ({
+            tipoCredencialId: id
+          }));
+      }
+    }
 
     console.log("REQUEST ::: ", request);
 
