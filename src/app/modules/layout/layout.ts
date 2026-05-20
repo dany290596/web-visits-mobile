@@ -146,6 +146,8 @@ export class Layout implements OnInit {
         groupName = 'Seguridad';
       } else if (modulo.moduloNombre === 'HID') {
         groupName = 'Integraciones';
+      } else if (modulo.moduloNombre === 'Cliente') {
+        groupName = 'Organizaciones';
       } else {
         groupName = 'Otros';
       }

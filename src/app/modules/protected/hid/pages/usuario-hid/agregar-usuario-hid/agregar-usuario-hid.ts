@@ -1,4 +1,4 @@
-import { Component, EventEmitter, OnInit, Output, ViewChild, inject } from '@angular/core';
+import { Component, EventEmitter, OnInit, Output, ViewChild, computed, effect, inject, signal } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 
@@ -11,11 +11,15 @@ import Swal from 'sweetalert2';
 
 import { MessageService } from 'primeng/api';
 import { UsuarioHIDService } from '../../../services/usuario-hid.service';
+import { StorageService } from '../../../../../auth/services/storage.service';
+
+import { AutocPlantillaCredencial } from '../../../components/autoc/autoc-plantilla-credencial/autoc-plantilla-credencial';
 
 import { IUsuarioHIDRequest } from '../../../interfaces/usuario-hid.interface';
 
 import { AutocLicenciaHid } from '../../../components/autoc/autoc-licencia-hid/autoc-licencia-hid';
-import { StorageService } from '../../../../../auth/services/storage.service';
+import { AutocPlataforma } from '../../../components/autoc/autoc-plataforma/autoc-plataforma';
+
 import { IUsuarioResponse } from '../../../../authentication/interfaces/usuario.interface';
 
 import { MselectTipoCredencialHid } from '../../../components/mselect/mselect-tipo-credencial-hid/mselect-tipo-credencial-hid';
@@ -36,7 +40,9 @@ interface LicenciaOption {
     TooltipModule,
     DatePickerModule,
     AutocLicenciaHid,
+    AutocPlataforma,
     MselectTipoCredencialHid,
+    AutocPlantillaCredencial,
     FileUploadModule
   ],
   templateUrl: './agregar-usuario-hid.html',
@@ -59,9 +65,25 @@ export class AgregarUsuarioHid implements OnInit {
   private srvMessage = inject(MessageService);
   private srvStorage = inject(StorageService);
 
+  private readonly ID_WALLET = '2b3c4d5e-6f70-8901-bcde-f12345678901';
+
+  // Señal que se actualizará manualmente cuando cambie el formulario
+  private tipoCredencialSignal = signal<string[]>([]);
+
+  // Computed: ¿está seleccionado Wallet?
+  isWalletSelected = computed(() =>
+    this.tipoCredencialSignal().includes(this.ID_WALLET)
+  );
+
   currentDate = new Date();
   licencias: LicenciaOption[] = [];
   formSubmitted = false;
+
+  fechaFinMayorIgualInicio = (group: FormGroup): { [key: string]: boolean } | null => {
+    const inicio = group.get('fechaInicio')?.value;
+    const fin = group.get('fechaFin')?.value;
+    return inicio && fin && fin < inicio ? { fechaFinMenor: true } : null;
+  };
 
   form: FormGroup = this.fb.group({
     licenciaId: ['', Validators.required],
@@ -74,9 +96,37 @@ export class AgregarUsuarioHid implements OnInit {
     usuarioHidTipoCredencial: ['', Validators.required],
     imagen: [null],
     extensionImagen: [null],
-  });
+    plantillaCredencialId: [null],
+    plataforma: [null],
+  },
+    { validators: this.fechaFinMayorIgualInicio });
+
+  constructor() {
+    effect(() => {
+      const plantilla = this.form.get('plantillaCredencialId');
+      const plataforma = this.form.get('plataforma');
+      const isWallet = this.isWalletSelected();
+
+      if (plantilla && plataforma) {
+        if (isWallet) {
+          plantilla.setValidators(Validators.required);
+          plataforma.setValidators(Validators.required);
+        } else {
+          plantilla.clearValidators();
+          plataforma.clearValidators();
+          plantilla.setValue(null);
+          plataforma.setValue(null);
+        }
+        plantilla.updateValueAndValidity();
+        plataforma.updateValueAndValidity();
+      }
+    });
+  }
 
   ngOnInit(): void {
+    this.form.get('usuarioHidTipoCredencial')!.valueChanges
+      .subscribe(val => this.tipoCredencialSignal.set(val ?? []));
+
     if (this.srvStorage.getUserDetailData() !== undefined && this.srvStorage.getUserDetailData() !== null) {
       this.user = this.srvStorage.getUserDetailData()!;
       this.userId = this.user.id!;
@@ -106,14 +156,14 @@ export class AgregarUsuarioHid implements OnInit {
     if (!file) return;
 
     // Validar tipo de imagen profesional
-    const validTypes = ['image/jpeg', 'image/png', 'image/webp', 'image/svg+xml'];
+    const validTypes = ['image/png'];
     if (!validTypes.includes(file.type)) {
       Swal.fire({
         toast: true,
         position: 'top-end',
         icon: 'error',
         title: 'Formato inválido',
-        text: 'Solo se permiten JPEG, PNG, WEBP o SVG',
+        text: 'Solo se permiten PNG.',
         showConfirmButton: false,
         timer: 3000,
         customClass: {
@@ -201,6 +251,9 @@ export class AgregarUsuarioHid implements OnInit {
 
     request.imagen = formValue.imagen;
     request.extensionImagen = formValue.extensionImagen;
+
+    request.plantillaCredencialId = formValue.plantillaCredencialId;
+    request.plataforma = formValue.plataforma;
 
     request.usuarioCreadorId = this.userId;
 

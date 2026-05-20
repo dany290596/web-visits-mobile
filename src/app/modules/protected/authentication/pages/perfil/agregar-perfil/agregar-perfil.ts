@@ -15,7 +15,7 @@ import { MessageService } from 'primeng/api';
 
 import { IPerfilRequest, IPerfilPermisoSeccion } from '../../../interfaces/perfil.interface';
 import { ISeccionFilter, ISeccionResponse } from '../../../interfaces/seccion.interface';
-import { IModuloSeccionResponse } from '../../../interfaces/modulo.interface';
+import { IModuloResponse, IModuloSeccionResponse } from '../../../interfaces/modulo.interface';
 
 import Swal from 'sweetalert2';
 
@@ -42,12 +42,14 @@ export class AgregarPerfil implements OnInit {
   @Output() guardadoExitoso = new EventEmitter<any>(); // para refrescar la tabla
   @Input() id!: string;
   @Input() nombre!: string;
+  @Input() action!: string;
 
   private fb = inject(FormBuilder);
   private router = inject(Router);
 
   // Listas necesarias para el panel de permisos
   listaSecciones: ISeccionResponse[] = [];
+  listaSeccionesAsignadas: ISeccionResponse[] = [];
   listaSeccionesAgrupadas: IModuloSeccionResponse[] = [];
   listaSeccionesSeleccionadas: ISeccionResponse[] = [];
 
@@ -64,6 +66,77 @@ export class AgregarPerfil implements OnInit {
           this.miFormulario.controls['nombre'].setValue(s.data.nombre);
         }
       });
+
+      this.srvPerfil.getByIdWithPermissions(this.id).subscribe((data) => {
+        if (data.respuesta === true) {
+          let perfil: any = data.data;
+          this.miFormulario.controls['nombre'].setValue(perfil.nombre);
+
+          // Secciones ya asignadas al perfil
+          if (data?.data?.perfilPermisoSecciones && Array.isArray(data.data.perfilPermisoSecciones)) {
+            this.listaSeccionesAsignadas = data.data.perfilPermisoSecciones.map((m: any) => {
+              return {
+                id: m.seccionId,
+                permisoId: m.permiso
+              } as ISeccionResponse;
+            });
+          } else {
+            this.listaSeccionesAsignadas = [];
+          }
+
+          let filter: ISeccionFilter = {
+            PageNumber: 1,
+            PageSize: 1000,
+            DatosCompletos: 1
+          };
+
+          this.srvSeccion.getAll(filter).subscribe((data: any) => {
+            if (data.respuesta == true) {
+              // Todas las secciones obtenidas
+              this.listaSecciones = data.data.map((m: any) => {
+                return {
+                  id: m.id,
+                  moduloId: m.moduloId,
+                  nombre: m.nombre,
+                  modulo: m.modulo && Object.keys(m.modulo).length > 0
+                    ? {
+                      id: m.modulo.id,
+                      nombre: m.modulo.nombre
+                    } as IModuloResponse
+                    : undefined
+                } as ISeccionResponse;
+              });
+
+              this.listaSeccionesAgrupadas = Array.from(
+                this.listaSecciones.reduce((map, seccion) => {
+                  const modulo = seccion.modulo;
+                  if (!modulo) return map;
+
+                  if (!map.has(modulo.id)) {
+                    map.set(modulo.id, {
+                      id: modulo.id,
+                      nombre: modulo.nombre,
+                      secciones: []
+                    });
+                  }
+
+                  map.get(modulo.id).secciones.push({
+                    id: seccion.id,
+                    nombre: seccion.nombre,
+                    moduloId: seccion.moduloId
+                  });
+
+                  return map;
+                }, new Map())
+              ).map(([_, group]) => group);
+
+              // Opcional: console.log para ver resultado
+              console.log('Agrupado por módulo sin asignadas:', JSON.stringify(this.listaSeccionesAgrupadas));
+            }
+          });
+        }
+      });
+
     }
   }
 
@@ -116,63 +189,126 @@ export class AgregarPerfil implements OnInit {
   }
 
   guardar(): void {
-    if (this.miFormulario.invalid) {
-      this.miFormulario.markAllAsTouched();
-      Swal.fire({
-        title: '¡Advertencia!',
-        text: 'Complete el campo obligatorio.',
-        icon: 'warning',
-        confirmButtonText: 'Aceptar',
-        confirmButtonColor: '#2563EB',
-        customClass: { popup: 'swal-theme' }
-      });
-      return;
-    }
-
-    if (this.listaSeccionesSeleccionadas.length === 0) {
-      Swal.fire({
-        title: '¡No se puede crear el perfil!',
-        text: 'Debe asignar al menos un permiso al perfil para poder continuar.',
-        icon: 'warning',
-        confirmButtonText: 'Aceptar',
-        customClass: { popup: 'swal-theme' }
-      });
-      return;
-    }
-
-    const form = this.miFormulario.value;
-    const request = new IPerfilRequest();
-    request.nombre = form.nombre;
-    request.perfilPermisoSecciones = this.listaSeccionesSeleccionadas.map((m: ISeccionResponse) => ({
-      seccionId: m.id,
-      permiso: m.permisoId,
-      vence: 2,
-      fechaVencimiento: null
-    } as IPerfilPermisoSeccion));
-
-    this.srvPerfil.create(request).subscribe((data: any) => {
-      if (data.respuesta === true) {
-        this.srvMessage.add({ severity: 'success', summary: 'Éxito', detail: 'Perfil creado', life: 3000 });
-        this.miFormulario.reset();
-        this.listaSeccionesSeleccionadas = [];
+    if (this.action === "ADD") {
+      if (this.miFormulario.invalid) {
+        this.miFormulario.markAllAsTouched();
         Swal.fire({
-          title: '¡Éxito!',
-          text: 'El perfil ha sido registrado correctamente.',
-          icon: 'success',
+          title: '¡Advertencia!',
+          text: 'Complete el campo obligatorio.',
+          icon: 'warning',
           confirmButtonText: 'Aceptar',
-          allowOutsideClick: false,
-          allowEscapeKey: false,
+          confirmButtonColor: '#2563EB',
           customClass: { popup: 'swal-theme' }
-        }).then((result) => {
-          if (result.isConfirmed) {
-            this.guardadoExitoso.emit({ creado: true });
-            this.closeModal.emit();
-          }
         });
-      } else {
-        this.srvMessage.add({ severity: 'error', summary: 'Error', detail: 'No se pudo crear el perfil', life: 5000 });
+        return;
       }
-    });
+
+      if (this.listaSeccionesSeleccionadas.length === 0) {
+        Swal.fire({
+          title: '¡No se puede crear el perfil!',
+          text: 'Debe asignar al menos un permiso al perfil para poder continuar.',
+          icon: 'warning',
+          confirmButtonText: 'Aceptar',
+          customClass: { popup: 'swal-theme' }
+        });
+        return;
+      }
+
+      const form = this.miFormulario.value;
+      const request = new IPerfilRequest();
+      request.nombre = form.nombre;
+      request.perfilPermisoSecciones = this.listaSeccionesSeleccionadas.map((m: ISeccionResponse) => ({
+        seccionId: m.id,
+        permiso: m.permisoId,
+        vence: 2,
+        fechaVencimiento: null
+      } as IPerfilPermisoSeccion));
+
+      this.srvPerfil.create(request).subscribe((data: any) => {
+        if (data.respuesta === true) {
+          this.srvMessage.add({ severity: 'success', summary: 'Éxito', detail: 'Perfil creado', life: 3000 });
+          this.miFormulario.reset();
+          this.listaSeccionesSeleccionadas = [];
+          Swal.fire({
+            title: '¡Éxito!',
+            text: 'El perfil ha sido registrado correctamente.',
+            icon: 'success',
+            confirmButtonText: 'Aceptar',
+            allowOutsideClick: false,
+            allowEscapeKey: false,
+            customClass: { popup: 'swal-theme' }
+          }).then((result) => {
+            if (result.isConfirmed) {
+              this.guardadoExitoso.emit({ creado: true });
+              this.closeModal.emit();
+            }
+          });
+        } else {
+          this.srvMessage.add({ severity: 'error', summary: 'Error', detail: 'No se pudo crear el perfil', life: 5000 });
+        }
+      });
+    }
+
+    if (this.action === "UPDATE") {
+      if (this.miFormulario.invalid) {
+        this.miFormulario.markAllAsTouched();
+        Swal.fire({
+          title: '¡Advertencia!',
+          text: 'Complete el campo obligatorio.',
+          icon: 'warning',
+          confirmButtonText: 'Aceptar',
+          confirmButtonColor: '#2563EB',
+          customClass: { popup: 'swal-theme' }
+        });
+        return;
+      }
+
+      if (this.listaSeccionesSeleccionadas.length === 0) {
+        Swal.fire({
+          title: '¡No se puede crear el perfil!',
+          text: 'Debe asignar al menos un permiso al perfil para poder continuar.',
+          icon: 'warning',
+          confirmButtonText: 'Aceptar',
+          customClass: { popup: 'swal-theme' }
+        });
+        return;
+      }
+
+      const form = this.miFormulario.value;
+      const request = new IPerfilRequest();
+      request.nombre = form.nombre;
+      request.perfilPermisoSecciones = this.listaSeccionesSeleccionadas.map((m: ISeccionResponse) => ({
+        perfilId: this.id,
+        seccionId: m.id,
+        permiso: m.permisoId,
+        vence: 2,
+        fechaVencimiento: null
+      } as IPerfilPermisoSeccion));
+
+      this.srvPerfil.update(request, this.id).subscribe((data: any) => {
+        if (data.respuesta === true) {
+          this.srvMessage.add({ severity: 'success', summary: 'Éxito', detail: 'Perfil actualizado', life: 3000 });
+          this.miFormulario.reset();
+          this.listaSeccionesSeleccionadas = [];
+          Swal.fire({
+            title: '¡Éxito!',
+            text: 'El perfil ha sido actualizado correctamente.',
+            icon: 'success',
+            confirmButtonText: 'Aceptar',
+            allowOutsideClick: false,
+            allowEscapeKey: false,
+            customClass: { popup: 'swal-theme' }
+          }).then((result) => {
+            if (result.isConfirmed) {
+              this.guardadoExitoso.emit({ creado: true });
+              this.closeModal.emit();
+            }
+          });
+        } else {
+          this.srvMessage.add({ severity: 'error', summary: 'Error', detail: 'No se pudo actualizar el perfil', life: 5000 });
+        }
+      });
+    }
   }
 
   cerrar(): void {

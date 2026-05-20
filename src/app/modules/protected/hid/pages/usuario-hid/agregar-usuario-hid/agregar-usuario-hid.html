@@ -24,7 +24,7 @@
                     </div>
 
                     <!-- Uploader oculto -->
-                    <p-fileUpload #fondoUpload mode="basic" name="fondo" accept="image/*" [maxFileSize]="5000000"
+                    <p-fileUpload #fondoUpload mode="basic" name="fondo" accept="image/png" [maxFileSize]="5000000"
                         (onSelect)="onFileSelected($event, 'foto')" [style]="{ display: 'none' }" [auto]="true">
                     </p-fileUpload>
 
@@ -37,7 +37,7 @@
                         </div>
                         <p class="text-sm font-medium text-slate-600 group-hover:text-primary">Arrastra o selecciona una
                             imagen</p>
-                        <p class="text-xs mt-1">SVG, PNG, JPG o WEBP (máx. 5 MB)</p>
+                        <p class="text-xs mt-1">PNG (máx. 5 MB)</p>
                     </div>
 
                     <!-- Previsualización del fondo -->
@@ -131,12 +131,30 @@
             </div>
 
             <!-- Fecha de fin -->
+            <!--
             <div class="col-span-12 md:col-span-6 xl:col-span-3 pt-0">
                 <label class="form-label fw-semibold">Fecha de fin <span class="text-red-500">*</span></label>
                 <p-datepicker formControlName="fechaFin" [minDate]="currentDate" [showIcon]="true" inputId="fechaFin"
                     [showOnFocus]="false" class="w-full"></p-datepicker>
                 <p-message severity="error" *ngIf="isInvalid('fechaFin', 'required')" class="p-error block">
                     <i class="pi pi-exclamation-circle"></i> La fecha de fin es requerida.
+                </p-message>
+            </div>
+            -->
+
+            <!-- Fecha de fin -->
+            <div class="col-span-12 md:col-span-6 xl:col-span-3 pt-0">
+                <label class="form-label fw-semibold">Fecha de fin <span class="text-red-500">*</span></label>
+                <p-datepicker formControlName="fechaFin" [minDate]="currentDate" [showIcon]="true" inputId="fechaFin"
+                    [showOnFocus]="false" class="w-full"></p-datepicker>
+                <p-message severity="error" *ngIf="isInvalid('fechaFin', 'required')" class="p-error block">
+                    <i class="pi pi-exclamation-circle"></i> La fecha de fin es requerida.
+                </p-message>
+                <!-- 👇 NUEVO: validación de coherencia de fechas -->
+                <p-message severity="error"
+                    *ngIf="form.hasError('fechaFinMenor') && (form.get('fechaFin')?.touched || formSubmitted)"
+                    class="p-error block">
+                    <i class="pi pi-exclamation-circle"></i> La fecha de fin no puede ser anterior a la fecha de inicio.
                 </p-message>
             </div>
 
@@ -146,6 +164,18 @@
                     formControlName="usuarioHidTipoCredencial"></app-mselect-tipo-credencial-hid>
             </div>
 
+            @if(isWalletSelected()){
+            <div class="col-span-12 md:col-span-6 xl:col-span-3 pt-0">
+                <app-autoc-plantilla-credencial
+                    formControlName="plantillaCredencialId"></app-autoc-plantilla-credencial>
+            </div>
+            }
+
+            @if(isWalletSelected()){
+            <div class="col-span-12 md:col-span-6 xl:col-span-3 pt-0">
+                <app-autoc-plataforma formControlName="plataforma"></app-autoc-plataforma>
+            </div>
+            }
         </div>
 
         <!-- Botones finales -->

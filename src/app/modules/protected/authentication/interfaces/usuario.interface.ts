@@ -43,6 +43,7 @@ export class IUsuarioRequest {
     contrasena?: string;
     perfilId?: string;
     tipoUsuarioId?: string;
+    idAsociado?: string;
     idioma?: string;
     vence?: number;
     fechaVencimiento?: any;

@@ -2,10 +2,12 @@ import { Component, EventEmitter, inject, Input, Output } from '@angular/core';
 import { PerfilService } from '../../../services/perfil.service';
 
 import { TagModule } from 'primeng/tag';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-detalle-perfil',
   imports: [
+    CommonModule,
     TagModule,
   ],
   templateUrl: './detalle-perfil.html',

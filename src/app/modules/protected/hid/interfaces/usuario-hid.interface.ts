@@ -68,5 +68,7 @@ export class IUsuarioHIDRequest {
     usuarioCreadorId: any;
     imagen: any;
     extensionImagen: any;
+    plantillaCredencialId: any;
+    plataforma: any;
     usuarioHidTipoCredencial: IUsuarioHidTipoCredencialRequest[] = [];
 }

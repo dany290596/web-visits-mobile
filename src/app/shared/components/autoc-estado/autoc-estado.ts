@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit, inject, forwardRef, Optional, Attribute } from '@angular/core';
+import { Component, OnInit, forwardRef, Optional, Attribute } from '@angular/core';
 import { ControlContainer, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { AutoCompleteModule } from 'primeng/autocomplete';

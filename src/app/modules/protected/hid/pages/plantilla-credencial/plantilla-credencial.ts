@@ -3,7 +3,7 @@ import { RouterLink } from '@angular/router';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 
-import { EmpresaService } from '../../services/empresa.service';
+import { PlantillaCredencialService } from '../../services/plantilla-credencial.service';
 
 import { DataTable, DataTableRegistroCampo } from '../../../../../shared/clases/table-dynamic.clase';
 
@@ -15,20 +15,20 @@ import { InputNumberModule } from 'primeng/inputnumber';
 import { InputTextModule } from 'primeng/inputtext';
 
 import { ModalService } from '../../../../../shared/services/modal.service';
-import { StorageService } from '../../../../auth/services/storage.service';
+
+import { AgregarPlantillaCredencial } from './agregar-plantilla-credencial/agregar-plantilla-credencial';
+import { DetallePlantillaCredencial } from './detalle-plantilla-credencial/detalle-plantilla-credencial';
+import { EditarPlantillaCredencial } from './editar-plantilla-credencial/editar-plantilla-credencial';
 
 import Swal from 'sweetalert2';
 
 import { AutocEstado } from '../../../../../shared/components/autoc-estado/autoc-estado';
-
-import { AgregarEmpresa } from './agregar-empresa/agregar-empresa';
-import {DetalleEmpresa} from './detalle-empresa/detalle-empresa';
-
-import { filter, take } from 'rxjs';
+import { StorageService } from '../../../../auth/services/storage.service';
 import { IUsuarioAutenticado } from '../../../authentication/interfaces/usuario.interface';
+import { filter, take } from 'rxjs';
 
 @Component({
-  selector: 'app-empresa',
+  selector: 'app-plantilla-credencial',
   imports: [
     CommonModule,
     ReactiveFormsModule,
@@ -38,14 +38,14 @@ import { IUsuarioAutenticado } from '../../../authentication/interfaces/usuario.
     InputTextModule,
     AutocEstado
   ],
-  templateUrl: './empresa.html',
-  styleUrl: './empresa.css',
+  templateUrl: './plantilla-credencial.html',
+  styleUrl: './plantilla-credencial.css',
 })
-export class Empresa {
-  private srvStorage = inject(StorageService);
-  private srvEmpresa = inject(EmpresaService);
+export class PlantillaCredencial implements OnInit {
+  private srvPlantillaCredencial = inject(PlantillaCredencialService);
   private srvForm = inject(FormBuilder);
   private srvModal = inject(ModalService);
+  private srvStorage = inject(StorageService);
 
   paginaActual: number = 1;
   totalPaginas: number = 0;
@@ -59,8 +59,8 @@ export class Empresa {
   userData!: IUsuarioAutenticado;
 
   buscarFG: FormGroup = this.srvForm.group({
-    RazonSocial: [''],
-    Estado: [''],
+    nombre: [''],
+    estado: [''],
   });
 
   ngOnInit(): void {
@@ -80,9 +80,7 @@ export class Empresa {
   prepararTablaResultados() {
     this.tablaResultados = new DataTable();
     this.tablaResultados.setTieneAcciones(true, true, true, true);
-    this.tablaResultados.addTitulo('Razón Social', true, true, true, true, true, 4, 3, 2);
-    this.tablaResultados.addTitulo('RFC', true, true, true, true, true, 4, 3, 2);
-    this.tablaResultados.addTitulo('Correo Electrónico', true, true, true, true, true, 4, 3, 2);
+    this.tablaResultados.addTitulo('Nombre', true, true, true, true, true, 4, 3, 2);
     this.tablaResultados.addTitulo('Fecha de creación', true, true, true, true, true, 1, 1, 1);
     this.tablaResultados.addTitulo('Estado', true, true, true, true, true, 1, 1, 1);
     this.tablaResultados.registros = [];
@@ -91,8 +89,8 @@ export class Empresa {
   buscar(pagina?: boolean) {
     this.cargando = true;
     const {
-      RazonSocial,
-      Estado
+      nombre,
+      estado
     } = this.buscarFG.value;
 
     if (pagina) {
@@ -100,14 +98,14 @@ export class Empresa {
     }
 
     let filtroBusqueda: any = {
-      RazonSocial: RazonSocial,
-      Estado: Estado,
+      Nombre: nombre,
+      Estado: estado,
       DatosCompletos: 1,
       PageNumber: this.paginaActual
     };
 
     this.tablaResultados!.registros = [];
-    this.srvEmpresa.getAll(filtroBusqueda).subscribe((resp: any) => {
+    this.srvPlantillaCredencial.getAll(filtroBusqueda).subscribe((resp: any) => {
       this.cargando = false;
       if (resp.respuesta === true) {
 
@@ -124,56 +122,48 @@ export class Empresa {
         }
         this.sinDatos = false;
         listado.forEach(vst => {
-          console.log("ITEM ::: ", vst);
-
-          let strId: string = vst.id ? vst.id : '';
-          let strRazonSocial: string = vst.razonSocial;
-          let strRFC: string = vst.rfc;
-          let strCorreoElectronico: string = vst.correoElectronico;
-          let strEstado: string = vst.estado === 1 ? 'Activo' : vst.estado === 2 ? 'Inactivo' : '';
-          let listEstado: IDTRCampoPropiedad[] = [
-            { condicion: 'Activo', aplicar: DataTableRegistroCampo.COLOR_BADGE_PRIMARY },
-            { condicion: 'Inactivo', aplicar: DataTableRegistroCampo.COLOR_BADGE_DANGER }
-          ];
+          this.srvPlantillaCredencial.getById(vst.id).subscribe((dataById: any) => {
+            if (dataById.respuesta === true) {
+              let strId: string = vst.id ? vst.id : '';
+              let strNombre: string = vst.nombre;
+              let strEstado: string = vst.estado === 1 ? 'Activo' : vst.estado === 2 ? 'Inactivo' : '';
+              let listEstado: IDTRCampoPropiedad[] = [
+                { condicion: 'Activo', aplicar: DataTableRegistroCampo.COLOR_BADGE_PRIMARY },
+                { condicion: 'Inactivo', aplicar: DataTableRegistroCampo.COLOR_BADGE_DANGER }
+              ];
 
 
-          let campos: IDataTableRegistroCampo[] = [];
-          let campoRazonSocial: IDataTableRegistroCampo = new DataTableRegistroCampo();
-          let campoRFC: IDataTableRegistroCampo = new DataTableRegistroCampo();
-          let campoCorreoElectronico: IDataTableRegistroCampo = new DataTableRegistroCampo();
-          let campoFechaCreacion: IDataTableRegistroCampo = new DataTableRegistroCampo();
-          let campoEstado: IDataTableRegistroCampo = new DataTableRegistroCampo();
+              let campos: IDataTableRegistroCampo[] = [];
+              let campoNombre: IDataTableRegistroCampo = new DataTableRegistroCampo();
+              let campoFechaCreacion: IDataTableRegistroCampo = new DataTableRegistroCampo();
+              let campoEstado: IDataTableRegistroCampo = new DataTableRegistroCampo();
 
 
-          if (vst.fechaCreacion) {
-            const fecha = new Date(vst.fechaCreacion);
-            const dia = String(fecha.getDate()).padStart(2, '0');
-            const mes = String(fecha.getMonth() + 1).padStart(2, '0');
-            const año = fecha.getFullYear();
-            const horas = String(fecha.getHours()).padStart(2, '0');
-            const minutos = String(fecha.getMinutes()).padStart(2, '0');
+              if (vst.fechaCreacion) {
+                const fecha = new Date(vst.fechaCreacion);
+                const dia = String(fecha.getDate()).padStart(2, '0');
+                const mes = String(fecha.getMonth() + 1).padStart(2, '0');
+                const año = fecha.getFullYear();
+                const horas = String(fecha.getHours()).padStart(2, '0');
+                const minutos = String(fecha.getMinutes()).padStart(2, '0');
 
-            vst.fechaCreacion = `${dia}/${mes}/${año} ${horas}:${minutos}`;
-          }
+                vst.fechaCreacion = `${dia}/${mes}/${año} ${horas}:${minutos}`;
+              }
 
-          // campos que aparecerán en línea
-          campoRazonSocial.setValores(strRazonSocial, DataTableRegistroCampo.CAMPO_TEXTO, true, true, true, true, true, 4, 3, 2);
-          campoRFC.setValores(strRFC, DataTableRegistroCampo.CAMPO_TEXTO, true, true, true, true, true, 4, 3, 2);
-          campoCorreoElectronico.setValores(strCorreoElectronico, DataTableRegistroCampo.CAMPO_TEXTO, true, true, true, true, true, 4, 3, 2);
-          campoFechaCreacion.setValores(vst.fechaCreacion, DataTableRegistroCampo.CAMPO_TEXTO, true, true, true, true, true, 1, 1, 1);
+              // campos que aparecerán en línea
+              campoNombre.setValores(strNombre, DataTableRegistroCampo.CAMPO_TEXTO, true, true, true, true, true, 4, 3, 2);
+              campoFechaCreacion.setValores(vst.fechaCreacion, DataTableRegistroCampo.CAMPO_TEXTO, true, true, true, true, true, 1, 1, 1);
 
-          campoEstado.setValores(strEstado, DataTableRegistroCampo.CAMPO_BADGE, true, true, false, false, true, 0, 0, 1, listEstado);
+              campoEstado.setValores(strEstado, DataTableRegistroCampo.CAMPO_BADGE, true, true, false, false, true, 0, 0, 1, listEstado);
 
-          // campos que aparecerán en línea
-          campos.push(campoRazonSocial);
-          campos.push(campoRFC);
-          campos.push(campoCorreoElectronico);
-          campos.push(campoFechaCreacion);
-          campos.push(campoEstado);
+              // campos que aparecerán en línea
+              campos.push(campoNombre);
+              campos.push(campoFechaCreacion);
+              campos.push(campoEstado);
 
-          this.tablaResultados?.addRegistro(strId, vst.estado!, campos);
-
-
+              this.tablaResultados?.addRegistro(strId, vst.estado!, campos);
+            }
+          });
         });
       }
     });
@@ -181,11 +171,11 @@ export class Empresa {
 
   inactivar(id: string) {
     if (id.trim().length == 0) { return }
-    this.srvEmpresa.inactivate(id, this.userData.usuarioId!).subscribe((resp: any) => {
+    this.srvPlantillaCredencial.inactivate(id, this.userData.usuarioId!).subscribe((resp: any) => {
       if (resp.respuesta === true) {
         Swal.fire({
-          title: 'Empresa inactivada',
-          text: 'La empresa se ha inactivado correctamente. Presiona "Aceptar" para continuar.',
+          title: 'Plantilla inactivada',
+          text: 'La plantilla se ha inactivado correctamente. Presiona "Aceptar" para continuar.',
           icon: 'success',
           confirmButtonText: 'Aceptar',
           allowOutsideClick: false,   // evita cerrar clickeando fuera
@@ -202,7 +192,7 @@ export class Empresa {
       } else {
         Swal.fire({
           title: '¡Advertencia!',
-          text: 'No fue posible inactivar la empresa. Intenta nuevamente.',
+          text: 'No fue posible inactivar el perfil. Intenta nuevamente.',
           icon: 'warning',
           confirmButtonText: 'Aceptar',
           allowOutsideClick: false,
@@ -216,11 +206,11 @@ export class Empresa {
 
   reactivar(id: string) {
     if (id.trim().length == 0) { return }
-    this.srvEmpresa.reactivate(id, this.userData.usuarioId!).subscribe((resp: any) => {
+    this.srvPlantillaCredencial.reactivate(id, this.userData.usuarioId!).subscribe((resp: any) => {
       if (resp.respuesta === true) {
         Swal.fire({
-          title: 'Empresa reactivada',
-          text: 'La empresa se ha reactivado correctamente. Presiona "Aceptar" para continuar.',
+          title: 'Plantilla reactivada',
+          text: 'La plantilla se ha reactivado correctamente. Presiona "Aceptar" para continuar.',
           icon: 'success',
           confirmButtonText: 'Aceptar',
           allowOutsideClick: false,   // evita cerrar clickeando fuera
@@ -237,7 +227,7 @@ export class Empresa {
       } else {
         Swal.fire({
           title: '¡Advertencia!',
-          text: 'No fue posible reactivar la empresa. Intenta nuevamente.',
+          text: 'No fue posible reactivar el perfil. Intenta nuevamente.',
           icon: 'warning',
           confirmButtonText: 'Aceptar',
           allowOutsideClick: false,
@@ -251,9 +241,9 @@ export class Empresa {
 
   ver(id: string) {
     if (id.trim().length == 0) { return }
-    const ref = this.srvModal.open(DetalleEmpresa, {
+    const ref = this.srvModal.open(DetallePlantillaCredencial, {
       id: id,
-      nombre: "Detalle de la empresa"
+      nombre: "Detalle de la plantilla"
     }, 'max-w-5xl');
 
     if (ref && ref.instance) {
@@ -266,9 +256,10 @@ export class Empresa {
 
   detalle(id: string) {
     if (id.trim().length == 0) { return }
-    const ref = this.srvModal.open(AgregarEmpresa, {
+    const ref = this.srvModal.open(EditarPlantillaCredencial, {
       id: id,
-      nombre: "Editar empresa"
+      nombre: "Editar plantilla",
+      action: "UPDATE"
     }, 'max-w-5xl');
 
     if (ref && ref.instance) {
@@ -295,17 +286,15 @@ export class Empresa {
   }
 
   showAgregar(): void {
-    const ref = this.srvModal.open(AgregarEmpresa, {
-      nombre: "Agregar empresa",
+    const ref = this.srvModal.open(AgregarPlantillaCredencial, {
+      nombre: "Agregar plantilla de credencial",
+      action: "ADD"
     }, 'max-w-5xl');
 
     if (ref && ref.instance) {
-      ref.instance.closeModal.subscribe((guardadoExitoso: boolean) => {
-        console.log("Se cerró el modal, guardadoExitoso:", guardadoExitoso);
-        if (guardadoExitoso) {
-          this.buscar(true); // refresca la tabla solo si se guardó algo
-        }
-        // No es necesario llamar a ref.close() porque el servicio ya lo hace
+      ref.instance.guardadoExitoso.subscribe((s: any) => {
+        console.log("DATA ::: ", s);
+        this.buscar(true); // refresca la tabla
       });
     }
   }

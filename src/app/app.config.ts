@@ -1,4 +1,4 @@
-import { ApplicationConfig, importProvidersFrom, provideBrowserGlobalErrorListeners, provideZoneChangeDetection } from '@angular/core';
+import { APP_INITIALIZER, ApplicationConfig, ApplicationRef, EnvironmentInjector, importProvidersFrom, provideBrowserGlobalErrorListeners, provideZoneChangeDetection } from '@angular/core';
 import { provideRouter } from '@angular/router';
 
 import { routes } from './app.routes';
@@ -12,6 +12,7 @@ import Blanc from '../theme/tokens/blanc.preset';
 
 import { AuthInterceptor } from './modules/auth/interceptors/auth.interceptor';
 import { HashLocationStrategy, LocationStrategy } from '@angular/common';
+import { provideFuseLoadingBar } from './shared/providers/loading.provider';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -46,6 +47,12 @@ export const appConfig: ApplicationConfig = {
     importProvidersFrom(
       AngularSvgIconModule.forRoot()
     ),
+    {
+      provide: APP_INITIALIZER,
+      useFactory: provideFuseLoadingBar,
+      deps: [ApplicationRef, EnvironmentInjector], // ⬅️ Importante
+      multi: true,
+    },
     { provide: LocationStrategy, useClass: HashLocationStrategy }
   ]
 };

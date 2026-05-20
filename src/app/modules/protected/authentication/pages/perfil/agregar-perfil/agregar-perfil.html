@@ -40,7 +40,7 @@
             </h3>
             <!-- Panel de permisos (componente hijo) siempre ocupa 12 columnas -->
             <div *ngIf="listaSecciones.length !== 0 && listaSeccionesAgrupadas.length !== 0" class="col-span-12 pt-0">
-                <app-pnl-perfil-permiso [listaSeccionesAgrupadas]="listaSeccionesAgrupadas" [action]="'ADD'"
+                <app-pnl-perfil-permiso [listaSeccionesAgrupadas]="listaSeccionesAgrupadas" [listaSeccionesAsignadas]="listaSeccionesAsignadas" [action]="action"
                     (eventSeccionesSeleccionadas)="eventSeccionesSeleccionadas($event)">
                 </app-pnl-perfil-permiso>
             </div>
