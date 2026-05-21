@@ -1,0 +1,160 @@
+<div>
+    <div class="flex justify-between items-center mb-4">
+        <h2 class="text-lg font-semibold text-foreground">{{nombre}}</h2>
+        <button (click)="cerrar()" class="text-muted-foreground hover:text-foreground transition-colors">
+            <span class="text-xl font-bold">×</span>
+        </button>
+    </div>
+
+    <form autocomplete="off" [formGroup]="form" (ngSubmit)="guardar()" class="space-y-6">
+        <div class="grid grid-cols-12 gap-4">
+            <!-- Email -->
+            <div class="col-span-12 md:col-span-6 xl:col-span-3 pt-0">
+                <label class="form-label fw-semibold">Email <span class="text-red-500">*</span></label>
+                <input pInputText type="email" formControlName="email" placeholder="Email" class="w-full"
+                    autocomplete="off" readonly (focus)="$event.target.removeAttribute('readonly')" />
+                <!-- Mensajes de error -->
+                <p-message severity="error"
+                    *ngIf="form.controls['email'].errors?.['required'] && form.controls['email'].touched"
+                    class="p-error block">
+                    <i class="pi pi-exclamation-circle"></i> El correo es requerido.
+                </p-message>
+
+                <!-- Formato inválido -->
+                <p-message severity="error"
+                    *ngIf="form.controls['email'].errors?.['email'] && form.controls['email'].touched"
+                    class="p-error block">
+                    <i class="pi pi-exclamation-circle"></i> El formato del correo no es válido.
+                </p-message>
+
+                <!-- Mínimo 8 caracteres -->
+                <p-message severity="error"
+                    *ngIf="form.controls['email'].errors?.['minlength'] && form.controls['email'].touched"
+                    class="p-error block">
+                    <i class="pi pi-exclamation-circle"></i> El correo debe tener al menos 8 caracteres.
+                </p-message>
+
+                <!-- Máximo 150 caracteres -->
+                <p-message severity="error"
+                    *ngIf="form.controls['email'].errors?.['maxlength'] && form.controls['email'].touched"
+                    class="p-error block">
+                    <i class="pi pi-exclamation-circle"></i> El correo no puede tener más de 150 caracteres.
+                </p-message>
+            </div>
+
+            <!-- Contraseña -->
+            <div class="col-span-12 md:col-span-6 xl:col-span-3 pt-0 relative">
+                <label class="form-label fw-semibold">Contraseña <span class="text-red-500">*</span></label>
+                <p-password formControlName="contrasena" [toggleMask]="true" [feedback]="false" placeholder="**********"
+                    (onFocus)="onPasswordFocus()" inputStyleClass="w-full" [style]="{ width: '100%' }"
+                    pTooltip="Debe tener entre 8 y 255 caracteres, incluir al menos una mayúscula, una minúscula, un número y un carácter especial."
+                    tooltipPosition="top">
+                </p-password>
+
+                <!-- Mostrar errores solo si el campo fue tocado -->
+                <p-message severity="error" *ngIf="passwordTouched && form.controls['contrasena'].errors?.['required']"
+                    class="p-error block">
+                    <i class="pi pi-exclamation-circle"></i> La contraseña es requerida.
+                </p-message>
+
+                <p-message severity="error" *ngIf="passwordTouched && form.controls['contrasena'].errors?.['minlength']"
+                    class="p-error block">
+                    <i class="pi pi-exclamation-circle"></i> La contraseña debe tener al menos 8 caracteres.
+                </p-message>
+
+                <p-message severity="error" *ngIf="passwordTouched && form.controls['contrasena'].errors?.['maxlength']"
+                    class="p-error block">
+                    <i class="pi pi-exclamation-circle"></i> La contraseña no puede tener más de 255 caracteres.
+                </p-message>
+
+                <p-message severity="error" *ngIf="passwordTouched && form.controls['contrasena'].errors?.['pattern']"
+                    class="p-error block">
+                    <i class="pi pi-exclamation-circle"></i> La contraseña debe tener mayúscula, minúscula, número y
+                    carácter especial.
+                </p-message>
+            </div>
+
+            <!-- Confirmar contraseña -->
+            <div class="col-span-12 md:col-span-6 xl:col-span-3 pt-0"
+                *ngIf="form.controls['contrasena'].value !== null && form.controls['contrasena'].value !== undefined && form.controls['contrasena'].value !== ''">
+                <label class="form-label fw-semibold">Confirmar contraseña <span class="text-red-500">*</span></label>
+                <p-password formControlName="contrasenavalidacion" [toggleMask]="true" [feedback]="false"
+                    placeholder="**********" (onFocus)="onConfirmPasswordFocus()" inputStyleClass="w-full"
+                    [style]="{ width: '100%' }"
+                    pTooltip="Debe coincidir con la contraseña e incluir una mayúscula, una minúscula, un número y un carácter especial."
+                    tooltipPosition="top">
+                </p-password>
+
+                <p-message severity="error"
+                    *ngIf="confirmPasswordTouched && form.controls['contrasenavalidacion'].errors?.['required']"
+                    class="p-error block">
+                    <i class="pi pi-exclamation-circle"></i> Debes confirmar la contraseña.
+                </p-message>
+
+                <p-message severity="error"
+                    *ngIf="confirmPasswordTouched && form.controls['contrasenavalidacion'].errors?.['minlength']"
+                    class="p-error block">
+                    <i class="pi pi-exclamation-circle"></i> La confirmación debe tener al menos 8 caracteres.
+                </p-message>
+
+                <p-message severity="error"
+                    *ngIf="confirmPasswordTouched && form.controls['contrasenavalidacion'].errors?.['maxlength']"
+                    class="p-error block">
+                    <i class="pi pi-exclamation-circle"></i> La confirmación no puede tener más de 255 caracteres.
+                </p-message>
+
+                <p-message severity="error"
+                    *ngIf="confirmPasswordTouched && form.controls['contrasenavalidacion'].errors?.['pattern']"
+                    class="p-error block">
+                    <i class="pi pi-exclamation-circle"></i> La confirmación debe tener mayúscula, minúscula, número
+                    y carácter especial.
+                </p-message>
+
+                <p-message severity="error"
+                    *ngIf="(passwordTouched || confirmPasswordTouched) && form.errors?.['noCoincide']"
+                    class="p-error block">
+                    <i class="pi pi-exclamation-circle"></i> Las contraseñas no coinciden.
+                </p-message>
+            </div>
+
+            <!-- Autocomplete Perfil -->
+            <div class="col-span-12 md:col-span-6 xl:col-span-3 pt-0">
+                <app-autoc-perfil formControlName="perfilId"></app-autoc-perfil>
+            </div>
+
+            <!-- Autocomplete Tipo Usuario -->
+            <div class="col-span-12 md:col-span-6 xl:col-span-3 pt-0">
+                <app-autoc-tipo-usuario formControlName="tipoUsuarioId"></app-autoc-tipo-usuario>
+            </div>
+
+            <!-- Toggle Vence -->
+            <div class="col-span-12 md:col-span-6 xl:col-span-3 pt-0 flex flex-col">
+                <label class="form-label fw-semibold">¿Vencimiento?</label>
+                <p-toggleswitch formControlName="vence" (onChange)="onToggleVence($event)"></p-toggleswitch>
+            </div>
+
+            <!-- Fecha de vencimiento condicionada -->
+            <div class="col-span-12 md:col-span-6 xl:col-span-3 pt-0" *ngIf="form.get('vence')?.value">
+                <label class="form-label fw-semibold">Fecha de vencimiento</label>
+                <p-datepicker formControlName="fechaVencimiento" [minDate]="currentDate" [showIcon]="true"
+                    inputId="buttondisplay" [showOnFocus]="false" class="w-full"></p-datepicker>
+                <p-message severity="error"
+                    *ngIf="form.errors?.['fechaVencimientoRequerida'] && (formSubmitted || form.get('fechaVencimiento')?.touched)"
+                    class="error block">
+                    La fecha de vencimiento es obligatoria.
+                </p-message>
+            </div>
+        </div>
+
+        <!-- Botones finales -->
+        <div class="flex justify-end space-x-3 pt-4 border-t border-border">
+            <button type="button" (click)="cerrar()"
+                class="rounded-md bg-muted px-4 py-2 text-xs font-semibold text-muted-foreground hover:text-foreground">
+                Cancelar
+            </button>
+            <button type="submit" class="rounded-md bg-primary px-4 py-2 text-xs font-semibold text-primary-foreground">
+                Guardar
+            </button>
+        </div>
+    </form>
+</div>

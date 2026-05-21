@@ -114,6 +114,7 @@
         </tr>
 
         <!-- Expandable Detail Row -->
+        <!--
         <tr *ngIf="registro.visualizar && registro.expandirRegistro" class="bg-surface-50">
             <td [attr.colspan]="tabla.titulosEnTitulos.length + (tabla.ColumnaAcciones ? 1 : 0)" class="p-0">
                 <div class="p-4 border-top-1 surface-border">
@@ -139,6 +140,63 @@
                                     </div>
                                 </div>
                             </div>
+                        </div>
+                    </div>
+                </div>
+            </td>
+        </tr>
+        -->
+        <!-- Expandable Detail Row – Diseño corporativo profesional -->
+        <tr *ngIf="registro.visualizar && registro.expandirRegistro" class="bg-gray-50 border-t-2 border-gray-200">
+            <td [attr.colspan]="tabla.titulosEnTitulos.length + (tabla.ColumnaAcciones ? 1 : 0)" class="p-0">
+                <div class="flex">
+                    <!-- Barra lateral decorativa -->
+                    <div class="w-1 bg-primary flex-shrink-0"></div>
+
+                    <!-- Contenido del detalle -->
+                    <div class="flex-1 p-5">
+                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+
+                            <div *ngFor="let titulo of tabla.titulosEnDetalle; let j = index">
+                                <!-- Tarjeta por campo -->
+                                <div class="border border-gray-200 rounded-lg p-3 shadow-sm h-full flex flex-col">
+                                    <!-- Etiqueta -->
+                                    <span class="text-xs tracking-wider font-semibold mb-2">
+                                        {{ titulo.texto }}
+                                    </span>
+
+                                    <!-- Valor -->
+                                    <div [ngSwitch]="registro.camposEnDetalle[j].tipoCampo"
+                                        class="text-sm font-semibold mt-auto">
+
+                                        <!-- Texto normal -->
+                                        <span *ngSwitchCase="1">
+                                            {{ registro.camposEnDetalle[j].texto || '—' }}
+                                        </span>
+
+                                        <!-- Badge -->
+                                        <span *ngSwitchCase="3" class="inline-flex">
+                                            <p-tag [value]="registro.camposEnDetalle[j].texto"
+                                                [severity]="registro.camposEnDetalle[j].getBadgeColor()"
+                                                styleClass="px-3 py-1 text-sm font-semibold">
+                                            </p-tag>
+                                        </span>
+
+                                        <!-- Array de textos -->
+                                        <div *ngSwitchCase="4" class="flex flex-col gap-1">
+                                            <span *ngFor="let strTexto of registro.camposEnDetalle[j].arrTexto">
+                                                {{ strTexto || '—' }}
+                                            </span>
+                                        </div>
+
+                                        <!-- Imagen / Otros -->
+                                        <span *ngSwitchDefault>
+                                            {{ registro.camposEnDetalle[j].texto || '—' }}
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+
                         </div>
                     </div>
                 </div>

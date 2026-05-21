@@ -1,0 +1,234 @@
+import { Component, inject, OnInit, EventEmitter, Output, Input, ViewChild, ElementRef } from '@angular/core';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { CommonModule } from '@angular/common';
+import { Router } from '@angular/router';
+
+import { IPlantillaCredencialRequest } from '../../../interfaces/plantilla-credencial.interface';
+
+import { InputTextModule } from 'primeng/inputtext';
+import { MessageModule } from 'primeng/message';
+import { TooltipModule } from 'primeng/tooltip';
+import { CardModule } from 'primeng/card';
+import { FileUpload, FileUploadModule } from 'primeng/fileupload';
+
+import { MessageService } from 'primeng/api';
+import { PlantillaCredencialService } from '../../../services/plantilla-credencial.service';
+
+
+import Swal from 'sweetalert2';
+import { StorageService } from '../../../../../auth/services/storage.service';
+import { filter, switchMap, take } from 'rxjs';
+import { IUsuarioAutenticado } from '../../../../../../modules/protected/authentication/interfaces/usuario.interface';
+
+
+@Component({
+  selector: 'app-agregar-plantilla-credencial',
+  imports: [
+    CommonModule,
+    ReactiveFormsModule,
+    InputTextModule,
+    MessageModule,
+    TooltipModule,
+    CardModule,
+    FileUploadModule
+  ],
+  templateUrl: './agregar-plantilla-credencial.html',
+  styleUrl: './agregar-plantilla-credencial.css',
+  providers: [MessageService]
+})
+export class AgregarPlantillaCredencial {
+  private srvMessage = inject(MessageService);
+  private srvPlantillaCredencial = inject(PlantillaCredencialService);
+  private srvStorage = inject(StorageService);
+
+  @Output() closeModal = new EventEmitter<void>();
+  @Output() guardadoExitoso = new EventEmitter<any>(); // para refrescar la tabla
+  @Input() id!: string;
+  @Input() nombre!: string;
+  @Input() action!: string;
+
+  @ViewChild('fondoUpload') fondoUpload!: FileUpload;
+  @ViewChild('logoUpload') logoUpload!: FileUpload;
+
+
+
+  @ViewChild('fileFondo') fileFondo!: ElementRef<HTMLInputElement>;
+
+  abrirFondo() {
+    this.fileFondo.nativeElement.click();
+  }
+
+  userData!: IUsuarioAutenticado;
+
+  private fb = inject(FormBuilder);
+
+  imagenFondoPreview: string | ArrayBuffer | null = null;
+  imagenLogoPreview: string | ArrayBuffer | null = null;
+
+
+  miFormulario: FormGroup = this.fb.group({
+    nombre: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(50)]],
+    imagenFondo: [null],
+    extensionImagenFondo: [null],
+    imagenLogo: [null],
+    extensionImagenLogo: [null]
+  });
+
+  ngOnInit(): void {
+    this.srvStorage.userData$
+      .pipe(
+        filter((data: any) => !!data?.perfilId),
+        take(1)
+      )
+      .subscribe((data: IUsuarioAutenticado) => {
+        this.userData = data;
+        console.log("WWW ::: ", this.userData);
+      });
+  }
+
+  onFileSelected(event: any, tipo: 'fondo' | 'logo') {
+    const file = event.files[0];
+    if (!file) return;
+
+    // Validar tipo de imagen profesional
+    const validTypes = ['image/png'];
+    if (!validTypes.includes(file.type)) {
+      Swal.fire({
+        toast: true,
+        position: 'top-end',
+        icon: 'error',
+        title: 'Formato inválido',
+        text: 'Solo se permiten PNG.',
+        showConfirmButton: false,
+        timer: 3000
+      });
+      return;
+    }
+
+    const reader = new FileReader();
+    reader.onload = () => {
+      const base64WithPrefix = reader.result as string;
+      const base64 = base64WithPrefix.split(',')[1];
+      if (tipo === 'fondo') {
+        this.miFormulario.patchValue({
+          imagenFondo: base64,
+          extensionImagenFondo: this.getExtension(file.name)
+        });
+        this.imagenFondoPreview = base64WithPrefix;
+      } else {
+        this.miFormulario.patchValue({
+          imagenLogo: base64,
+          extensionImagenLogo: this.getExtension(file.name)
+        });
+        this.imagenLogoPreview = base64WithPrefix;
+      }
+      Swal.fire({
+        toast: true,
+        position: 'top-end',
+        icon: 'success',
+        title: 'Imagen cargada',
+        text: file.name,
+        showConfirmButton: false,
+        timer: 2000
+      });
+    };
+    reader.readAsDataURL(file);
+  }
+
+  onClearImage(tipo: 'fondo' | 'logo') {
+    if (tipo === 'fondo') {
+      this.miFormulario.patchValue({ imagenFondo: null, extensionImagenFondo: null });
+      this.imagenFondoPreview = null;
+    } else {
+      this.miFormulario.patchValue({ imagenLogo: null, extensionImagenLogo: null });
+      this.imagenLogoPreview = null;
+    }
+  }
+
+  private getExtension(filename: string): string {
+    return filename.split('.').pop()?.toLowerCase() || '';
+  }
+
+  guardar(): void {
+    if (this.miFormulario.invalid) {
+      this.miFormulario.markAllAsTouched();
+      Swal.fire({
+        title: '¡Advertencia!',
+        text: 'Complete el campo obligatorio.',
+        icon: 'warning',
+        confirmButtonText: 'Aceptar',
+        confirmButtonColor: '#2563EB',
+        customClass: { popup: 'swal-theme' }
+      });
+      return;
+    }
+
+    const formValue = this.miFormulario.value;
+    const request = new IPlantillaCredencialRequest();
+
+
+
+
+    request.nombre = formValue.nombre;
+
+    request.imagenFondo = formValue.imagenFondo;
+    request.extensionImagenFondo = formValue.extensionImagenFondo;
+
+    request.imagenLogo = formValue.imagenLogo;
+    request.extensionImagenLogo = formValue.extensionImagenLogo;
+
+    request.usuarioCreadorId = this.userData.usuarioId;
+
+    console.log("REQUEST ::: ", request);
+
+    this.srvPlantillaCredencial.create(request).subscribe((data: any) => {
+      if (data.respuesta === true) {
+        this.srvMessage.add({ severity: 'success', summary: 'Éxito', detail: 'Perfil creado', life: 3000 });
+        this.miFormulario.reset();
+
+        Swal.fire({
+          title: '¡Éxito!',
+          text: 'La plantilla ha sido registrada correctamente.',
+          icon: 'success',
+          confirmButtonText: 'Aceptar',
+          allowOutsideClick: false,
+          allowEscapeKey: false,
+          customClass: { popup: 'swal-theme' }
+        }).then((result) => {
+          if (result.isConfirmed) {
+            this.guardadoExitoso.emit({ creado: true });
+            this.closeModal.emit();
+          }
+        });
+      } else {
+        this.srvMessage.add({ severity: 'error', summary: 'Error', detail: 'No se pudo crear el perfil', life: 5000 });
+      }
+    });
+  }
+
+  cerrar(): void {
+    this.closeModal.emit();
+  }
+
+  seleccionarFondo() {
+    if (this.fondoUpload) {
+      this.fondoUpload.choose();
+    }
+  }
+  seleccionarLogo() {
+    if (this.logoUpload) {
+      this.logoUpload.choose();
+    }
+  }
+
+  forzarCargaPrimeNG(uploader: FileUpload): void {
+    if (uploader) {
+      // Rompemos la limitación de PrimeNG accediendo directamente a la propiedad nativa del input del navegador
+      const inputNativo = uploader.basicFileInput?.nativeElement;
+
+      if (inputNativo) {
+        inputNativo.click(); // Dispara el explorador del S.O de forma obligatoria
+      }
+    }
+  }
+}

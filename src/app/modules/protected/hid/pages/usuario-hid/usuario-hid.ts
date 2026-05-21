@@ -16,7 +16,7 @@ import { IDataTable, IDataTableRegistroCampo, IDTRCampoPropiedad } from '../../.
 
 import { TableDynamic } from '../../../../../shared/components/table-dynamic/table-dynamic';
 
-import { IUsuarioResponse } from '../../../authentication/interfaces/usuario.interface';
+import { IUsuarioAutenticado, IUsuarioResponse } from '../../../authentication/interfaces/usuario.interface';
 
 import { InputNumberModule } from 'primeng/inputnumber';
 import { InputTextModule } from 'primeng/inputtext';
@@ -25,6 +25,10 @@ import { AutocTipoCredencialHid } from '../../components/autoc/autoc-tipo-creden
 import { AutocEstado } from '../../../../../shared/components/autoc-estado/autoc-estado';
 
 import { DetalleUsuarioHid } from './detalle-usuario-hid/detalle-usuario-hid';
+import { EditarUsuarioHid } from './editar-usuario-hid/editar-usuario-hid';
+
+import Swal from 'sweetalert2';
+import { filter, take } from 'rxjs';
 
 @Component({
   selector: 'app-usuario-hid',
@@ -48,6 +52,8 @@ export class UsuarioHid {
   private srvUsuarioHID = inject(UsuarioHIDService);
   private srvStorage = inject(StorageService);
   private srvUsuarioHidTipoCredencial = inject(UsuarioHidTipoCredencialService);
+
+  userData!: IUsuarioAutenticado;
 
   user: IUsuarioResponse | undefined;
   userId: string = '';
@@ -84,25 +90,29 @@ export class UsuarioHid {
     this.buscar(true);
     this.prepararTablaResultados();
 
-    if (this.srvStorage.getUserDetailData() !== undefined && this.srvStorage.getUserDetailData() !== null) {
-      this.user = this.srvStorage.getUserDetailData()!;
-      this.userId = this.user.id!;
-    }
+    this.srvStorage.userData$
+      .pipe(
+        filter((data: any) => !!data?.perfilId),
+        take(1)
+      )
+      .subscribe((data: IUsuarioAutenticado) => {
+        this.userData = data;
+      });
   }
 
   prepararTablaResultados() {
     this.tablaResultados = new DataTable();
-    this.tablaResultados.setTieneAcciones(true, true, true, true);
+    this.tablaResultados.setTieneAcciones(true, true, true, false);
 
     this.tablaResultados.addTitulo('Licencia', true, true, true, true, true, 3, 3, 2);
     this.tablaResultados.addTitulo('Usuario', true, true, true, true, true, 2, 2, 2);
     this.tablaResultados.addTitulo('Correo electrónico', true, true, true, true, true, 3, 3, 2);
     // this.tablaResultados.addTitulo('Estado HID', true, true, true, true, true, 3, 3, 2);
-    this.tablaResultados.addTitulo('Estado de la invitación', true, true, true, true, true, 1, 1, 1);
+    this.tablaResultados.addTitulo('Estado invitación', true, true, true, true, true, 1, 1, 1);
     this.tablaResultados.addTitulo('Código de invitación', true, true, true, true, true, 1, 1, 1);
     this.tablaResultados.addTitulo('Tipo de credencial', true, true, true, true, true, 1, 1, 1);
     this.tablaResultados.addTitulo('Fecha de creación', true, true, true, true, true, 1, 1, 1);
-    // this.tablaResultados.addTitulo('Fecha de vencimiento', false, true, true, true, true, 1, 1, 1);
+    this.tablaResultados.addTitulo('Estado WV', true, true, true, true, true, 1, 1, 1);
     this.tablaResultados.registros = [];
   }
 
@@ -217,6 +227,12 @@ export class UsuarioHid {
             { condicion: 'Sin estado', aplicar: DataTableRegistroCampo.COLOR_BADGE_DARK }
           ];
 
+           let strEstado: string = registro.estado === 1 ? 'Activo' : registro.estado === 2 ? 'Inactivo' : '';
+              let listEstado: IDTRCampoPropiedad[] = [
+                { condicion: 'Activo', aplicar: DataTableRegistroCampo.COLOR_BADGE_PRIMARY },
+                { condicion: 'Inactivo', aplicar: DataTableRegistroCampo.COLOR_BADGE_DANGER }
+              ];
+
           let campos: IDataTableRegistroCampo[] = [];
           let campoLicencia: IDataTableRegistroCampo = new DataTableRegistroCampo();
           let campoNombre: IDataTableRegistroCampo = new DataTableRegistroCampo();
@@ -264,14 +280,10 @@ export class UsuarioHid {
             DataTableRegistroCampo.CAMPO_TEXTO,
             false, true, true, true, true, 1, 1, 1
           );
+            let campoEstado: IDataTableRegistroCampo = new DataTableRegistroCampo();
 
-          // // campos que aparecerán en línea
-          // campos.push(campoNombre);
-          // campos.push(campoCorreo);
-          // campos.push(campoCorreoSecundario);
+          campoEstado.setValores(strEstado, DataTableRegistroCampo.CAMPO_BADGE, true, true, false, false, true, 0, 0, 1, listEstado);
 
-          // // campos que aparecerán en detalle
-          // 
           campos.push(campoLicencia);
           campos.push(campoNombre);
           campos.push(campoEmail);
@@ -279,12 +291,11 @@ export class UsuarioHid {
           campos.push(campoCodigoInvitacion);
           campos.push(campoTipoCredencial);
           campos.push(campoFechaCreacion);
-          campos.push(campoFechaVencimiento);
+          campos.push(campoEstado);
 
           if (registro.id !== this.userId) {
             this.tablaResultados?.addRegistro(strId, registro.estado!, campos);
           }
-
         });
       }
     });
@@ -292,37 +303,66 @@ export class UsuarioHid {
 
   inactivar(id: string) {
     if (id.trim().length == 0) { return }
-    // this.srvUsuario.inactivate(id).subscribe((resp: any) => {
-    //   if (resp.respuesta === true) {
-    //     Swal.fire({
-    //       title: 'Usuario inactivado',
-    //       text: 'El usuario se ha inactivado correctamente. Presiona "Aceptar" para continuar.',
-    //       icon: 'success',
-    //       confirmButtonText: 'Aceptar',
-    //       allowOutsideClick: false,   // evita cerrar clickeando fuera
-    //       allowEscapeKey: false,      // evita cerrar con ESC
-    //       allowEnterKey: true,         // permite confirmar con ENTER
-    //       customClass: {
-    //         popup: 'swal-theme',
-    //       }
-    //     }).then((result) => {
-    //       if (result.isConfirmed) {
-    //         this.buscar(); // actualiza la lista SOLO al aceptar
-    //       }
-    //     });
-    //   } else {
-    //     Swal.fire({
-    //       title: '¡Advertencia!',
-    //       text: 'No fue posible inactivar el usuario. Intenta nuevamente.',
-    //       icon: 'warning',
-    //       confirmButtonText: 'Aceptar',
-    //       allowOutsideClick: false,
-    //       customClass: {
-    //         popup: 'swal-theme',
-    //       }
-    //     });
-    //   }
-    // });
+
+    Swal.fire({
+      title: '¡Advertencia!',
+      text: 'El usuario está por inactivarse.',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'Aceptar',
+      cancelButtonText: 'Cancelar',
+      allowOutsideClick: false
+    }).then((result) => {
+      if (result.isConfirmed) {
+        Swal.fire({
+          title: 'Procesando...',
+          text: 'Por favor espera',
+          timerProgressBar: true,
+          allowOutsideClick: false,
+          showConfirmButton: false,
+          willOpen: () => {
+            Swal.showLoading();
+          }
+        });
+
+        this.srvUsuarioHidTipoCredencial.inactivateCredentialUser(id, this.userData.usuarioId!).subscribe((resp: any) => {
+          if (resp.respuesta === true) {
+            Swal.close();
+            Swal.fire({
+              title: 'Usuario inactivado',
+              text: 'El usuario se ha inactivado correctamente. Presiona "Aceptar" para continuar.',
+              icon: 'success',
+              confirmButtonText: 'Aceptar',
+              allowOutsideClick: false,   // evita cerrar clickeando fuera
+              allowEscapeKey: false,      // evita cerrar con ESC
+              allowEnterKey: true,         // permite confirmar con ENTER
+              customClass: {
+                popup: 'swal-theme',
+              }
+            }).then((result) => {
+              if (result.isConfirmed) {
+                this.buscar(); // actualiza la lista SOLO al aceptar
+              }
+            });
+          } else {
+            Swal.close();
+            Swal.fire({
+              title: '¡Advertencia!',
+              text: 'No fue posible inactivar el usuario. Intenta nuevamente.',
+              icon: 'warning',
+              confirmButtonText: 'Aceptar',
+              allowOutsideClick: false,
+              customClass: {
+                popup: 'swal-theme',
+              }
+            });
+          }
+        });
+      }
+
+    });
+
+
   }
 
   reactivar(id: string) {
@@ -377,7 +417,16 @@ export class UsuarioHid {
 
   detalle(id: string) {
     if (id.trim().length == 0) { return }
+    const ref = this.srvModal.open(EditarUsuarioHid, {
+      id: id,
+      nombre: "Editar usuario HID"
+    }, 'max-w-5xl');
 
+    if (ref && ref.instance) {
+      ref.instance.guardadoExitoso.subscribe((s: any) => {
+        this.buscar(true);
+      });
+    }
   }
 
   cambiar(numero: number) {

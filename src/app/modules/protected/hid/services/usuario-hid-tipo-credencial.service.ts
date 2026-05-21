@@ -77,4 +77,22 @@ export class UsuarioHidTipoCredencialService {
             })
         );
     }
+
+    inactivateCredentialUser(id: string, usuarioBajaId: string) {
+        return this.http.patch(`${url}UsuarioHID/InactivateCredentialUser?id=${id}&usuarioBajaId=${usuarioBajaId}`, null, {
+            headers: new HttpHeaders(
+                {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${localStorage.getItem('token')}`,
+                    'Empresa': `${localStorage.getItem('empresa')}`
+                })
+        }).pipe(
+            catchError((e: any) =>
+                of(e)
+            ),
+            switchMap((response: any) => {
+                return of(response);
+            })
+        );
+    }
 }
