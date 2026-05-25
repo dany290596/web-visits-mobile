@@ -3,7 +3,7 @@
     <button (click)="toggleMenu()" class="bg-card relative flex rounded-full text-sm" type="button">
         <span class="sr-only">Open user menu</span>
         <img clickOutside (clickOutside)="isOpen = false" class="size-9 shrink-0 rounded-md"
-            src="https://avatars.githubusercontent.com/u/12519008?v=4" alt="" />
+            src="user.png" alt="" />
     </button>
     <!-- Dropdown -->
     <div [@openClose]="isOpen ? 'open' : 'closed'"
@@ -23,7 +23,7 @@
 
         <div class="flex flex-col items-center px-4 pb-4">
             <div class="w-10 shrink-0">
-                <img class="rounded-md" src="https://avatars.githubusercontent.com/u/12519008?v=4" alt="" />
+                <img class="rounded-md" src="user.png" alt="" />
             </div>
             @if (user !== undefined && user !== null){
             <div class="text-foreground overflow-hidden px-2">

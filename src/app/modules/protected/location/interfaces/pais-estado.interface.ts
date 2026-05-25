@@ -1,5 +1,6 @@
 export class IPaisEstadoFilter {
     Nombre?: string;
+    PaisId?: string;
     Estado?: any;
     EmpresaId?: string;
     PageSize?: number;

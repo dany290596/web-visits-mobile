@@ -24,17 +24,35 @@
             Telefono móvil: {{data.telefonoMovil}}
         </div>
 
+        @if(data.pais !== undefined && data.pais !== null){
+        <div class="col-span-12 md:col-span-6 xl:col-span-3 pt-0">
+            País: {{data.pais.nombre}}
+        </div>
+        }
+
+        @if(data.paisEstado !== undefined && data.paisEstado !== null){
+        <div class="col-span-12 md:col-span-6 xl:col-span-3 pt-0">
+            Estado: {{data.paisEstado.nombre}}
+        </div>
+        }
+
+        @if(data.ciudad !== undefined && data.ciudad !== null){
+        <div class="col-span-12 md:col-span-6 xl:col-span-3 pt-0">
+            Ciudad: {{data.ciudad.nombre}}
+        </div>
+        }
+
         @if(data.usaCredencialesHID === 1){
-         <div class="col-span-12 md:col-span-6 xl:col-span-3 pt-0">
+        <div class="col-span-12 md:col-span-6 xl:col-span-3 pt-0">
             Usa credenciales HID: Sí
         </div>
-    }
+        }
 
         @if(data.usaCredencialesHID === 2){
         <div class="col-span-12 md:col-span-6 xl:col-span-3 pt-0">
             Usa credenciales HID: No
         </div>
-    }
+        }
 
         <div class="col-span-12 md:col-span-6 xl:col-span-3 pt-0">
             <label class="block text-sm font-medium text-muted-foreground">Estado</label>

@@ -95,4 +95,22 @@ export class UsuarioHidTipoCredencialService {
             })
         );
     }
+
+    reactivateCredentialUser(id: string, usuarioReactivadorId: string) {
+        return this.http.patch(`${url}UsuarioHID/ReactivateCredentialUser?id=${id}&usuarioReactivadorId=${usuarioReactivadorId}`, null, {
+            headers: new HttpHeaders(
+                {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${localStorage.getItem('token')}`,
+                    'Empresa': `${localStorage.getItem('empresa')}`
+                })
+        }).pipe(
+            catchError((e: any) =>
+                of(e)
+            ),
+            switchMap((response: any) => {
+                return of(response);
+            })
+        );
+    }
 }

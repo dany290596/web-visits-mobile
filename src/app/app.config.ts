@@ -13,6 +13,7 @@ import Blanc from '../theme/tokens/blanc.preset';
 import { AuthInterceptor } from './modules/auth/interceptors/auth.interceptor';
 import { HashLocationStrategy, LocationStrategy } from '@angular/common';
 import { provideFuseLoadingBar } from './shared/providers/loading.provider';
+import { NgxSpinnerModule } from 'ngx-spinner';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -43,6 +44,7 @@ export const appConfig: ApplicationConfig = {
         clear: 'Limpiar',
       }
     }),
+    importProvidersFrom(NgxSpinnerModule),
     provideAngularSvgIcon(),
     importProvidersFrom(
       AngularSvgIconModule.forRoot()

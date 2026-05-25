@@ -6,7 +6,7 @@ import { CommonModule } from '@angular/common';
 import { AgregarUsuarioHid } from './agregar-usuario-hid/agregar-usuario-hid';
 
 import { ModalService } from '../../../../../shared/services/modal.service';
-import { UsuarioHIDService } from '../../services/usuario-hid.service';
+
 import { StorageService } from '../../../../auth/services/storage.service';
 import { UsuarioHidTipoCredencialService } from '../../services/usuario-hid-tipo-credencial.service';
 
@@ -49,7 +49,6 @@ import { filter, take } from 'rxjs';
 export class UsuarioHid {
   private srvModal = inject(ModalService);
   private srvForm = inject(FormBuilder);
-  private srvUsuarioHID = inject(UsuarioHIDService);
   private srvStorage = inject(StorageService);
   private srvUsuarioHidTipoCredencial = inject(UsuarioHidTipoCredencialService);
 
@@ -224,14 +223,15 @@ export class UsuarioHid {
             { condicion: 'Cancelado', aplicar: DataTableRegistroCampo.COLOR_BADGE_SECONDARY },
             { condicion: 'Reconocido', aplicar: DataTableRegistroCampo.COLOR_BADGE_PRIMARY },
             { condicion: 'Eliminado', aplicar: DataTableRegistroCampo.COLOR_BADGE_DANGER },
+            { condicion: 'Inactivo', aplicar: DataTableRegistroCampo.COLOR_BADGE_DANGER },
             { condicion: 'Sin estado', aplicar: DataTableRegistroCampo.COLOR_BADGE_DARK }
           ];
 
-           let strEstado: string = registro.estado === 1 ? 'Activo' : registro.estado === 2 ? 'Inactivo' : '';
-              let listEstado: IDTRCampoPropiedad[] = [
-                { condicion: 'Activo', aplicar: DataTableRegistroCampo.COLOR_BADGE_PRIMARY },
-                { condicion: 'Inactivo', aplicar: DataTableRegistroCampo.COLOR_BADGE_DANGER }
-              ];
+          let strEstado: string = registro.estado === 1 ? 'Activo' : registro.estado === 2 ? 'Inactivo' : '';
+          let listEstado: IDTRCampoPropiedad[] = [
+            { condicion: 'Activo', aplicar: DataTableRegistroCampo.COLOR_BADGE_PRIMARY },
+            { condicion: 'Inactivo', aplicar: DataTableRegistroCampo.COLOR_BADGE_DANGER }
+          ];
 
           let campos: IDataTableRegistroCampo[] = [];
           let campoLicencia: IDataTableRegistroCampo = new DataTableRegistroCampo();
@@ -280,7 +280,7 @@ export class UsuarioHid {
             DataTableRegistroCampo.CAMPO_TEXTO,
             false, true, true, true, true, 1, 1, 1
           );
-            let campoEstado: IDataTableRegistroCampo = new DataTableRegistroCampo();
+          let campoEstado: IDataTableRegistroCampo = new DataTableRegistroCampo();
 
           campoEstado.setValores(strEstado, DataTableRegistroCampo.CAMPO_BADGE, true, true, false, false, true, 0, 0, 1, listEstado);
 
@@ -293,8 +293,10 @@ export class UsuarioHid {
           campos.push(campoFechaCreacion);
           campos.push(campoEstado);
 
+          console.log("REGISTRO ::: ", registro);
+          const ocultarReactivar = registro.tipoCredencialId === "1a2b3c4d-5e6f-7890-abcd-ef1234567890";
           if (registro.id !== this.userId) {
-            this.tablaResultados?.addRegistro(strId, registro.estado!, campos);
+            this.tablaResultados?.addRegistro(strId, registro.estado!, campos, { mostrarReactivar: !ocultarReactivar });
           }
         });
       }
@@ -311,7 +313,10 @@ export class UsuarioHid {
       showCancelButton: true,
       confirmButtonText: 'Aceptar',
       cancelButtonText: 'Cancelar',
-      allowOutsideClick: false
+      allowOutsideClick: false,
+      customClass: {
+        popup: 'swal-theme',
+      }
     }).then((result) => {
       if (result.isConfirmed) {
         Swal.fire({
@@ -320,6 +325,9 @@ export class UsuarioHid {
           timerProgressBar: true,
           allowOutsideClick: false,
           showConfirmButton: false,
+          customClass: {
+            popup: 'swal-theme',
+          },
           willOpen: () => {
             Swal.showLoading();
           }
@@ -359,45 +367,72 @@ export class UsuarioHid {
           }
         });
       }
-
     });
-
-
   }
 
   reactivar(id: string) {
     if (id.trim().length == 0) { return }
-    // this.srvUsuario.reactivate(id).subscribe((resp: any) => {
-    //   if (resp.respuesta === true) {
-    //     Swal.fire({
-    //       title: 'Usuario reactivado',
-    //       text: 'El usuario se ha reactivado correctamente. Presiona "Aceptar" para continuar.',
-    //       icon: 'success',
-    //       confirmButtonText: 'Aceptar',
-    //       allowOutsideClick: false,   // evita cerrar clickeando fuera
-    //       allowEscapeKey: false,      // evita cerrar con ESC
-    //       allowEnterKey: true,         // permite confirmar con ENTER
-    //       customClass: {
-    //         popup: 'swal-theme',
-    //       }
-    //     }).then((result) => {
-    //       if (result.isConfirmed) {
-    //         this.buscar(); // actualiza la lista SOLO al aceptar
-    //       }
-    //     });
-    //   } else {
-    //     Swal.fire({
-    //       title: '¡Advertencia!',
-    //       text: 'No fue posible reactivar el usuario. Intenta nuevamente.',
-    //       icon: 'warning',
-    //       confirmButtonText: 'Aceptar',
-    //       allowOutsideClick: false,
-    //       customClass: {
-    //         popup: 'swal-theme',
-    //       }
-    //     });
-    //   }
-    // });
+
+    Swal.fire({
+      title: '¡Advertencia!',
+      text: 'El usuario está por reactivarse.',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'Aceptar',
+      cancelButtonText: 'Cancelar',
+      allowOutsideClick: false,
+      customClass: {
+        popup: 'swal-theme',
+      }
+    }).then((result) => {
+      if (result.isConfirmed) {
+        Swal.fire({
+          title: 'Procesando...',
+          text: 'Por favor espera',
+          timerProgressBar: true,
+          allowOutsideClick: false,
+          showConfirmButton: false,
+          customClass: {
+            popup: 'swal-theme',
+          },
+          willOpen: () => {
+            Swal.showLoading();
+          }
+        });
+
+        this.srvUsuarioHidTipoCredencial.reactivateCredentialUser(id, this.userData.usuarioId!).subscribe((resp: any) => {
+          if (resp.respuesta === true) {
+            Swal.fire({
+              title: 'Usuario reactivado',
+              text: 'El usuario se ha reactivado correctamente. Presiona "Aceptar" para continuar.',
+              icon: 'success',
+              confirmButtonText: 'Aceptar',
+              allowOutsideClick: false,   // evita cerrar clickeando fuera
+              allowEscapeKey: false,      // evita cerrar con ESC
+              allowEnterKey: true,         // permite confirmar con ENTER
+              customClass: {
+                popup: 'swal-theme',
+              }
+            }).then((result) => {
+              if (result.isConfirmed) {
+                this.buscar(); // actualiza la lista SOLO al aceptar
+              }
+            });
+          } else {
+            Swal.fire({
+              title: '¡Advertencia!',
+              text: 'No fue posible reactivar el usuario. Intenta nuevamente.',
+              icon: 'warning',
+              confirmButtonText: 'Aceptar',
+              allowOutsideClick: false,
+              customClass: {
+                popup: 'swal-theme',
+              }
+            });
+          }
+        });
+      }
+    });
   }
 
   ver(id: string) {

@@ -1,0 +1,229 @@
+<div>
+    <!-- Header -->
+    <div class="mb-4 flex justify-between">
+        <div class="inline-block">
+            <h3 class="font-semibold text-foreground">Plantilla de correo HID</h3>
+            <div class="space-x-1 text-xs font-medium text-muted-foreground">
+                <a [routerLink]="['/layout/dashboard/inicio']" class="hover:text-primary">Inicio</a>
+                <!-- <span> - Inicio</span> -->
+            </div>
+        </div>
+    </div>
+    <!-- end Header -->
+
+    <div class="grid grid-cols-12 gap-4">
+        <div class="col-span-12 flex-col rounded-lg bg-background px-8 py-8 sm:flex-row">
+            <p-tabs [(value)]="value">
+                <p-tablist>
+                    <p-tab [value]="0">Correo SMTP</p-tab>
+                    <p-tab [value]="1">Correo OAuth</p-tab>
+                </p-tablist>
+                <p-tabpanels>
+                    <p-tabpanel [value]="0">
+                        <form class="grid grid-cols-12 gap-4" autocomplete="off" [formGroup]="emailSMTPFG"
+                            (ngSubmit)="showEmailSMTP()" class="w-full">
+
+                            <div class="grid grid-cols-12 gap-4">
+                                <div class="col-span-12 md:col-span-6 xl:col-span-3 pt-0 flex align-items-center">
+                                    <div class="flex align-items-center gap-3">
+                                        <label for="chkProtocoloEnvioCorreoSMTP" class="ms-2 fw-bold">
+                                            Habilitar
+                                        </label>
+                                        <!-- <p-toggleswitch inputId="chkProtocoloEnvioCorreoSMTP"
+                                        formControlName="ProtocoloEnvioCorreo" class="switch-align"></p-toggleswitch> -->
+                                        <p-toggleswitch inputId="chkProtocoloEnvioCorreoSMTP"
+                                            formControlName="ProtocoloEnvioCorreo"
+                                            (onChange)="onProtocolToggleChange($event, 'SMTP')">
+                                        </p-toggleswitch>
+                                    </div>
+                                </div>
+
+                                <div class="col-span-12 md:col-span-6 xl:col-span-3 pt-0">
+                                    <label class="form-label">Correo <span class="text-danger">*</span></label>
+                                    <input required pInputText type="text" class="form-control" placeholder="Correo"
+                                        formControlName="Email" class="w-full">
+                                    <p-message severity="error"
+                                        *ngIf="emailSMTPFG.get('Email')?.errors?.['required'] && emailSMTPFG.get('Email')?.touched">
+                                        <i class="pi pi-exclamation-circle"></i> El correo es obligatorio
+                                    </p-message>
+                                    <p-message severity="error"
+                                        *ngIf="emailSMTPFG.get('Email')?.errors?.['email'] && emailSMTPFG.get('Email')?.touched && !emailSMTPFG.get('Email')?.errors?.['required']">
+                                        <i class="pi pi-exclamation-circle"></i> El correo no tiene un formato
+                                        válido
+                                    </p-message>
+                                </div>
+
+                                <div class="col-span-12 md:col-span-6 xl:col-span-3 pt-0">
+                                    <label class="form-label">Servidor SMTP <span class="text-danger">*</span></label>
+                                    <input required pInputText type="text" class="form-control"
+                                        placeholder="Servidor SMTP" formControlName="ServidorSMTP" class="w-full">
+                                    <p-message severity="error"
+                                        *ngIf="emailSMTPFG.get('ServidorSMTP')?.invalid && emailSMTPFG.get('ServidorSMTP')?.touched"
+                                        class="text-red-500">
+                                        <i class="pi pi-exclamation-circle"></i> El servidor SMTP es obligatorio
+                                    </p-message>
+                                </div>
+
+                                <div class="col-span-12 md:col-span-6 xl:col-span-3 pt-0">
+                                    <label required class="form-label">Puerto de salida <span
+                                            class="text-danger">*</span></label>
+                                    <input pInputText type="number" min="0" class="form-control"
+                                        placeholder="Puerto de salida" formControlName="Puerto" class="w-full">
+                                    <p-message severity="error"
+                                        *ngIf="emailSMTPFG.get('Puerto')?.invalid && emailSMTPFG.get('Puerto')?.touched"
+                                        class="text-red-500">
+                                        <i class="pi pi-exclamation-circle"></i> El puerto de salida es
+                                        obligatorio
+                                    </p-message>
+                                </div>
+
+                                <div class="col-span-12 md:col-span-6 xl:col-span-3 pt-0">
+                                    <label class="form-label">Nombre de usuario <span
+                                            class="text-danger">*</span></label>
+                                    <input required pInputText type="text" class="form-control"
+                                        placeholder="Nombre de usuario" formControlName="Usuario" class="w-full">
+                                    <p-message severity="error"
+                                        *ngIf="emailSMTPFG.get('Usuario')?.errors?.['required'] && emailSMTPFG.get('Usuario')?.touched">
+                                        <i class="pi pi-exclamation-circle"></i> El nombre de usuario es
+                                        obligatorio
+                                    </p-message>
+                                    <p-message severity="error"
+                                        *ngIf="emailSMTPFG.get('Usuario')?.errors?.['email'] && emailSMTPFG.get('Usuario')?.touched && !emailSMTPFG.get('Usuario')?.errors?.['required']">
+                                        <i class="pi pi-exclamation-circle"></i> El nombre de usuario no tiene
+                                        un formato
+                                        válido
+                                    </p-message>
+                                </div>
+
+                                <div class="col-span-12 md:col-span-6 xl:col-span-3 pt-0">
+                                    <label class="form-label">Contraseña <span class="text-danger">*</span></label>
+                                    <input required pInputText type="password" class="form-control"
+                                        placeholder="Contraseña" formControlName="Contrasena" class="w-full">
+                                    <p-message severity="error"
+                                        *ngIf="emailSMTPFG.get('Contrasena')?.invalid && emailSMTPFG.get('Contrasena')?.touched"
+                                        class="text-red-500">
+                                        <i class="pi pi-exclamation-circle"></i> La contraseña es obligatoria
+                                    </p-message>
+                                </div>
+
+                                <div class="col-span-12 md:col-span-6 xl:col-span-3 pt-0 flex align-items-center">
+                                    <div class="flex align-items-center gap-3">
+                                        <label for="chkSSL" class="ms-2 fw-bold">
+                                            Requiere SSL
+                                        </label>
+                                        <p-toggleswitch inputId="chkSSL" formControlName="SSL"
+                                            class="switch-align"></p-toggleswitch>
+                                    </div>
+                                </div>
+
+                                <div class="col-span-12 md:col-span-6 xl:col-span-3 pt-0 flex align-items-center">
+                                    <div class="flex align-items-center gap-3">
+                                        <label for="chkTLS1" class="ms-2 fw-bold">
+                                            Requiere TLS 1.2
+                                        </label>
+                                        <p-toggleswitch inputId="chkTLS1" formControlName="TLS1"
+                                            class="switch-align"></p-toggleswitch>
+                                    </div>
+                                </div>
+
+                                <div class="col-span-12 md:col-span-6 xl:col-span-3 pt-0 flex align-items-center">
+                                    <div class="flex align-items-center gap-3">
+                                        <label for="chkTLS2" class="ms-2 fw-bold">
+                                            Requiere TLS 1.3
+                                        </label>
+                                        <p-toggleswitch inputId="chkTLS2" formControlName="TLS2"
+                                            class="switch-align"></p-toggleswitch>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="flex justify-end space-x-3 pt-4 border-t border-border">
+                                <button type="submit"
+                                    class="rounded-md bg-primary px-4 py-2 text-xs font-semibold text-primary-foreground">
+                                    Guardar
+                                </button>
+                            </div>
+                        </form>
+                    </p-tabpanel>
+                    <p-tabpanel [value]="1">
+                        <form class="grid grid-cols-12 gap-4" autocomplete="off" [formGroup]="emailOAuthFG"
+                            (ngSubmit)="showEmailOAuth()" class="w-full">
+
+                            <div class="grid grid-cols-12 gap-4">
+                                <div class="col-span-12 md:col-span-6 xl:col-span-3 pt-0 flex align-items-center">
+                                    <div class="flex align-items-center gap-3">
+                                        <label for="chkProtocoloEnvioCorreoOAuth" class="ms-2 fw-bold">
+                                            Habilitar
+                                        </label>
+                                        <!-- <p-toggleswitch inputId="chkProtocoloEnvioCorreoOAuth"
+                                        formControlName="ProtocoloEnvioCorreo" class="switch-align"></p-toggleswitch> -->
+                                        <p-toggleswitch inputId="chkProtocoloEnvioCorreoOAuth"
+                                            formControlName="ProtocoloEnvioCorreo"
+                                            (onChange)="onProtocolToggleChange($event, 'OAuth')">
+                                        </p-toggleswitch>
+                                    </div>
+                                </div>
+
+                                <div class="col-span-12 md:col-span-6 xl:col-span-3 pt-0">
+                                    <label class="form-label">Tenant <span class="text-danger">*</span></label>
+                                    <input required pInputText type="text" class="form-control" placeholder="Tenant"
+                                        formControlName="Tenant" class="w-full">
+                                    <p-message severity="error"
+                                        *ngIf="emailOAuthFG.get('Tenant')?.invalid && emailOAuthFG.get('Tenant')?.touched"
+                                        class="text-red-500">
+                                        <i class="pi pi-exclamation-circle"></i> El tenant es obligatorio
+                                    </p-message>
+                                </div>
+
+                                <div class="col-span-12 md:col-span-6 xl:col-span-3 pt-0">
+                                    <label class="form-label">Client <span class="text-danger">*</span></label>
+                                    <input required pInputText type="text" class="form-control" placeholder="Client"
+                                        formControlName="Client" class="w-full">
+                                    <p-message severity="error"
+                                        *ngIf="emailOAuthFG.get('Client')?.invalid && emailOAuthFG.get('Client')?.touched"
+                                        class="text-red-500">
+                                        <i class="pi pi-exclamation-circle"></i> El client es obligatorio
+                                    </p-message>
+                                </div>
+
+                                <div class="col-span-12 md:col-span-6 xl:col-span-3 pt-0">
+                                    <label class="form-label">Client secret <span class="text-danger">*</span></label>
+                                    <input required pInputText type="password" class="form-control"
+                                        placeholder="Client secret" formControlName="ClientSecret" class="w-full">
+                                    <p-message severity="error"
+                                        *ngIf="emailOAuthFG.get('ClientSecret')?.invalid && emailOAuthFG.get('ClientSecret')?.touched"
+                                        class="text-red-500">
+                                        <i class="pi pi-exclamation-circle"></i> El client secret es obligatorio
+                                    </p-message>
+                                </div>
+
+                                <div class="col-span-12 md:col-span-6 xl:col-span-3 pt-0">
+                                    <label class="form-label">Correo <span class="text-danger">*</span></label>
+                                    <input required pInputText type="text" class="form-control" placeholder="Correo"
+                                        formControlName="Email" class="w-full">
+                                    <p-message severity="error"
+                                        *ngIf="emailOAuthFG.get('Email')?.errors?.['required'] && emailOAuthFG.get('Email')?.touched">
+                                        <i class="pi pi-exclamation-circle"></i> El correo es obligatorio
+                                    </p-message>
+                                    <p-message severity="error"
+                                        *ngIf="emailOAuthFG.get('Email')?.errors?.['email'] && emailOAuthFG.get('Email')?.touched && !emailOAuthFG.get('Email')?.errors?.['required']">
+                                        <i class="pi pi-exclamation-circle"></i> El correo no tiene un formato
+                                        válido
+                                    </p-message>
+                                </div>
+                            </div>
+
+                            <div class="flex justify-end space-x-3 pt-4 border-t border-border">
+                                <button type="submit"
+                                    class="rounded-md bg-primary px-4 py-2 text-xs font-semibold text-primary-foreground">
+                                    Guardar
+                                </button>
+                            </div>
+
+                        </form>
+                    </p-tabpanel>
+                </p-tabpanels>
+            </p-tabs>
+        </div>
+    </div>
+</div>

@@ -25,10 +25,11 @@ export class DetalleEmpresa {
 
   ngOnInit(): void {
     if (this.id !== undefined && this.id !== null && this.id !== "") {
-      this.srvEmpresa.getById(this.id).subscribe((s: any) => {
+      this.srvEmpresa.getComplete(this.id).subscribe((s: any) => {
         if (s.respuesta === true) {
-          console.log(s);
+          
           this.data = s.data;
+          console.log("DATA ::: ", this.data );
         }
       });
     }

@@ -3,10 +3,16 @@ import { RouterOutlet } from '@angular/router';
 import { NgxSonnerToaster } from 'ngx-sonner';
 import { ResponsiveHelper } from '../app/shared/components/responsive-helper/responsive-helper';
 import { ThemeService } from './core/services/theme.service';
+import { NgxSpinnerModule } from 'ngx-spinner';
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet, ResponsiveHelper, NgxSonnerToaster],
+  imports: [
+    RouterOutlet,
+    ResponsiveHelper,
+    NgxSonnerToaster,
+    NgxSpinnerModule
+  ],
   templateUrl: './app.html',
   styleUrl: './app.css'
 })

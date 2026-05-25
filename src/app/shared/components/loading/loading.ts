@@ -2,15 +2,22 @@ import { ChangeDetectorRef, Component, inject, Input, OnChanges, OnDestroy, OnIn
 import { LoadingService } from '../../services/loading.service';
 import { Subject, takeUntil } from 'rxjs';
 
+
+import { NgxSpinnerModule, NgxSpinnerService } from 'ngx-spinner';
+
 import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-loading',
-  imports: [],
+  imports: [
+    NgxSpinnerModule
+  ],
   templateUrl: './loading.html',
   styleUrl: './loading.css',
 })
 export class Loading implements OnChanges, OnInit, OnDestroy {
+  private spinner = inject(NgxSpinnerService);
+
   private _fuseLoadingService = inject(LoadingService);
   private _cdRef = inject(ChangeDetectorRef);
 
@@ -40,6 +47,7 @@ export class Loading implements OnChanges, OnInit, OnDestroy {
       .pipe(takeUntil(this._unsubscribeAll))
       .subscribe(progress => (this.progress = progress));
 
+    /*
     this._fuseLoadingService.show$
       .pipe(takeUntil(this._unsubscribeAll))
       .subscribe(show => {
@@ -55,9 +63,19 @@ export class Loading implements OnChanges, OnInit, OnDestroy {
           //     Swal.showLoading();
           //   }
           // });
-        } else {
-          // Swal.close();
         }
+      });
+    */
+    this._fuseLoadingService.show$
+      .pipe(takeUntil(this._unsubscribeAll))
+      .subscribe(show => {
+        // this.show = show;
+
+        // if (show) {
+        //   this.spinner.show();
+        // } else {
+        //   this.spinner.hide();
+        // }
       });
   }
 

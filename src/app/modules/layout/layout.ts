@@ -31,6 +31,7 @@ export class Layout implements OnInit {
     'fas fa-cog': 'assets/icons/heroicons/outline/cog.svg',
     'fas fa-users-cog': 'assets/icons/heroicons/outline/users.svg', // o 'cog-6-tooth.svg'
     'fas fa-qrcode': 'assets/icons/heroicons/outline/view-grid.svg', // o 'cube.svg'
+    'fas fa-building':'assets/icons/heroicons/outline/bookmark.svg'
     // Puedes agregar más mapeos si la API devuelve otros iconos
   };
 

@@ -110,6 +110,24 @@ export class EmpresaService {
         );
     }
 
+    getComplete(id: string) {
+        return this.http.get(`${url}EmpresaCliente/Complete/${id}`, {
+            headers: new HttpHeaders(
+                {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${localStorage.getItem('token')}`,
+                    'Empresa': `${localStorage.getItem('empresa')}`
+                })
+        }).pipe(
+            catchError((e: any) =>
+                of(e)
+            ),
+            switchMap((response: any) => {
+                return of(response);
+            })
+        );
+    }
+
     /**
  * Crea una tarea para probar la conexión HID.
  * POST /api/EmpresaCliente/TestConnection
@@ -150,6 +168,25 @@ export class EmpresaService {
                 return of({ respuesta: false, mensaje: 'Error al guardar', codigo: 500, data: null } as any);
             })
         );
+    }
+
+    update(data: { empresa: any; configuraciones: any[] }, id: string): Observable<any> {
+        return this.http.put(`${url}EmpresaCliente/Update?id=${id}`, data, {
+            headers: new HttpHeaders(
+                {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${localStorage.getItem('token')}`,
+                    'Empresa': `${localStorage.getItem('empresa')}`
+                })
+        })
+            .pipe(
+                catchError((e: any) =>
+                    of(e)
+                ),
+                switchMap((response: any) => {
+                    return of(response);
+                })
+            );
     }
 
     inactivate(id: string, usuarioBajaId: string) {

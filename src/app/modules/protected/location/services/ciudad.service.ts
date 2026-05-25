@@ -20,6 +20,9 @@ export class CiudadService {
         if (filter.Nombre !== undefined && filter.Nombre !== null && filter.Nombre !== "") {
             params = params.set('Nombre', filter.Nombre);
         }
+        if (filter.EstadoId !== undefined && filter.EstadoId !== null && filter.EstadoId !== "") {
+            params = params.set('EstadoId', filter.EstadoId);
+        }
         if (filter.Estado !== undefined && filter.Estado !== null && filter.Estado !== 0 && filter.Estado !== "") {
             params = params.set('Estado', filter.Estado);
         }
@@ -42,7 +45,7 @@ export class CiudadService {
             params: params
         };
 
-        return this.http.get(`${url}Perfil/GetAll`, opciones).pipe(
+        return this.http.get(`${url}Ciudad`, opciones).pipe(
             catchError((e: any) =>
                 of(e)
             ),

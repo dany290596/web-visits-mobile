@@ -20,6 +20,9 @@ export class PaisEstadoService {
         if (filter.Nombre !== undefined && filter.Nombre !== null && filter.Nombre !== "") {
             params = params.set('Nombre', filter.Nombre);
         }
+        if (filter.PaisId !== undefined && filter.PaisId !== null && filter.PaisId !== "") {
+            params = params.set('PaisId', filter.PaisId);
+        }
         if (filter.Estado !== undefined && filter.Estado !== null && filter.Estado !== 0 && filter.Estado !== "") {
             params = params.set('Estado', filter.Estado);
         }
@@ -42,7 +45,7 @@ export class PaisEstadoService {
             params: params
         };
 
-        return this.http.get(`${url}Perfil/GetAll`, opciones).pipe(
+        return this.http.get(`${url}PaisEstado`, opciones).pipe(
             catchError((e: any) =>
                 of(e)
             ),
@@ -53,7 +56,7 @@ export class PaisEstadoService {
     }
 
     getById(id: string) {
-        return this.http.get(`${url}Perfil/GetById/${id}`, {
+        return this.http.get(`${url}PaisEstado/GetById/${id}`, {
             headers: new HttpHeaders(
                 {
                     'Content-Type': 'application/json',
@@ -71,7 +74,7 @@ export class PaisEstadoService {
     }
 
     getByIdWithPermissions(id: string) {
-        return this.http.get(`${url}Perfil/GetConPermisos/${id}`, {
+        return this.http.get(`${url}PaisEstado/GetConPermisos/${id}`, {
             headers: new HttpHeaders(
                 {
                     'Content-Type': 'application/json',

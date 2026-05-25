@@ -15,6 +15,7 @@ import { PaisEstadoService } from '../../../../location/services/pais-estado.ser
 
 import { EmpresaService, TestConnectionDTO } from '../../../services/empresa.service';
 import Swal from 'sweetalert2';
+import { of, switchMap } from 'rxjs';
 
 export interface Pais {
   id: string;
@@ -49,7 +50,7 @@ export interface TabConfig {
 }
 
 @Component({
-  selector: 'app-agregar-empresa',
+  selector: 'app-editar-empresa',
   imports: [
     CommonModule,
     ReactiveFormsModule,
@@ -59,11 +60,11 @@ export interface TabConfig {
     Select,
     MessageModule,
   ],
-  templateUrl: './agregar-empresa.html',
-  styleUrl: './agregar-empresa.css',
+  templateUrl: './editar-empresa.html',
+  styleUrl: './editar-empresa.css',
   providers: [MessageService]
 })
-export class AgregarEmpresa implements OnInit {
+export class EditarEmpresa implements OnInit {
   private eventSource: EventSource | null = null;
   private srvEmpresa = inject(EmpresaService);
   private fb = inject(FormBuilder);
@@ -76,6 +77,7 @@ export class AgregarEmpresa implements OnInit {
 
   @Output() closeModal = new EventEmitter<boolean>();   // ✅ Cambiado a boolean
   @Input() empresaData?: any;
+  @Input() id!: string;
   @Input() nombre: string = 'Agregar empresa';
 
   // Señales de estado
@@ -158,7 +160,73 @@ export class AgregarEmpresa implements OnInit {
       this.isHid.set(val);
       if (!val) this.conexionExitosa.set(false);
     });
+
+    this.srvEmpresa.getComplete(this.id).subscribe({
+      next: ((resp) => {
+        console.log(JSON.stringify(resp));
+        if (resp.respuesta && resp.data) {
+          this.aplicarDatosEdicion(resp.data);
+        } else {
+          this.messageService.add({ severity: 'error', summary: 'Error', detail: 'No se pudo cargar la empresa' });
+        }
+      })
+    });
   }
+
+  private aplicarDatosEdicion(data: any): void {
+    // 1. Llenar campos del formulario (excepto ubicaciones)
+    this.form.patchValue({
+      razonSocial: data.razonSocial,
+      rfc: data.rfc,
+      telefonoEmpresa: data.telefonoEmpresa,
+      telefonoMovil: data.telefonoMovil,
+      correoElectronico: data.correoElectronico,
+      usaCredencialesHID: data.usaCredencialesHID === 1
+    });
+
+    // Actualizar la señal del toggle
+    this.isHid.set(data.usaCredencialesHID === 1);
+
+    // 2. Cargar configuraciones si vienen en la respuesta (ajusta según la estructura real)
+    if (data.configuraciones) {
+      this.configuraciones.set(data.configuraciones);
+    } else {
+      // Si no vienen, igual podemos usar las plantillas por defecto
+      this.cargarConfiguracionesHID();
+    }
+
+    // 3. Cascada de ubicaciones: primero país, luego estado, luego ciudad
+    if (data.paisId) {
+      this.form.get('paisId')?.setValue(data.paisId);
+      this.cargarEstados(data.paisId);
+
+      // Esperar a que carguen los estados y luego fijar estadoId
+      this.paisEstadoService.getAll({ PaisId: data.paisId, PageSize: 1000, PageNumber: 1 })
+        .pipe(
+          switchMap(estadosResp => {
+            if (estadosResp.respuesta) {
+              this.estados.set(estadosResp.data);
+              this.form.get('estadoId')?.enable();
+              if (data.estadoId) {
+                this.form.get('estadoId')?.setValue(data.estadoId);
+                return this.ciudadService.getAll({ EstadoId: data.estadoId, PageSize: 1000, PageNumber: 1 });
+              }
+            }
+            return of(null);
+          })
+        )
+        .subscribe((ciudadesResp: any) => {
+          if (ciudadesResp && ciudadesResp.respuesta) {
+            this.ciudades.set(ciudadesResp.data);
+            this.form.get('ciudadId')?.enable();
+            if (data.ciudadId) {
+              this.form.get('ciudadId')?.setValue(data.ciudadId);
+            }
+          }
+        });
+    }
+  }
+
 
   // ------------------------------------------------------------
   // Formulario y catálogos (sin cambios relevantes)
@@ -670,7 +738,7 @@ export class AgregarEmpresa implements OnInit {
 
     const payload = { empresa, configuraciones };
     console.log("JSON ::: ", payload);
-    this.srvEmpresa.create(payload).subscribe({
+    this.srvEmpresa.update(payload, this.id).subscribe({
       next: (resp) => {
         if (resp?.respuesta) {
           Swal.fire({

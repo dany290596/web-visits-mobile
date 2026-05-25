@@ -22,7 +22,8 @@ import Swal from 'sweetalert2';
 import { AutocEstado } from '../../../../../shared/components/autoc-estado/autoc-estado';
 
 import { AgregarEmpresa } from './agregar-empresa/agregar-empresa';
-import {DetalleEmpresa} from './detalle-empresa/detalle-empresa';
+import { DetalleEmpresa } from './detalle-empresa/detalle-empresa';
+import { EditarEmpresa } from './editar-empresa/editar-empresa';
 
 import { filter, take } from 'rxjs';
 import { IUsuarioAutenticado } from '../../../authentication/interfaces/usuario.interface';
@@ -266,14 +267,18 @@ export class Empresa {
 
   detalle(id: string) {
     if (id.trim().length == 0) { return }
-    const ref = this.srvModal.open(AgregarEmpresa, {
+    const ref = this.srvModal.open(EditarEmpresa, {
       id: id,
       nombre: "Editar empresa"
     }, 'max-w-5xl');
 
     if (ref && ref.instance) {
-      ref.instance.guardadoExitoso.subscribe((s: any) => {
-        this.buscar(true);
+      ref.instance.closeModal.subscribe((guardadoExitoso: boolean) => {
+        console.log("Se cerró el modal, guardadoExitoso:", guardadoExitoso);
+        if (guardadoExitoso) {
+          this.buscar(true); // refresca la tabla solo si se guardó algo
+        }
+        // No es necesario llamar a ref.close() porque el servicio ya lo hace
       });
     }
   }
