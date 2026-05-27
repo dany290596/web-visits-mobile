@@ -28,6 +28,9 @@ export class UsuarioHidTipoCredencialService {
         if (filter.Nombre !== null && filter.Nombre !== undefined && filter.Nombre !== "") {
             params = params.set('Nombre', filter.Nombre);
         }
+        if (filter.Email !== null && filter.Email !== undefined && filter.Email !== "") {
+            params = params.set('Email', filter.Email);
+        }
         if (filter.PageSize !== null && filter.PageSize !== undefined && filter.PageSize !== "") {
             params = params.set('PageSize', filter.PageSize);
         }

@@ -26,3 +26,11 @@ export class ICredencialHIDFilter {
     FechaReactivacionHasta: string = "";
     Estado: any;
 }
+
+export class ICredencialHIDRequest {
+    usuarioid?: any;
+    tipoCredencial?: any;
+    externalId?: any;
+    credencialValor?: any;
+    status?: any;
+}

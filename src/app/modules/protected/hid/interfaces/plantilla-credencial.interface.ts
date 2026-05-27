@@ -33,4 +33,5 @@ export class IPlantillaCredencialRequest {
     imagenLogo?: any;
     extensionImagenLogo?: any;
     usuarioCreadorId?: any;
+    appleId?: any;
 }

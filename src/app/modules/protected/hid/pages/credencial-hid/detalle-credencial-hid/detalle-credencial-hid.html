@@ -10,17 +10,18 @@
     <div class="grid grid-cols-12 gap-4">
         <!-- Nombre -->
         <div class="col-span-12 md:col-span-6 xl:col-span-3 pt-0">
-            Nombre: {{ data.nombreCompleto }}
+            Tipo de credencial: {{ data.tipoCredencial }}
         </div>
 
         <div class="col-span-12 md:col-span-6 xl:col-span-3 pt-0">
-            Telefono: {{ data.telefono }}
+            Dispositivo HID:
         </div>
 
         <div class="col-span-12 md:col-span-6 xl:col-span-6 pt-0">
-            Correo electronico: {{ data.email }}
+            Usuario HID:
         </div>
 
+        <!-- 
         @if(data.plataforma === 1){
         <div class="col-span-12 md:col-span-6 xl:col-span-3 pt-0">
             Plataforma: <p-chip label="Apple" icon="pi pi-apple" />
@@ -46,12 +47,11 @@
             Expiración invitación:
             {{ data.invitacionExpirationDate ? (data.invitacionExpirationDate | date:'dd/MM/yyyy HH:mm') : 'Sin datos'
             }}
-        </div>
+        </div> -->
 
-        <div class="col-span-12 md:col-span-6 xl:col-span-3 pt-0">
+        <!-- <div class="col-span-12 md:col-span-6 xl:col-span-3 pt-0">
             Status invitación: <p-chip [label]="data.statusDescripcion" icon="" />
-       
-        </div>
+        </div> -->
 
         <!-- Estado con badge -->
         <div class="col-span-12 md:col-span-6 xl:col-span-4">
@@ -60,31 +60,14 @@
         </div>
 
         <!-- Extensiones -->
-        <div class="col-span-12 md:col-span-6 xl:col-span-4">
+        <!-- <div class="col-span-12 md:col-span-6 xl:col-span-4">
             <label class="block text-sm font-medium text-muted-foreground">Extensiones</label>
             <p class="mt-1 text-foreground">Fondo: {{ data.extensionImagen }} | Logo: {{ data.extensionImagen
                 }}</p>
-        </div>
+        </div> -->
     </div>
 
-    <!-- Imágenes: Fondo y Logo en dos columnas usando p-card -->
-    <div class="grid grid-cols-1 md:grid-cols-1 gap-6 mb-6">
-        <!-- Imagen de Fondo -->
-        <div>
-            <label class="block text-sm font-medium text-muted-foreground mb-2">Imagen del usuario</label>
-            <p-card styleClass="flex justify-center items-center"
-                [style]="{'min-height': '200px', 'border': '1px solid var(--border-color)', 'border-radius': '0.5rem', 'background': 'var(--muted/0.2)'}">
-                <div class="flex justify-center items-center w-full h-full">
-                    @if (data.imagenBase64) {
-                    <img [src]="data.imagenBase64" alt="Fondo" class="max-w-full max-h-48 object-contain">
-                    } @else {
-                    <p class="text-muted-foreground text-sm">Sin imagen</p>
-                    }
-                </div>
-            </p-card>
-            <p class="text-xs text-muted-foreground mt-1">Archivo: {{ data.imagen || 'Sin foto' }}</p>
-        </div>
-    </div>
+
 
     <!-- Información de auditoría -->
     <div class="grid grid-cols-12 gap-4 text-xs text-muted-foreground border-t pt-4 mt-4">
@@ -103,12 +86,11 @@
 
     <!-- Botón cerrar -->
     <div class="flex justify-end space-x-3 pt-4 border-t border-border">
-        @if (data.estado === 1) {
-          <button type="button" (click)="cerrar()"
+        <button type="button" (click)="suspender()"
             class="rounded-md bg-primary px-4 py-2 text-xs font-semibold text-primary-foreground">
-            Enviar código
+            Suspender
         </button>
-    }
+
         <button type="button" (click)="cerrar()"
             class="rounded-md bg-primary px-4 py-2 text-xs font-semibold text-primary-foreground">
             Cerrar

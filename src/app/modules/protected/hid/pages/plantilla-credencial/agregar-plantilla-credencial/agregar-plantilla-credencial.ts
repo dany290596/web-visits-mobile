@@ -14,12 +14,15 @@ import { FileUpload, FileUploadModule } from 'primeng/fileupload';
 import { MessageService } from 'primeng/api';
 import { PlantillaCredencialService } from '../../../services/plantilla-credencial.service';
 
-
 import Swal from 'sweetalert2';
 import { StorageService } from '../../../../../auth/services/storage.service';
-import { filter, switchMap, take } from 'rxjs';
+import { filter, take } from 'rxjs';
 import { IUsuarioAutenticado } from '../../../../../../modules/protected/authentication/interfaces/usuario.interface';
 
+// Librería para redimensionar imágenes
+import pica from 'pica';
+
+const UUID_PATTERN = /^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$/;
 
 @Component({
   selector: 'app-agregar-plantilla-credencial',
@@ -42,15 +45,13 @@ export class AgregarPlantillaCredencial {
   private srvStorage = inject(StorageService);
 
   @Output() closeModal = new EventEmitter<void>();
-  @Output() guardadoExitoso = new EventEmitter<any>(); // para refrescar la tabla
+  @Output() guardadoExitoso = new EventEmitter<any>();
   @Input() id!: string;
   @Input() nombre!: string;
   @Input() action!: string;
 
   @ViewChild('fondoUpload') fondoUpload!: FileUpload;
   @ViewChild('logoUpload') logoUpload!: FileUpload;
-
-
 
   @ViewChild('fileFondo') fileFondo!: ElementRef<HTMLInputElement>;
 
@@ -59,18 +60,18 @@ export class AgregarPlantillaCredencial {
   }
 
   userData!: IUsuarioAutenticado;
-
   private fb = inject(FormBuilder);
 
   imagenFondoPreview: string | ArrayBuffer | null = null;
   imagenLogoPreview: string | ArrayBuffer | null = null;
-
+  logoDimensions: { width: number; height: number } | null = null;
 
   miFormulario: FormGroup = this.fb.group({
     nombre: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(50)]],
-    imagenFondo: [null],
+    appleId: ['', [Validators.required, Validators.pattern(UUID_PATTERN)]],
+    imagenFondo: [null, Validators.required],
     extensionImagenFondo: [null],
-    imagenLogo: [null],
+    imagenLogo: [null, Validators.required],
     extensionImagenLogo: [null]
   });
 
@@ -82,7 +83,6 @@ export class AgregarPlantillaCredencial {
       )
       .subscribe((data: IUsuarioAutenticado) => {
         this.userData = data;
-        console.log("WWW ::: ", this.userData);
       });
   }
 
@@ -90,7 +90,6 @@ export class AgregarPlantillaCredencial {
     const file = event.files[0];
     if (!file) return;
 
-    // Validar tipo de imagen profesional
     const validTypes = ['image/png'];
     if (!validTypes.includes(file.type)) {
       Swal.fire({
@@ -100,28 +99,27 @@ export class AgregarPlantillaCredencial {
         title: 'Formato inválido',
         text: 'Solo se permiten PNG.',
         showConfirmButton: false,
-        timer: 3000
+        timer: 3000,
+        customClass: { popup: 'swal-theme' }
       });
       return;
     }
 
+    if (tipo === 'logo') {
+      this.procesarLogo(file);
+      return;
+    }
+
+    // Lógica para fondo (sin cambios)
     const reader = new FileReader();
     reader.onload = () => {
       const base64WithPrefix = reader.result as string;
       const base64 = base64WithPrefix.split(',')[1];
-      if (tipo === 'fondo') {
-        this.miFormulario.patchValue({
-          imagenFondo: base64,
-          extensionImagenFondo: this.getExtension(file.name)
-        });
-        this.imagenFondoPreview = base64WithPrefix;
-      } else {
-        this.miFormulario.patchValue({
-          imagenLogo: base64,
-          extensionImagenLogo: this.getExtension(file.name)
-        });
-        this.imagenLogoPreview = base64WithPrefix;
-      }
+      this.miFormulario.patchValue({
+        imagenFondo: base64,
+        extensionImagenFondo: this.getExtension(file.name)
+      });
+      this.imagenFondoPreview = base64WithPrefix;
       Swal.fire({
         toast: true,
         position: 'top-end',
@@ -129,8 +127,98 @@ export class AgregarPlantillaCredencial {
         title: 'Imagen cargada',
         text: file.name,
         showConfirmButton: false,
-        timer: 2000
+        timer: 2000,
+        customClass: { popup: 'swal-theme' }
       });
+    };
+    reader.readAsDataURL(file);
+  }
+
+  private procesarLogo(file: File) {
+    const reader = new FileReader();
+    reader.onload = () => {
+      const dataUrl = reader.result as string;
+      const img = new Image();
+      img.onload = () => {
+        const w = img.naturalWidth;
+        const h = img.naturalHeight;
+
+        // Validar que sea cuadrada (relación de aspecto 1:1)
+        if (w !== h) {
+          Swal.fire({
+            toast: true,
+            position: 'top-end',
+            icon: 'error',
+            title: 'Formato incorrecto',
+            text: 'La imagen debe ser cuadrada (mismo ancho y alto).',
+            showConfirmButton: false,
+            timer: 3000,
+            customClass: { popup: 'swal-theme' }
+          });
+          this.logoUpload.clear();
+          return;
+        }
+
+        // Redimensionar a 200x200 usando pica
+        const canvasOrigen = document.createElement('canvas');
+        canvasOrigen.width = w;
+        canvasOrigen.height = h;
+        const ctx = canvasOrigen.getContext('2d')!;
+        ctx.drawImage(img, 0, 0);
+
+        const canvasDestino = document.createElement('canvas');
+        canvasDestino.width = 200;
+        canvasDestino.height = 200;
+
+        const picaInstance = pica();
+        picaInstance.resize(canvasOrigen, canvasDestino)
+          .then(() => {
+            const resizedDataUrl = canvasDestino.toDataURL('image/png');
+            const base64 = resizedDataUrl.split(',')[1];
+            this.miFormulario.patchValue({
+              imagenLogo: base64,
+              extensionImagenLogo: 'png'
+            });
+            this.imagenLogoPreview = resizedDataUrl;
+            this.logoDimensions = { width: 200, height: 200 };
+            Swal.fire({
+              toast: true,
+              position: 'top-end',
+              icon: 'success',
+              title: 'Logo redimensionado',
+              text: 'Imagen redimensionada a 200×200 px.',
+              showConfirmButton: false,
+              timer: 2000
+            });
+          })
+          .catch(() => {
+            Swal.fire({
+              toast: true,
+              position: 'top-end',
+              icon: 'error',
+              title: 'Error al redimensionar',
+              text: 'No se pudo procesar la imagen.',
+              showConfirmButton: false,
+              timer: 3000,
+              customClass: { popup: 'swal-theme' }
+            });
+            this.logoUpload.clear();
+          });
+      };
+      img.onerror = () => {
+        Swal.fire({
+          toast: true,
+          position: 'top-end',
+          icon: 'error',
+          title: 'Imagen inválida',
+          text: 'El archivo no es una imagen válida.',
+          showConfirmButton: false,
+          timer: 3000,
+          customClass: { popup: 'swal-theme' }
+        });
+        this.logoUpload.clear();
+      };
+      img.src = dataUrl;
     };
     reader.readAsDataURL(file);
   }
@@ -142,7 +230,10 @@ export class AgregarPlantillaCredencial {
     } else {
       this.miFormulario.patchValue({ imagenLogo: null, extensionImagenLogo: null });
       this.imagenLogoPreview = null;
+      this.logoDimensions = null;
     }
+
+    this.miFormulario.get(tipo === 'fondo' ? 'imagenFondo' : 'imagenLogo')?.markAsTouched();
   }
 
   private getExtension(filename: string): string {
@@ -154,7 +245,7 @@ export class AgregarPlantillaCredencial {
       this.miFormulario.markAllAsTouched();
       Swal.fire({
         title: '¡Advertencia!',
-        text: 'Complete el campo obligatorio.',
+        text: 'Complete los campos obligatorios.',
         icon: 'warning',
         confirmButtonText: 'Aceptar',
         confirmButtonColor: '#2563EB',
@@ -164,28 +255,39 @@ export class AgregarPlantillaCredencial {
     }
 
     const formValue = this.miFormulario.value;
+
+    // Validación extra: el logo debe ser 200x200 (ya lo aseguramos al subir)
+    if (formValue.imagenLogo) {
+      if (!this.logoDimensions || this.logoDimensions.width !== 200 || this.logoDimensions.height !== 200) {
+        Swal.fire({
+          toast: true,
+          position: 'top-end',
+          icon: 'error',
+          title: 'Logo inválido',
+          text: 'El logo debe medir exactamente 200×200 píxeles.',
+          showConfirmButton: false,
+          timer: 3000,
+          customClass: { popup: 'swal-theme' }
+        });
+        return;
+      }
+    }
+
     const request = new IPlantillaCredencialRequest();
-
-
-
-
     request.nombre = formValue.nombre;
-
     request.imagenFondo = formValue.imagenFondo;
     request.extensionImagenFondo = formValue.extensionImagenFondo;
-
     request.imagenLogo = formValue.imagenLogo;
     request.extensionImagenLogo = formValue.extensionImagenLogo;
-
     request.usuarioCreadorId = this.userData.usuarioId;
+    request.appleId = formValue.appleId;
 
-    console.log("REQUEST ::: ", request);
+    console.log('REQUEST ::: ', request);
 
     this.srvPlantillaCredencial.create(request).subscribe((data: any) => {
       if (data.respuesta === true) {
-        this.srvMessage.add({ severity: 'success', summary: 'Éxito', detail: 'Perfil creado', life: 3000 });
+        this.srvMessage.add({ severity: 'success', summary: 'Éxito', detail: 'Plantilla creada', life: 3000 });
         this.miFormulario.reset();
-
         Swal.fire({
           title: '¡Éxito!',
           text: 'La plantilla ha sido registrada correctamente.',
@@ -201,7 +303,7 @@ export class AgregarPlantillaCredencial {
           }
         });
       } else {
-        this.srvMessage.add({ severity: 'error', summary: 'Error', detail: 'No se pudo crear el perfil', life: 5000 });
+        this.srvMessage.add({ severity: 'error', summary: 'Error', detail: 'No se pudo crear la plantilla', life: 5000 });
       }
     });
   }
@@ -215,6 +317,7 @@ export class AgregarPlantillaCredencial {
       this.fondoUpload.choose();
     }
   }
+
   seleccionarLogo() {
     if (this.logoUpload) {
       this.logoUpload.choose();
@@ -223,11 +326,9 @@ export class AgregarPlantillaCredencial {
 
   forzarCargaPrimeNG(uploader: FileUpload): void {
     if (uploader) {
-      // Rompemos la limitación de PrimeNG accediendo directamente a la propiedad nativa del input del navegador
       const inputNativo = uploader.basicFileInput?.nativeElement;
-
       if (inputNativo) {
-        inputNativo.click(); // Dispara el explorador del S.O de forma obligatoria
+        inputNativo.click();
       }
     }
   }

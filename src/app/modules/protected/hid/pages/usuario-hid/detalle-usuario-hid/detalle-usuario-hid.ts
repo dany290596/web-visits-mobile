@@ -5,10 +5,16 @@ import { UsuarioHIDService } from '../../../services/usuario-hid.service';
 import { TagModule } from 'primeng/tag';
 import { CommonModule } from '@angular/common';
 import { CardModule } from 'primeng/card';
+import { ChipModule } from 'primeng/chip';
 
 @Component({
   selector: 'app-detalle-usuario-hid',
-  imports: [CommonModule, TagModule, CardModule],
+  imports: [
+    CommonModule,
+    TagModule,
+    CardModule,
+    ChipModule
+  ],
   templateUrl: './detalle-usuario-hid.html',
   styleUrl: './detalle-usuario-hid.css',
 })

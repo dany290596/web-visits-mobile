@@ -1,7 +1,6 @@
-import { Component, inject, OnInit, EventEmitter, Output, Input, ViewChild, ElementRef } from '@angular/core';
+import { Component, inject, EventEmitter, Output, Input, ViewChild, ElementRef } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-import { Router } from '@angular/router';
 
 import { IPlantillaCredencialRequest } from '../../../interfaces/plantilla-credencial.interface';
 
@@ -17,8 +16,14 @@ import { PlantillaCredencialService } from '../../../services/plantilla-credenci
 
 import Swal from 'sweetalert2';
 import { StorageService } from '../../../../../auth/services/storage.service';
-import { filter, switchMap, take } from 'rxjs';
+import { filter, take } from 'rxjs';
 import { IUsuarioAutenticado } from '../../../../../../modules/protected/authentication/interfaces/usuario.interface';
+
+// Librería para redimensionar imágenes
+import pica from 'pica';
+
+const UUID_PATTERN = /^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$/;
+
 
 @Component({
   selector: 'app-editar-plantilla-credencial',
@@ -63,14 +68,15 @@ export class EditarPlantillaCredencial {
 
   imagenFondoPreview: string | ArrayBuffer | null = null;
   imagenLogoPreview: string | ArrayBuffer | null = null;
-
+  logoDimensions: { width: number; height: number } | null = null;
 
   miFormulario: FormGroup = this.fb.group({
     nombre: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(50)]],
+    appleId: ['', [Validators.required, Validators.pattern(UUID_PATTERN)]],
     imagenFondo: [null, Validators.required],
-    extensionImagenFondo: [null, Validators.required],
+    extensionImagenFondo: [null],
     imagenLogo: [null, Validators.required],
-    extensionImagenLogo: [null, Validators.required]
+    extensionImagenLogo: [null]
   });
 
   ngOnInit(): void {
@@ -81,15 +87,15 @@ export class EditarPlantillaCredencial {
       )
       .subscribe((data: IUsuarioAutenticado) => {
         this.userData = data;
-        console.log("WWW ::: ", this.userData);
       });
 
     if (this.id !== undefined && this.id !== null && this.id !== "") {
       this.srvPlantillaCredencial.getById(this.id).subscribe((data: any) => {
         if (data.respuesta === true) {
 
-
           const plantilla = data.data;
+
+          console.log("PLANTILLA ::: ", plantilla);
 
           // --- Previsualizaciones ---
           this.imagenFondoPreview = plantilla.imagenFondoBase64 || null;
@@ -100,6 +106,7 @@ export class EditarPlantillaCredencial {
           // NO el Base64, para que el backend entienda que no se cambió la imagen.
           this.miFormulario.patchValue({
             nombre: plantilla.nombre,
+            appleId: plantilla.appleId,
             imagenFondo: plantilla.imagenFondo === 'Sin foto' ? null : plantilla.imagenFondo,
             extensionImagenFondo: plantilla.imagenFondo === 'Sin foto' ? null : plantilla.extensionImagenFondo,
             imagenLogo: plantilla.imagenLogo === 'Sin foto' ? null : plantilla.imagenLogo,
@@ -124,8 +131,14 @@ export class EditarPlantillaCredencial {
         title: 'Formato inválido',
         text: 'Solo se permiten PNG.',
         showConfirmButton: false,
-        timer: 3000
+        timer: 3000,
+        customClass: { popup: 'swal-theme' }
       });
+      return;
+    }
+
+    if (tipo === 'logo') {
+      this.procesarLogo(file);
       return;
     }
 
@@ -153,8 +166,98 @@ export class EditarPlantillaCredencial {
         title: 'Imagen cargada',
         text: file.name,
         showConfirmButton: false,
-        timer: 2000
+        timer: 2000,
+        customClass: { popup: 'swal-theme' }
       });
+    };
+    reader.readAsDataURL(file);
+  }
+
+  private procesarLogo(file: File) {
+    const reader = new FileReader();
+    reader.onload = () => {
+      const dataUrl = reader.result as string;
+      const img = new Image();
+      img.onload = () => {
+        const w = img.naturalWidth;
+        const h = img.naturalHeight;
+
+        // Validar que sea cuadrada (relación de aspecto 1:1)
+        if (w !== h) {
+          Swal.fire({
+            toast: true,
+            position: 'top-end',
+            icon: 'error',
+            title: 'Formato incorrecto',
+            text: 'La imagen debe ser cuadrada (mismo ancho y alto).',
+            showConfirmButton: false,
+            timer: 3000,
+            customClass: { popup: 'swal-theme' }
+          });
+          this.logoUpload.clear();
+          return;
+        }
+
+        // Redimensionar a 200x200 usando pica
+        const canvasOrigen = document.createElement('canvas');
+        canvasOrigen.width = w;
+        canvasOrigen.height = h;
+        const ctx = canvasOrigen.getContext('2d')!;
+        ctx.drawImage(img, 0, 0);
+
+        const canvasDestino = document.createElement('canvas');
+        canvasDestino.width = 200;
+        canvasDestino.height = 200;
+
+        const picaInstance = pica();
+        picaInstance.resize(canvasOrigen, canvasDestino)
+          .then(() => {
+            const resizedDataUrl = canvasDestino.toDataURL('image/png');
+            const base64 = resizedDataUrl.split(',')[1];
+            this.miFormulario.patchValue({
+              imagenLogo: base64,
+              extensionImagenLogo: 'png'
+            });
+            this.imagenLogoPreview = resizedDataUrl;
+            this.logoDimensions = { width: 200, height: 200 };
+            Swal.fire({
+              toast: true,
+              position: 'top-end',
+              icon: 'success',
+              title: 'Logo redimensionado',
+              text: 'Imagen redimensionada a 200×200 px.',
+              showConfirmButton: false,
+              timer: 2000
+            });
+          })
+          .catch(() => {
+            Swal.fire({
+              toast: true,
+              position: 'top-end',
+              icon: 'error',
+              title: 'Error al redimensionar',
+              text: 'No se pudo procesar la imagen.',
+              showConfirmButton: false,
+              timer: 3000,
+              customClass: { popup: 'swal-theme' }
+            });
+            this.logoUpload.clear();
+          });
+      };
+      img.onerror = () => {
+        Swal.fire({
+          toast: true,
+          position: 'top-end',
+          icon: 'error',
+          title: 'Imagen inválida',
+          text: 'El archivo no es una imagen válida.',
+          showConfirmButton: false,
+          timer: 3000,
+          customClass: { popup: 'swal-theme' }
+        });
+        this.logoUpload.clear();
+      };
+      img.src = dataUrl;
     };
     reader.readAsDataURL(file);
   }
@@ -170,7 +273,10 @@ export class EditarPlantillaCredencial {
       this.miFormulario.get('imagenLogo')?.markAsTouched();
       this.miFormulario.get('extensionImagenLogo')?.markAsTouched();
       this.imagenLogoPreview = null;
+      this.logoDimensions = null;
     }
+
+    this.miFormulario.get(tipo === 'fondo' ? 'imagenFondo' : 'imagenLogo')?.markAsTouched();
   }
 
   private getExtension(filename: string): string {
@@ -205,10 +311,25 @@ export class EditarPlantillaCredencial {
     }
 
     const formValue = this.miFormulario.value;
+
+    // Validación extra: el logo debe ser 200x200 (ya lo aseguramos al subir)
+    if (formValue.imagenLogo && this.logoDimensions) {
+      if (this.logoDimensions.width !== 200 || this.logoDimensions.height !== 200) {
+        Swal.fire({
+          toast: true,
+          position: 'top-end',
+          icon: 'error',
+          title: 'Logo inválido',
+          text: 'El logo debe medir exactamente 200×200 píxeles.',
+          showConfirmButton: false,
+          timer: 3000,
+          customClass: { popup: 'swal-theme' }
+        });
+        return;
+      }
+    }
+
     const request = new IPlantillaCredencialRequest();
-
-
-
 
     request.nombre = formValue.nombre;
 
@@ -219,6 +340,8 @@ export class EditarPlantillaCredencial {
     request.extensionImagenLogo = formValue.extensionImagenLogo;
 
     request.usuarioCreadorId = this.userData.usuarioId;
+
+    request.appleId = formValue.appleId;
 
     console.log("REQUEST ::: ", request);
 

@@ -11,7 +11,7 @@
     <form autocomplete="off" [formGroup]="miFormulario" (ngSubmit)="guardar()" class="space-y-6">
         <!-- Campo Nombre -->
         <div class="grid grid-cols-12 gap-4">
-            <div class="col-span-12 md:col-span-12 xl:col-span-12 pt-0">
+            <div class="col-span-12 md:col-span-6 xl:col-span-6 pt-0">
                 <label class="form-label fw-semibold">Nombre <span class="text-red-500">*</span></label>
                 <input pInputText type="text" formControlName="nombre" placeholder="Nombre del perfil" class="w-full" />
                 <!-- Mensajes de error -->
@@ -29,6 +29,23 @@
                     *ngIf="miFormulario.controls['nombre'].errors?.['maxlength'] && miFormulario.controls['nombre'].touched"
                     class="p-error block">
                     <i class="pi pi-exclamation-circle"></i> El nombre no puede tener más de 50 caracteres.
+                </p-message>
+            </div>
+
+            <!-- Apple Id -->
+            <div class="col-span-12 md:col-span-6 xl:col-span-6 pt-0">
+                <label class="form-label fw-semibold">Apple Id <span class="text-red-500">*</span></label>
+                <input pInputText type="text" formControlName="appleId"
+                    placeholder="Ej: 550e8400-e29b-41d4-a716-446655440000" class="w-full" />
+                <p-message severity="error" class="text-red-500 text-xs mt-1"
+                    *ngIf="miFormulario.controls['appleId'].errors?.['required'] && miFormulario.controls['appleId'].touched">
+                    <i class="pi pi-exclamation-circle"></i>
+                    El Apple ID es requerido.
+                </p-message>
+                <p-message severity="error" class="text-red-500 text-xs mt-1"
+                    *ngIf="miFormulario.controls['appleId'].errors?.['pattern'] && miFormulario.controls['appleId'].touched">
+                    <i class="pi pi-exclamation-circle"></i>
+                    Debe ser un GUID válido (ej: 550e8400-e29b-41d4-a716-446655440000).
                 </p-message>
             </div>
         </div>
@@ -52,7 +69,6 @@
                 <p-fileUpload #fondoUpload mode="basic" name="fondo" accept="image/png" [maxFileSize]="5000000"
                     (onSelect)="onFileSelected($event, 'fondo')" [style]="{ display: 'none' }" [auto]="true">
                 </p-fileUpload>
-
 
                 <!-- Área de carga corporativa -->
                 <div *ngIf="!imagenFondoPreview" (click)="forzarCargaPrimeNG(fondoUpload)"
@@ -88,6 +104,13 @@
                         </div>
                     </div>
                 </div>
+
+                <!-- Mensaje de error cuando la imagen de fondo es obligatoria -->
+                <p-message severity="error" class="text-red-500 text-xs mt-2"
+                    *ngIf="miFormulario.controls['imagenFondo'].errors?.['required'] && miFormulario.controls['imagenFondo'].touched">
+                    <i class="pi pi-exclamation-circle"></i>
+                    La imagen de fondo es obligatoria.
+                </p-message>
             </div>
 
             <!-- Logo -->
@@ -138,10 +161,15 @@
                         </div>
                     </div>
                 </div>
+
+                <!-- Mensaje de error cuando el logo es obligatorio -->
+                <p-message severity="error" class="text-red-500 text-xs mt-2"
+                    *ngIf="miFormulario.controls['imagenLogo'].errors?.['required'] && miFormulario.controls['imagenLogo'].touched">
+                    <i class="pi pi-exclamation-circle"></i>
+                    El logo es obligatorio.
+                </p-message>
             </div>
         </div>
-
-
 
         <!-- Botones finales -->
         <div class="flex justify-end space-x-3 pt-4 border-t border-border">
