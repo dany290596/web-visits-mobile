@@ -85,14 +85,15 @@
                 </p-fileUpload>
 
                 <div *ngIf="!imagenFondoPreview" (click)="forzarCargaPrimeNG(fondoUpload)"
+                    pTooltip="Dimensiones máximas: 1456×928 px" tooltipPosition="top"
                     class="flex flex-col items-center justify-center py-8 px-4 text-slate-400 bg-slate-50/80 rounded-xl border-2 border-dashed border-slate-300 hover:border-primary hover:bg-blue-50/30 hover:text-primary transition-all cursor-pointer group">
                     <div
                         class="w-14 h-14 rounded-full bg-slate-100 flex items-center justify-center mb-3 group-hover:bg-blue-100 group-hover:scale-110 transition-transform">
                         <i class="pi pi-cloud-upload text-2xl"></i>
                     </div>
-                    <p class="text-sm font-medium text-slate-600 group-hover:text-primary">Arrastra o selecciona una
+                    <p class="text-sm font-medium text-slate-600 group-hover:text-primary">Selecciona una
                         imagen</p>
-                    <p class="text-xs mt-1">PNG (máx. 5 MB)</p>
+                    <p class="text-xs mt-1">PNG (máx. 5 MB) – Dimensiones máximas: 1456×928 px</p>
                 </div>
 
                 <div *ngIf="imagenFondoPreview"
@@ -142,12 +143,13 @@
                 </p-fileUpload>
 
                 <div *ngIf="!imagenLogoPreview" (click)="forzarCargaPrimeNG(logoUpload)"
+                    pTooltip="Debe ser cuadrada (se redimensiona a 200×200 px)" tooltipPosition="top"
                     class="flex flex-col items-center justify-center py-8 px-4 text-slate-400 bg-slate-50/80 rounded-xl border-2 border-dashed border-slate-300 hover:border-primary hover:bg-amber-50/30 hover:text-primary transition-all cursor-pointer group">
                     <div
                         class="w-14 h-14 rounded-full bg-slate-100 flex items-center justify-center mb-3 group-hover:bg-amber-100 group-hover:scale-110 transition-transform">
                         <i class="pi pi-cloud-upload text-2xl"></i>
                     </div>
-                    <p class="text-sm font-medium text-slate-600 group-hover:text-primary">Arrastra o selecciona una
+                    <p class="text-sm font-medium text-slate-600 group-hover:text-primary">Selecciona una
                         imagen</p>
                     <p class="text-xs mt-1">PNG – Debe ser cuadrada (se redimensiona a 200×200 px)</p>
                 </div>

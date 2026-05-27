@@ -87,6 +87,7 @@ export class AgregarPlantillaCredencial {
   }
 
   onFileSelected(event: any, tipo: 'fondo' | 'logo') {
+    Swal.close();
     const file = event.files[0];
     if (!file) return;
 
@@ -114,22 +115,68 @@ export class AgregarPlantillaCredencial {
     const reader = new FileReader();
     reader.onload = () => {
       const base64WithPrefix = reader.result as string;
-      const base64 = base64WithPrefix.split(',')[1];
-      this.miFormulario.patchValue({
-        imagenFondo: base64,
-        extensionImagenFondo: this.getExtension(file.name)
-      });
-      this.imagenFondoPreview = base64WithPrefix;
-      Swal.fire({
-        toast: true,
-        position: 'top-end',
-        icon: 'success',
-        title: 'Imagen cargada',
-        text: file.name,
-        showConfirmButton: false,
-        timer: 2000,
-        customClass: { popup: 'swal-theme' }
-      });
+      const img = new Image();
+      img.onload = () => {
+        const w = img.naturalWidth;
+        const h = img.naturalHeight;
+        const maxWidth = 1456;
+        const maxHeight = 928;
+
+        // Validar que no exceda las dimensiones máximas
+        if (w > maxWidth || h > maxHeight) {
+          Swal.fire({
+            toast: true,
+            position: 'top-end',
+            icon: 'error',
+            title: 'Dimensiones no permitidas',
+            text: `La imagen de fondo no puede exceder ${maxWidth}×${maxHeight} píxeles. La tuya mide ${w}×${h} px.`,
+            showConfirmButton: false,
+            showCloseButton: true,
+            allowOutsideClick: true,
+            backdrop: false,
+            timer: 5000,
+            customClass: { popup: 'swal-theme' }
+          });
+          this.fondoUpload.clear();           // Limpia el componente de subida
+          this.imagenFondoPreview = null;     // Quita la vista previa
+          return;
+        }
+
+        // Procesamiento normal
+        const base64 = base64WithPrefix.split(',')[1];
+        this.miFormulario.patchValue({
+          imagenFondo: base64,
+          extensionImagenFondo: this.getExtension(file.name)
+        });
+        this.imagenFondoPreview = base64WithPrefix;
+        Swal.fire({
+          toast: true,
+          position: 'top-end',
+          icon: 'success',
+          title: 'Imagen de fondo cargada',
+          text: file.name,
+          showConfirmButton: false,
+          showCloseButton: true,
+          allowOutsideClick: true,
+          backdrop: false,
+          timer: 5000,
+          customClass: { popup: 'swal-theme' }
+        });
+      };
+      img.onerror = () => {
+        Swal.fire({
+          toast: true,
+          position: 'top-end',
+          icon: 'error',
+          title: 'Imagen de fondo es inválida',
+          text: 'El archivo no es una imagen de fondo válida.',
+          showConfirmButton: false,
+          timer: 4000,
+          customClass: { popup: 'swal-theme' }
+        });
+        this.fondoUpload.clear();
+      };
+      img.src = base64WithPrefix;
     };
     reader.readAsDataURL(file);
   }

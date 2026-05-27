@@ -18,6 +18,7 @@ import { ISeccionFilter, ISeccionResponse } from '../../../interfaces/seccion.in
 import { IModuloResponse, IModuloSeccionResponse } from '../../../interfaces/modulo.interface';
 
 import Swal from 'sweetalert2';
+import { forkJoin } from 'rxjs';
 
 @Component({
   selector: 'app-agregar-perfil',
@@ -58,85 +59,151 @@ export class AgregarPerfil implements OnInit {
   });
 
   ngOnInit(): void {
-    this.cargarSecciones();
+    let filter: ISeccionFilter = {
+      PageNumber: 1,
+      PageSize: 1000,
+      DatosCompletos: 1
+    };
+
+
     if (this.id !== undefined && this.id !== null && this.id !== "") {
-      this.srvPerfil.getById(this.id).subscribe((s: any) => {
-        if (s.respuesta === true) {
-          console.log(s);
-          this.miFormulario.controls['nombre'].setValue(s.data.nombre);
+
+      forkJoin([
+        this.srvSeccion.getAll(filter),
+        this.srvPerfil.getByIdWithPermissions(this.id)
+      ]).subscribe(([seccionesData, permisoData]) => {
+        this.procesarSecciones(seccionesData);
+
+        // Asignamos los permisos ya existentes
+        if (permisoData?.respuesta && permisoData.data?.perfilPermisoSecciones) {
+          this.listaSeccionesAsignadas = permisoData.data.perfilPermisoSecciones.map((m: any) => ({
+            id: m.seccionId,
+            permisoId: m.permiso
+          } as ISeccionResponse));
+        } else {
+          this.listaSeccionesAsignadas = [];
+        }
+
+        // También seteamos el nombre
+        if (permisoData?.respuesta) {
+          this.miFormulario.controls['nombre'].setValue(permisoData.data.nombre);
         }
       });
+    } else {
+      // Modo agregar: solo secciones, asignadas vacío
+      this.srvSeccion.getAll(filter).subscribe((data: any) => {
+        this.procesarSecciones(data);
+        this.listaSeccionesAsignadas = []; // ya está listo para mostrar
+      });
+    }
 
-      this.srvPerfil.getByIdWithPermissions(this.id).subscribe((data) => {
-        if (data.respuesta === true) {
-          let perfil: any = data.data;
-          this.miFormulario.controls['nombre'].setValue(perfil.nombre);
+    // console.log("ddddddddddddddddddd");
+    // this.srvPerfil.getById(this.id).subscribe((s: any) => {
+    //   if (s.respuesta === true) {
+    //     console.log(s);
+    //     this.miFormulario.controls['nombre'].setValue(s.data.nombre);
+    //   }
+    // });
 
-          // Secciones ya asignadas al perfil
-          if (data?.data?.perfilPermisoSecciones && Array.isArray(data.data.perfilPermisoSecciones)) {
-            this.listaSeccionesAsignadas = data.data.perfilPermisoSecciones.map((m: any) => {
-              return {
-                id: m.seccionId,
-                permisoId: m.permiso
-              } as ISeccionResponse;
-            });
-          } else {
-            this.listaSeccionesAsignadas = [];
+    // this.srvPerfil.getByIdWithPermissions(this.id).subscribe((data) => {
+    //   if (data.respuesta === true) {
+    //     let perfil: any = data.data;
+    //     this.miFormulario.controls['nombre'].setValue(perfil.nombre);
+
+    //     // Secciones ya asignadas al perfil
+    //     if (data?.data?.perfilPermisoSecciones && Array.isArray(data.data.perfilPermisoSecciones)) {
+    //       this.listaSeccionesAsignadas = data.data.perfilPermisoSecciones.map((m: any) => {
+    //         return {
+    //           id: m.seccionId,
+    //           permisoId: m.permiso
+    //         } as ISeccionResponse;
+    //       });
+    //     } else {
+    //       this.listaSeccionesAsignadas = [];
+    //     }
+
+    //     let filter: ISeccionFilter = {
+    //       PageNumber: 1,
+    //       PageSize: 1000,
+    //       DatosCompletos: 1
+    //     };
+
+    //     this.srvSeccion.getAll(filter).subscribe((data: any) => {
+    //       if (data.respuesta == true) {
+    //         // Todas las secciones obtenidas
+    //         this.listaSecciones = data.data.map((m: any) => {
+    //           return {
+    //             id: m.id,
+    //             moduloId: m.moduloId,
+    //             nombre: m.nombre,
+    //             modulo: m.modulo && Object.keys(m.modulo).length > 0
+    //               ? {
+    //                 id: m.modulo.id,
+    //                 nombre: m.modulo.nombre
+    //               } as IModuloResponse
+    //               : undefined
+    //           } as ISeccionResponse;
+    //         });
+
+    //         this.listaSeccionesAgrupadas = Array.from(
+    //           this.listaSecciones.reduce((map, seccion) => {
+    //             const modulo = seccion.modulo;
+    //             if (!modulo) return map;
+
+    //             if (!map.has(modulo.id)) {
+    //               map.set(modulo.id, {
+    //                 id: modulo.id,
+    //                 nombre: modulo.nombre,
+    //                 secciones: []
+    //               });
+    //             }
+
+    //             map.get(modulo.id).secciones.push({
+    //               id: seccion.id,
+    //               nombre: seccion.nombre,
+    //               moduloId: seccion.moduloId
+    //             });
+
+    //             return map;
+    //           }, new Map())
+    //         ).map(([_, group]) => group);
+
+    //         // Opcional: console.log para ver resultado
+    //         console.log('Agrupado por módulo sin asignadas:', JSON.stringify(this.listaSeccionesAgrupadas));
+    //       }
+    //     });
+    //   }
+    // });
+
+    // }
+  }
+
+  private procesarSecciones(data: any): void {
+    if (data.respuesta) {
+      this.listaSecciones = data.data.map((m: any) => ({
+        id: m.id,
+        moduloId: m.moduloId,
+        nombre: m.nombre,
+        modulo: m.modulo && Object.keys(m.modulo).length > 0
+          ? { id: m.modulo.id, nombre: m.modulo.nombre }
+          : undefined
+      } as ISeccionResponse));
+
+      this.listaSeccionesAgrupadas = Array.from(
+        this.listaSecciones.reduce((map: any, seccion: ISeccionResponse) => {
+          const modulo = seccion.modulo;
+          if (!modulo) return map;
+          if (!map.has(modulo.id)) {
+            map.set(modulo.id, { id: modulo.id, nombre: modulo.nombre, secciones: [] });
           }
-
-          let filter: ISeccionFilter = {
-            PageNumber: 1,
-            PageSize: 1000,
-            DatosCompletos: 1
-          };
-
-          this.srvSeccion.getAll(filter).subscribe((data: any) => {
-            if (data.respuesta == true) {
-              // Todas las secciones obtenidas
-              this.listaSecciones = data.data.map((m: any) => {
-                return {
-                  id: m.id,
-                  moduloId: m.moduloId,
-                  nombre: m.nombre,
-                  modulo: m.modulo && Object.keys(m.modulo).length > 0
-                    ? {
-                      id: m.modulo.id,
-                      nombre: m.modulo.nombre
-                    } as IModuloResponse
-                    : undefined
-                } as ISeccionResponse;
-              });
-
-              this.listaSeccionesAgrupadas = Array.from(
-                this.listaSecciones.reduce((map, seccion) => {
-                  const modulo = seccion.modulo;
-                  if (!modulo) return map;
-
-                  if (!map.has(modulo.id)) {
-                    map.set(modulo.id, {
-                      id: modulo.id,
-                      nombre: modulo.nombre,
-                      secciones: []
-                    });
-                  }
-
-                  map.get(modulo.id).secciones.push({
-                    id: seccion.id,
-                    nombre: seccion.nombre,
-                    moduloId: seccion.moduloId
-                  });
-
-                  return map;
-                }, new Map())
-              ).map(([_, group]) => group);
-
-              // Opcional: console.log para ver resultado
-              console.log('Agrupado por módulo sin asignadas:', JSON.stringify(this.listaSeccionesAgrupadas));
-            }
+          map.get(modulo.id).secciones.push({
+            id: seccion.id,
+            nombre: seccion.nombre,
+            moduloId: seccion.moduloId
           });
-        }
-      });
-
+          return map;
+        }, new Map()) as Array<[any, any]>
+      ).map(([_, group]) => group);
     }
   }
 
