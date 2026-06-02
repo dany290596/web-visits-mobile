@@ -15,7 +15,6 @@ import { PaisEstadoService } from '../../../../location/services/pais-estado.ser
 
 import { EmpresaService, TestConnectionDTO } from '../../../services/empresa.service';
 import Swal from 'sweetalert2';
-import { of, switchMap } from 'rxjs';
 
 export interface Pais {
   id: string;
@@ -178,10 +177,13 @@ export class EditarEmpresa implements OnInit {
           });
 
           this.isHid.set(usaHid);
-
-          if (d.paisId) {
-            this.form.patchValue({ paisId: d.paisId });
-            this.cargarEstados(d.paisId, d.estadoId, d.ciudadId);
+          if (
+            d.pais !== undefined && d.pais !== null &&
+            d.paisEstado !== undefined && d.paisEstado !== null &&
+            d.ciudad !== undefined && d.ciudad !== null
+          ) {
+            this.form.patchValue({ paisId: d.pais.id });
+            this.cargarEstados(d.pais.id, d.paisEstado.id, d.ciudad.id);
           }
 
           if (usaHid) {

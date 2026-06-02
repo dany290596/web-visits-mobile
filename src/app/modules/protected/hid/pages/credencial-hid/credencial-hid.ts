@@ -146,18 +146,24 @@ export class CredencialHid {
     this.srvCredencialHID.getAll(filtroBusqueda).subscribe((resp: any) => {
       if (resp.respuesta === true) {
 
-        this.totalPaginas = resp.meta.totalPages;
-        this.totalRegistros = resp.meta.totalCount;
-        this.paginaActual = resp.meta.currentPage;
-        this.mostrarTabla = true;
-
         let listado: any[] = resp.data;
 
         if (listado.length === 0) {
+          this.totalPaginas = resp.meta?.totalPages || 0;
+          this.totalRegistros = 0;
+          this.paginaActual = resp.meta?.currentPage || 1;
+
           this.sinDatos = true;
+          this.mostrarTabla = true;
+          this.cargando = false;
           return;
         }
 
+        this.totalPaginas = resp.meta.totalPages;
+        this.totalRegistros = resp.meta.totalCount;
+        this.paginaActual = resp.meta.currentPage;
+        this.cargando = false;
+        this.mostrarTabla = true;
         this.sinDatos = false;
 
         listado.forEach(registro => {

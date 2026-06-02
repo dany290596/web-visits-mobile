@@ -275,7 +275,7 @@ export class Perfil implements OnInit {
     const ref = this.srvModal.open(AgregarPerfil, {
       nombre: "Agregar perfil",
       action: "ADD"
-    }, 'max-w-5xl');
+    }, '');
 
     if (ref && ref.instance) {
       ref.instance.guardadoExitoso.subscribe((s: any) => {

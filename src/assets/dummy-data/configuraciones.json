@@ -1,0 +1,110 @@
+[
+  {
+    "id": "78b7dd37-d5f0-4c85-a38f-0babfe604c30",
+    "nombreParametro": "Asunto del correo HID",
+    "valor1": "Código de Acceso - Plataforma HID",
+    "valor2": null,
+    "valor3": null,
+    "editable": 1,
+    "estado": 1
+  },
+  {
+    "id": "f2cbe367-793c-497c-9110-5e2fb6c75889",
+    "nombreParametro": "Nombre del remitente HID",
+    "valor1": "CRC de México",
+    "valor2": "cloud@crcdemexico.com.mx",
+    "valor3": null,
+    "editable": 1,
+    "estado": 1
+  },
+  {
+    "id": "dc227a7d-e48d-47ab-a401-7dac136f6c27",
+    "nombreParametro": "Telefono de contacto HID",
+    "valor1": "+52 (443) 340 0992",
+    "valor2": null,
+    "valor3": null,
+    "editable": 1,
+    "estado": 1
+  },
+  {
+    "id": "b42608e0-216b-42c0-8edf-9355009ac0f9",
+    "nombreParametro": "Correo de contacto HID",
+    "valor1": "omorales@crcdemexico.com.mx",
+    "valor2": null,
+    "valor3": null,
+    "editable": 1,
+    "estado": 1
+  },
+  {
+    "id": "dir-001",
+    "nombreParametro": "Direccion de contacto HID",
+    "valor1": "Lic. Antonio del Moral 45, Nueva Chapultepec, 58280 Morelia, Mich.",
+    "valor2": null,
+    "valor3": null,
+    "editable": 1,
+    "estado": 1
+  },
+  {
+    "id": "paso1-titulo",
+    "nombreParametro": "Titulo paso 1 correo HID",
+    "valor1": "Descarga nuestra App",
+    "valor2": null,
+    "valor3": null,
+    "editable": 1,
+    "estado": 1
+  },
+  {
+    "id": "paso1-texto",
+    "nombreParametro": "Texto paso 1 correo HID",
+    "valor1": "Accede fácilmente desde tu dispositivo móvil descargando la aplicación.",
+    "valor2": null,
+    "valor3": null,
+    "editable": 1,
+    "estado": 1
+  },
+  {
+    "id": "paso2-titulo",
+    "nombreParametro": "Titulo paso 2 correo HID",
+    "valor1": "Para acceder",
+    "valor2": null,
+    "valor3": null,
+    "editable": 1,
+    "estado": 1
+  },
+  {
+    "id": "paso2-texto",
+    "nombreParametro": "Texto paso 2 correo HID",
+    "valor1": "Abre la app, selecciona 'Continuar como invitado', presiona el ícono de QR y escanea el código.",
+    "valor2": null,
+    "valor3": null,
+    "editable": 1,
+    "estado": 1
+  },
+  {
+    "id": "paso3-titulo",
+    "nombreParametro": "Titulo paso 3 correo HID",
+    "valor1": "Alternativa - Código manual",
+    "valor2": null,
+    "valor3": null,
+    "editable": 1,
+    "estado": 1
+  },
+  {
+    "id": "paso3-texto",
+    "nombreParametro": "Texto paso 3 correo HID",
+    "valor1": "Copia el código, pégalo en 'Canjear código' y presiona 'Canjear'. Mantén la app en vista de credenciales frente al lector.",
+    "valor2": null,
+    "valor3": null,
+    "editable": 1,
+    "estado": 1
+  },
+  {
+    "id": "empresa-nombre",
+    "nombreParametro": "Nombre empresa pie correo HID",
+    "valor1": "CRC de México®, S.A. de C.V.",
+    "valor2": null,
+    "valor3": null,
+    "editable": 1,
+    "estado": 1
+  }
+]

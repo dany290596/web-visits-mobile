@@ -22,9 +22,33 @@ export class ModalService {
         });
 
         // Contenedor del modal (tarjeta)
-        const modalContainer = document.createElement('div');
-        modalContainer.className =
-            `bg-background rounded-lg shadow-xl w-full ${maxWidthClass} mx-4 p-6 animate__animated animate__fadeInUp`;
+        // const modalContainer = document.createElement('div');
+        // modalContainer.className =
+        //     `bg-background rounded-lg shadow-xl w-full ${maxWidthClass} mx-4 p-6 animate__animated animate__fadeInUp`;
+
+        // const modalContainer = document.createElement('div');
+        // modalContainer.className = 'bg-background rounded-lg shadow-xl animate__animated animate__fadeInUp max-h-[90vh] overflow-y-auto';
+        // Contenedor EXTERNO: solo visual, sin scroll
+const modalContainer = document.createElement('div');
+modalContainer.className = 'bg-background shadow-xl animate__animated animate__fadeInUp';
+modalContainer.style.borderRadius = '0.5rem';
+modalContainer.style.width = '95%';
+modalContainer.style.maxWidth = maxWidthClass;
+modalContainer.style.margin = '0 1rem';
+modalContainer.style.maxHeight = '90vh';
+modalContainer.style.overflowY = 'auto';
+modalContainer.style.padding = '1.5rem';
+
+// ✅ Scrollbar delgado que no tapa el border-radius
+modalContainer.style.scrollbarWidth = 'thin';
+modalContainer.style.scrollbarColor = 'rgba(100,100,100,0.4) transparent';
+
+        // ✅ Ancho con estilos inline, no Tailwind dinámico
+        // modalContainer.style.width = '95%';
+        // modalContainer.style.maxWidth = maxWidthClass; // ahora pasa px o rem, ej: '1024px'
+        // modalContainer.style.margin = '0 1rem';
+        // modalContainer.style.padding = '1.5rem';
+
         this.overlayElement.appendChild(modalContainer);
 
         // Crear el componente dinámico dentro del contenedor

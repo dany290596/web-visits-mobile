@@ -61,7 +61,9 @@ export class Empresa {
 
   buscarFG: FormGroup = this.srvForm.group({
     RazonSocial: [''],
-    Estado: [''],
+    RFC: [''],
+    CorreoElectronico: [''],
+    Estado: ['']
   });
 
   ngOnInit(): void {
@@ -93,6 +95,8 @@ export class Empresa {
     this.cargando = true;
     const {
       RazonSocial,
+      RFC,
+      CorreoElectronico,
       Estado
     } = this.buscarFG.value;
 
@@ -102,6 +106,8 @@ export class Empresa {
 
     let filtroBusqueda: any = {
       RazonSocial: RazonSocial,
+      RFC: RFC,
+      CorreoElectronico: CorreoElectronico,
       Estado: Estado,
       DatosCompletos: 1,
       PageNumber: this.paginaActual
@@ -125,8 +131,6 @@ export class Empresa {
         }
         this.sinDatos = false;
         listado.forEach(vst => {
-          console.log("ITEM ::: ", vst);
-
           let strId: string = vst.id ? vst.id : '';
           let strRazonSocial: string = vst.razonSocial;
           let strRFC: string = vst.rfc;
@@ -302,7 +306,7 @@ export class Empresa {
   showAgregar(): void {
     const ref = this.srvModal.open(AgregarEmpresa, {
       nombre: "Agregar empresa",
-    }, 'max-w-5xl');
+    }, '');
 
     if (ref && ref.instance) {
       ref.instance.closeModal.subscribe((guardadoExitoso: boolean) => {
