@@ -130,7 +130,9 @@
                                 <strong class="min-w-40 text-sm pt-1">{{ item.nombreParametro }}:</strong>
                                 <div class="flex-grow">
                                     @if (item.editable === 1) {
-                                    <input pInputText type="text" [value]="item.valor1"
+                                    <input pInputText
+                                        [type]="esCampoPassword(item.tipoConfiguracion) ? 'password' : 'text'"
+                                        [value]="item.valor1"
                                         (input)="actualizarValorConfig(tab.key, item.tipoConfiguracion, $event)"
                                         class="w-full" />
                                     @if (item.valor2) {

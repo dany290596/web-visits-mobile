@@ -67,10 +67,13 @@ export class EditarEmpresa implements OnInit {
   private eventSource: EventSource | null = null;
   private srvEmpresa = inject(EmpresaService);
   private fb = inject(FormBuilder);
-  private messageService = inject(MessageService);
   private ciudadService = inject(CiudadService);
   private paisService = inject(PaisService);
   private paisEstadoService = inject(PaisEstadoService);
+
+  private readonly CAMPOS_PASSWORD = new Set([
+    '29625587-4A45-495A-B728-203608694C44'
+  ]);
 
   @Output() closeModal = new EventEmitter<boolean>();
   @Input() empresaData?: any;
@@ -503,5 +506,9 @@ export class EditarEmpresa implements OnInit {
       if (longitud === 0) return null;
       return (longitud === 12 || longitud === 13) ? null : { longitudRFC: { actual: longitud } };
     };
+  }
+
+  esCampoPassword(tipoConfiguracion: string): boolean {
+    return this.CAMPOS_PASSWORD.has(tipoConfiguracion);
   }
 }

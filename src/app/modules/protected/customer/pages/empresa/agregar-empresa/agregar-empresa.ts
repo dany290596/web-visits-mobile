@@ -12,6 +12,7 @@ import { MessageService } from 'primeng/api';
 import { CiudadService } from '../../../../location/services/ciudad.service';
 import { PaisService } from '../../../../location/services/pais.service';
 import { PaisEstadoService } from '../../../../location/services/pais-estado.service';
+import { ConfiguracionService } from '../../../../configuration/services/configuration.service';
 
 import { EmpresaService, TestConnectionDTO } from '../../../services/empresa.service';
 import Swal from 'sweetalert2';
@@ -32,7 +33,7 @@ export interface Ciudad {
 }
 
 export interface ConfiguracionItem {
-  tipoConfiguracion: string; // GUID
+  tipoConfiguracion: string;
   nombreParametro: string;
   valor1: string;
   valor2: string;
@@ -45,7 +46,7 @@ export interface ConfiguracionItem {
 export interface TabConfig {
   key: string;
   label: string;
-  tipos: string[]; // lista de GUIDs
+  items: string[];
 }
 
 @Component({
@@ -65,16 +66,20 @@ export interface TabConfig {
 })
 export class AgregarEmpresa implements OnInit {
   private eventSource: EventSource | null = null;
+
   private srvEmpresa = inject(EmpresaService);
   private fb = inject(FormBuilder);
-
-
   private messageService = inject(MessageService);
   private ciudadService = inject(CiudadService);
   private paisService = inject(PaisService);
   private paisEstadoService = inject(PaisEstadoService);
+  private configuracionService = inject(ConfiguracionService);
 
-  @Output() closeModal = new EventEmitter<boolean>();   // ✅ Cambiado a boolean
+  private readonly CAMPOS_PASSWORD = new Set([
+    '29625587-4A45-495A-B728-203608694C44'
+  ]);
+
+  @Output() closeModal = new EventEmitter<boolean>();
   @Input() empresaData?: any;
   @Input() nombre: string = 'Agregar empresa';
 
@@ -89,61 +94,16 @@ export class AgregarEmpresa implements OnInit {
 
   configuraciones = signal<ConfiguracionItem[]>([]);
 
-  tabsConfig: TabConfig[] = [
-    {
-      key: 'authParams', label: 'Parámetros de autenticación',
-      tipos: [
-        '742CE98B-684B-4A76-BA0D-CF62621FC3E7',
-        'BB617929-5F49-4FDC-8C28-62435505B600',
-        '29625587-4A45-495A-B728-203608694C44'
-      ]
-    },
-    {
-      key: 'urlConfig', label: 'Configuración de URLS',
-      tipos: [
-        '60ADEBFE-01B5-497A-828B-CF3801F37495',
-        '9B02E35B-A069-4BF5-B9CA-337A59455347',
-        '82481E61-4BF5-44CE-B222-3283F7BC02F9',
-        '84BA81E1-56C0-4BEE-A57F-D05C13BB544A',
-        '5006A3E3-1E78-4341-9253-C2189A7C8974',
-        '5F9327BE-42D6-46B9-BF0E-DB7176371A20',
-        '9914DCB1-B370-4FC5-8CA3-D5ADD1605AF9',
-        'A90006CA-A3E8-4576-A8B0-25B1C5438D55'
-      ]
-    },
-    {
-      key: 'apiParams', label: 'Parámetros de API',
-      tipos: [
-        '40E1A0B9-9144-490E-BF75-7663F3447118',
-        '4B6BCEFA-20CA-48B9-92FA-5396C7C94202',
-        '788F90F3-0CE3-4E96-B4BA-38DA1CFE105B',
-        'FF5E7D45-FCED-4169-B4EB-BA70B43F7BB6'
-      ]
-    },
-    {
-      key: 'productKey', label: 'Clave de producto',
-      tipos: [
-        'C98EE139-92FB-4E71-94B7-AE258DD1929A'
-      ]
-    },
-    {
-      key: 'discovery', label: 'Métodos de descubrimiento',
-      tipos: [
-        'D539FF01-17F0-4C29-9E17-668A5591ACE5',
-        '18A0E41D-960E-4F52-9604-D0C773A87F9C',
-        '32DC2E87-E6A4-48D7-AF0E-B967ED2BBF49'
-      ]
-    },
-  ];
+  tabsConfig: TabConfig[] = [];
 
   groupedConfigs = computed(() =>
     this.tabsConfig.map(tab => ({
       ...tab,
-      items: this.configuraciones().filter(c => tab.tipos.includes(c.tipoConfiguracion)),
+      items: this.configuraciones().filter(c => tab.items.includes(c.tipoConfiguracion)),
     }))
   );
 
-  activeTab = signal<string>(this.tabsConfig[0]?.key || '');
+  activeTab = signal<string>("");
 
   form!: FormGroup;
   loadingEstados = signal(false);
@@ -152,11 +112,44 @@ export class AgregarEmpresa implements OnInit {
   ngOnInit(): void {
     this.initForm();
     this.cargarPaises();
-    this.cargarConfiguracionesHID();
-
     this.form.get('usaCredencialesHID')?.valueChanges.subscribe(val => {
       this.isHid.set(val);
       if (!val) this.conexionExitosa.set(false);
+    });
+
+    this.configuracionService.settingsGroupedType().subscribe({
+      next: (n) => {
+        if (n.respuesta === true) {
+          this.tabsConfig = n.data.map((a: any) => {
+            return {
+              key: a.key,
+              label: a.label,
+              items: a.items.map((b: any) => b.tipoConfiguracion.toUpperCase())
+            } as any;
+          });
+
+          this.activeTab.set(this.tabsConfig[0].key || "");
+          this.configuracionService.settingsGrouped().subscribe({
+            next: (x) => {
+              if (x.respuesta === true) {
+                console.log("X ::: ", x);
+                this.configuraciones.set(x.data.map((m: any) => {
+                  return {
+                    tipoConfiguracion: m.tipoConfiguracion.toUpperCase(),
+                    nombreParametro: m.nombreParametro,
+                    valor1: m.valor1,
+                    valor2: m.valor2,
+                    valor3: m.valor3,
+                    editable: m.editable,
+                    lectura: m.lectura,
+                    estado: m.estado
+                  } as any;
+                }));
+              }
+            }
+          });
+        }
+      }
     });
   }
 
@@ -211,29 +204,12 @@ export class AgregarEmpresa implements OnInit {
   private cargarPaises(): void {
     this.paisService.getAll({}).subscribe({
       next: (b) => {
-        console.log("QWsa ", b);
         if (b.respuesta === true) {
           this.paises.set(b.data);
         }
       }
     });
-    // this.paises.set([
-    //   { id: '1', nombre: 'México' },
-    //   { id: '2', nombre: 'Estados Unidos' },
-    // ]);
   }
-
-  // private cargarEstados(paisId: string): void {
-  //   this.loadingEstados.set(true);
-  //   setTimeout(() => {
-  //     const estadosMock: Estado[] = paisId === '1'
-  //       ? [{ id: '10', nombre: 'Jalisco' }, { id: '11', nombre: 'Nuevo León' }]
-  //       : [{ id: '20', nombre: 'California' }];
-  //     this.estados.set(estadosMock);
-  //     this.form.get('estadoId')?.enable();
-  //     this.loadingEstados.set(false);
-  //   }, 300);
-  // }
 
   private cargarEstados(paisId: string): void {
     this.loadingEstados.set(true);
@@ -254,18 +230,6 @@ export class AgregarEmpresa implements OnInit {
       }
     });
   }
-
-  // private cargarCiudades(estadoId: string): void {
-  //   this.loadingCiudades.set(true);
-  //   setTimeout(() => {
-  //     const ciudadesMock: Ciudad[] = estadoId === '10'
-  //       ? [{ id: '100', nombre: 'Guadalajara' }, { id: '101', nombre: 'Zapopan' }]
-  //       : [{ id: '200', nombre: 'Monterrey' }];
-  //     this.ciudades.set(ciudadesMock);
-  //     this.form.get('ciudadId')?.enable();
-  //     this.loadingCiudades.set(false);
-  //   }, 300);
-  // }
 
   private cargarCiudades(estadoId: string): void {
     this.loadingCiudades.set(true);
@@ -721,48 +685,15 @@ export class AgregarEmpresa implements OnInit {
     );
   }
 
-  // ------------------------------------------------------------
-  // Datos de plantillas HID
-  // ------------------------------------------------------------
-  public cargarConfiguracionesHID(): void {
-    const todos: ConfiguracionItem[] = [
-      // Parámetros de autenticación
-      { tipoConfiguracion: '742CE98B-684B-4A76-BA0D-CF62621FC3E7', nombreParametro: 'Customer ID', valor1: '', valor2: '', valor3: '', editable: 1, lectura: 0, estado: 1 },
-      { tipoConfiguracion: 'BB617929-5F49-4FDC-8C28-62435505B600', nombreParametro: 'Client ID', valor1: '', valor2: '', valor3: '', editable: 1, lectura: 0, estado: 1 },
-      { tipoConfiguracion: '29625587-4A45-495A-B728-203608694C44', nombreParametro: 'Client secret/Client certificate', valor1: '', valor2: '', valor3: '', editable: 1, lectura: 0, estado: 1 },
-
-      // Configuración de URLS
-      { tipoConfiguracion: '60ADEBFE-01B5-497A-828B-CF3801F37495', nombreParametro: 'IDP authentication URL', valor1: 'https://api.cert.origo.hidglobal.com', valor2: '', valor3: '', editable: 1, lectura: 0, estado: 1 },
-      { tipoConfiguracion: '9B02E35B-A069-4BF5-B9CA-337A59455347', nombreParametro: 'API URL', valor1: '', valor2: '', valor3: '', editable: 1, lectura: 0, estado: 1 },
-      { tipoConfiguracion: '82481E61-4BF5-44CE-B222-3283F7BC02F9', nombreParametro: 'Callback and Event URL', valor1: '', valor2: 'If callback is implemented', valor3: '', editable: 1, lectura: 0, estado: 1 },
-      { tipoConfiguracion: '84BA81E1-56C0-4BEE-A57F-D05C13BB544A', nombreParametro: 'Premium Report URL', valor1: '', valor2: 'If premium reports API is used', valor3: '', editable: 1, lectura: 0, estado: 1 },
-      { tipoConfiguracion: '5006A3E3-1E78-4341-9253-C2189A7C8974', nombreParametro: "Credential Management URL", valor1: "", valor2: '', valor3: '', editable: 1, lectura: 0, estado: 1 },
-      { tipoConfiguracion: '5F9327BE-42D6-46B9-BF0E-DB7176371A20', nombreParametro: "Users URL", valor1: "", valor2: '', valor3: '', editable: 1, lectura: 0, estado: 1 },
-      { tipoConfiguracion: '9914DCB1-B370-4FC5-8CA3-D5ADD1605AF9', nombreParametro: "Events URL", valor1: "", valor2: '', valor3: '', editable: 1, lectura: 0, estado: 1 },
-      { tipoConfiguracion: 'A90006CA-A3E8-4576-A8B0-25B1C5438D55', nombreParametro: "Transaction URL", valor1: "", valor2: '', valor3: '', editable: 1, lectura: 0, estado: 1 },
-
-      // Parámetros de API
-      { tipoConfiguracion: '40E1A0B9-9144-490E-BF75-7663F3447118', nombreParametro: 'Content Type', valor1: 'application/vnd.assaabloy.ma.credential-management-2.2+json', valor2: 'Header requirement', valor3: '', editable: 1, lectura: 0, estado: 1 },
-      { tipoConfiguracion: '4B6BCEFA-20CA-48B9-92FA-5396C7C94202', nombreParametro: 'Accept Type', valor1: '##MANDATORY##', valor2: 'For .NET compatibility', valor3: '', editable: 1, lectura: 0, estado: 1 },
-      { tipoConfiguracion: '788F90F3-0CE3-4E96-B4BA-38DA1CFE105B', nombreParametro: 'Application ID', valor1: 'HID-CRCDEMEXICO-DEV', valor2: 'Format: HID-PARTNERNAME-SOLUTIONNAME', valor3: '', editable: 1, lectura: 0, estado: 1 },
-      { tipoConfiguracion: 'FF5E7D45-FCED-4169-B4EB-BA70B43F7BB6', nombreParametro: 'Application Version', valor1: '##MANDATORY##', valor2: 'Versioning format', valor3: '', editable: 1, lectura: 0, estado: 1 },
-
-      // Clave de producto
-      { tipoConfiguracion: 'C98EE139-92FB-4E71-94B7-AE258DD1929A', nombreParametro: 'Part number field', valor1: 'MID-SUB-CRD_FTPN_644745', valor2: 'Replaces hardcoded value', valor3: '', editable: 1, lectura: 0, estado: 1 },
-
-      // Métodos de descubrimiento
-      { tipoConfiguracion: 'D539FF01-17F0-4C29-9E17-668A5591ACE5', nombreParametro: 'Auto detect Part number', valor1: '4924_644745', valor2: '', valor3: '', editable: 1, lectura: 0, estado: 1 },
-      { tipoConfiguracion: '18A0E41D-960E-4F52-9604-D0C773A87F9C', nombreParametro: 'Select Part number', valor1: 'MID-SUB-CRD_FTPN_644745', valor2: '', valor3: '', editable: 1, lectura: 0, estado: 1 },
-      { tipoConfiguracion: '32DC2E87-E6A4-48D7-AF0E-B967ED2BBF49', nombreParametro: 'Manual entry Part number', valor1: 'Enter value', valor2: 'HID Origo compatible', valor3: '', editable: 1, lectura: 0, estado: 1 },
-    ];
-    this.configuraciones.set(todos);
-  }
-
   soloNumeros(controlName: string): void {
     const control = this.form.get(controlName);
     if (control) {
-      let valor = control.value.replace(/\D/g, ''); // elimina todo lo que no sea dígito
+      let valor = control.value.replace(/\D/g, '');
       control.setValue(valor, { emitEvent: false });
     }
+  }
+
+  esCampoPassword(tipoConfiguracion: string): boolean {
+    return this.CAMPOS_PASSWORD.has(tipoConfiguracion);
   }
 }

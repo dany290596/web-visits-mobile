@@ -1,227 +1,420 @@
-<div>
-    <!-- Header -->
-    <div class="mb-4 flex justify-between">
-        <div class="inline-block">
-            <h3 class="font-semibold text-foreground">Plantilla de correo Wallet</h3>
-            <div class="space-x-1 text-xs font-medium text-muted-foreground">
-                <a [routerLink]="['/layout/dashboard/inicio']" class="hover:text-primary">Inicio</a>
-                <!-- <span> - Inicio</span> -->
-            </div>
+<!-- ============================================================
+     email-wallet-template.component.html
+============================================================ -->
+<p-toast />
+
+<!-- <div class="ewt-layout"> -->
+
+<!-- ── Encabezado ──────────────────────────────────────────── -->
+<div class="mb-4 flex justify-between">
+
+    <div class="inline-block">
+        <h3 class="font-semibold text-foreground">Plantilla de correo
+            <span><!-- Badge modo dummy — visible solo en desarrollo -->
+                @if (isDummy) {
+                <p-tag value="Wallet" severity="warn" icon="pi pi-database" styleClass="ewt-dummy-badge"
+                    pTooltip="Datos cargados desde /assets/dummy-data/configuraciones.json. Cambia useDummyData a false en environment para conectar al API real."
+                    tooltipPosition="right" />
+                }
+                <!-- Indicador cambios sin guardar -->
+                @if (isDirty()) {
+                <p-tag value="Cambios sin guardar" severity="danger" icon="pi pi-circle-fill"
+                    styleClass="ewt-dirty-badge" />
+                }
+            </span>
+        </h3>
+
+        <div class="space-x-1 text-xs font-medium text-muted-foreground">
+            <a [routerLink]="['/layout/dashboard/inicio']" class="hover:text-primary"> Personaliza los textos
+                del correo.</a>
+            <!-- <span> - Inicio</span> -->
         </div>
     </div>
-    <!-- end Header -->
 
-    <div class="grid grid-cols-12 gap-4">
-        <div class="col-span-12 flex-col rounded-lg bg-background px-8 py-8 sm:flex-row">
-            <p-tabs [(value)]="value">
-                <p-tablist>
-                    <p-tab [value]="0">Correo SMTP</p-tab>
-                    <p-tab [value]="1">Correo OAuth</p-tab>
-                </p-tablist>
-                <p-tabpanels>
-                    <p-tabpanel [value]="0">
-                        <form class="grid grid-cols-12 gap-4" autocomplete="off" [formGroup]="emailSMTPFG"
-                            (ngSubmit)="showEmailSMTP()" class="w-full">
-                            <div class="grid grid-cols-12 gap-4">
-                                <div class="col-span-12 md:col-span-6 xl:col-span-3 pt-0 flex align-items-center">
-                                    <div class="flex align-items-center gap-3">
-                                        <label for="chkProtocoloEnvioCorreoSMTP" class="ms-2 fw-bold">
-                                            Habilitar
-                                        </label>
-                                        <!-- <p-toggleswitch inputId="chkProtocoloEnvioCorreoSMTP"
-                                        formControlName="ProtocoloEnvioCorreo" class="switch-align"></p-toggleswitch> -->
-                                        <p-toggleswitch inputId="chkProtocoloEnvioCorreoSMTP"
-                                            formControlName="ProtocoloEnvioCorreo"
-                                            (onChange)="onProtocolToggleChange($event, 'SMTP')">
-                                        </p-toggleswitch>
-                                    </div>
-                                </div>
+    <!--
+        <div class="ewt-title-row">
+            <h1 class="ewt-title">
+                <i class="pi pi-envelope"></i>
+                Plantilla de correo Wallet
+            </h1>
 
-                                <div class="col-span-12 md:col-span-6 xl:col-span-3 pt-0">
-                                    <label class="form-label">Correo <span class="text-danger">*</span></label>
-                                    <input required pInputText type="text" class="form-control" placeholder="Correo"
-                                        formControlName="Email" class="w-full">
-                                    <p-message severity="error"
-                                        *ngIf="emailSMTPFG.get('Email')?.errors?.['required'] && emailSMTPFG.get('Email')?.touched">
-                                        <i class="pi pi-exclamation-circle"></i> El correo es obligatorio
-                                    </p-message>
-                                    <p-message severity="error"
-                                        *ngIf="emailSMTPFG.get('Email')?.errors?.['email'] && emailSMTPFG.get('Email')?.touched && !emailSMTPFG.get('Email')?.errors?.['required']">
-                                        <i class="pi pi-exclamation-circle"></i> El correo no tiene un formato
-                                        válido
-                                    </p-message>
-                                </div>
+            @if (isDummy) {
+            <p-tag value="Modo dummy" severity="warn" icon="pi pi-database" styleClass="ewt-dummy-badge"
+                pTooltip="Datos cargados desde /assets/dummy-data/configuraciones.json. Cambia useDummyData a false en environment para conectar al API real."
+                tooltipPosition="right" />
+            }
 
-                                <div class="col-span-12 md:col-span-6 xl:col-span-3 pt-0">
-                                    <label class="form-label">Servidor SMTP <span class="text-danger">*</span></label>
-                                    <input required pInputText type="text" class="form-control"
-                                        placeholder="Servidor SMTP" formControlName="ServidorSMTP" class="w-full">
-                                    <p-message severity="error"
-                                        *ngIf="emailSMTPFG.get('ServidorSMTP')?.invalid && emailSMTPFG.get('ServidorSMTP')?.touched"
-                                        class="text-red-500">
-                                        <i class="pi pi-exclamation-circle"></i> El servidor SMTP es obligatorio
-                                    </p-message>
-                                </div>
-
-                                <div class="col-span-12 md:col-span-6 xl:col-span-3 pt-0">
-                                    <label required class="form-label">Puerto de salida <span
-                                            class="text-danger">*</span></label>
-                                    <input pInputText type="number" min="0" class="form-control"
-                                        placeholder="Puerto de salida" formControlName="Puerto" class="w-full">
-                                    <p-message severity="error"
-                                        *ngIf="emailSMTPFG.get('Puerto')?.invalid && emailSMTPFG.get('Puerto')?.touched"
-                                        class="text-red-500">
-                                        <i class="pi pi-exclamation-circle"></i> El puerto de salida es
-                                        obligatorio
-                                    </p-message>
-                                </div>
-
-                                <div class="col-span-12 md:col-span-6 xl:col-span-3 pt-0">
-                                    <label class="form-label">Nombre de usuario <span
-                                            class="text-danger">*</span></label>
-                                    <input required pInputText type="text" class="form-control"
-                                        placeholder="Nombre de usuario" formControlName="Usuario" class="w-full">
-                                    <p-message severity="error"
-                                        *ngIf="emailSMTPFG.get('Usuario')?.errors?.['required'] && emailSMTPFG.get('Usuario')?.touched">
-                                        <i class="pi pi-exclamation-circle"></i> El nombre de usuario es
-                                        obligatorio
-                                    </p-message>
-                                    <p-message severity="error"
-                                        *ngIf="emailSMTPFG.get('Usuario')?.errors?.['email'] && emailSMTPFG.get('Usuario')?.touched && !emailSMTPFG.get('Usuario')?.errors?.['required']">
-                                        <i class="pi pi-exclamation-circle"></i> El nombre de usuario no tiene
-                                        un formato
-                                        válido
-                                    </p-message>
-                                </div>
-
-                                <div class="col-span-12 md:col-span-6 xl:col-span-3 pt-0">
-                                    <label class="form-label">Contraseña <span class="text-danger">*</span></label>
-                                    <input required pInputText type="password" class="form-control"
-                                        placeholder="Contraseña" formControlName="Contrasena" class="w-full">
-                                    <p-message severity="error"
-                                        *ngIf="emailSMTPFG.get('Contrasena')?.invalid && emailSMTPFG.get('Contrasena')?.touched"
-                                        class="text-red-500">
-                                        <i class="pi pi-exclamation-circle"></i> La contraseña es obligatoria
-                                    </p-message>
-                                </div>
-
-                                <div class="col-span-12 md:col-span-6 xl:col-span-3 pt-0 flex align-items-center">
-                                    <div class="flex align-items-center gap-3">
-                                        <label for="chkSSL" class="ms-2 fw-bold">
-                                            Requiere SSL
-                                        </label>
-                                        <p-toggleswitch inputId="chkSSL" formControlName="SSL"
-                                            class="switch-align"></p-toggleswitch>
-                                    </div>
-                                </div>
-
-                                <div class="col-span-12 md:col-span-6 xl:col-span-3 pt-0 flex align-items-center">
-                                    <div class="flex align-items-center gap-3">
-                                        <label for="chkTLS1" class="ms-2 fw-bold">
-                                            Requiere TLS 1.2
-                                        </label>
-                                        <p-toggleswitch inputId="chkTLS1" formControlName="TLS1"
-                                            class="switch-align"></p-toggleswitch>
-                                    </div>
-                                </div>
-
-                                <div class="col-span-12 md:col-span-6 xl:col-span-3 pt-0 flex align-items-center">
-                                    <div class="flex align-items-center gap-3">
-                                        <label for="chkTLS2" class="ms-2 fw-bold">
-                                            Requiere TLS 1.3
-                                        </label>
-                                        <p-toggleswitch inputId="chkTLS2" formControlName="TLS2"
-                                            class="switch-align"></p-toggleswitch>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="flex justify-end space-x-3 pt-4 border-t border-border">
-                                <button type="submit"
-                                    class="rounded-md bg-primary px-4 py-2 text-xs font-semibold text-primary-foreground">
-                                    Guardar
-                                </button>
-                            </div>
-                        </form>
-                    </p-tabpanel>
-                    <p-tabpanel [value]="1">
-                        <form class="grid grid-cols-12 gap-4" autocomplete="off" [formGroup]="emailOAuthFG"
-                            (ngSubmit)="showEmailOAuth()" class="w-full">
-
-                            <div class="grid grid-cols-12 gap-4">
-                                <div class="col-span-12 md:col-span-6 xl:col-span-3 pt-0 flex align-items-center">
-                                    <div class="flex align-items-center gap-3">
-                                        <label for="chkProtocoloEnvioCorreoOAuth" class="ms-2 fw-bold">
-                                            Habilitar
-                                        </label>
-                                        <!-- <p-toggleswitch inputId="chkProtocoloEnvioCorreoOAuth"
-                                        formControlName="ProtocoloEnvioCorreo" class="switch-align"></p-toggleswitch> -->
-                                        <p-toggleswitch inputId="chkProtocoloEnvioCorreoOAuth"
-                                            formControlName="ProtocoloEnvioCorreo"
-                                            (onChange)="onProtocolToggleChange($event, 'OAuth')">
-                                        </p-toggleswitch>
-                                    </div>
-                                </div>
-
-                                <div class="col-span-12 md:col-span-6 xl:col-span-3 pt-0">
-                                    <label class="form-label">Tenant <span class="text-danger">*</span></label>
-                                    <input required pInputText type="text" class="form-control" placeholder="Tenant"
-                                        formControlName="Tenant" class="w-full">
-                                    <p-message severity="error"
-                                        *ngIf="emailOAuthFG.get('Tenant')?.invalid && emailOAuthFG.get('Tenant')?.touched"
-                                        class="text-red-500">
-                                        <i class="pi pi-exclamation-circle"></i> El tenant es obligatorio
-                                    </p-message>
-                                </div>
-
-                                <div class="col-span-12 md:col-span-6 xl:col-span-3 pt-0">
-                                    <label class="form-label">Client <span class="text-danger">*</span></label>
-                                    <input required pInputText type="text" class="form-control" placeholder="Client"
-                                        formControlName="Client" class="w-full">
-                                    <p-message severity="error"
-                                        *ngIf="emailOAuthFG.get('Client')?.invalid && emailOAuthFG.get('Client')?.touched"
-                                        class="text-red-500">
-                                        <i class="pi pi-exclamation-circle"></i> El client es obligatorio
-                                    </p-message>
-                                </div>
-
-                                <div class="col-span-12 md:col-span-6 xl:col-span-3 pt-0">
-                                    <label class="form-label">Client secret <span class="text-danger">*</span></label>
-                                    <input required pInputText type="password" class="form-control"
-                                        placeholder="Client secret" formControlName="ClientSecret" class="w-full">
-                                    <p-message severity="error"
-                                        *ngIf="emailOAuthFG.get('ClientSecret')?.invalid && emailOAuthFG.get('ClientSecret')?.touched"
-                                        class="text-red-500">
-                                        <i class="pi pi-exclamation-circle"></i> El client secret es obligatorio
-                                    </p-message>
-                                </div>
-
-                                <div class="col-span-12 md:col-span-6 xl:col-span-3 pt-0">
-                                    <label class="form-label">Correo <span class="text-danger">*</span></label>
-                                    <input required pInputText type="text" class="form-control" placeholder="Correo"
-                                        formControlName="Email" class="w-full">
-                                    <p-message severity="error"
-                                        *ngIf="emailOAuthFG.get('Email')?.errors?.['required'] && emailOAuthFG.get('Email')?.touched">
-                                        <i class="pi pi-exclamation-circle"></i> El correo es obligatorio
-                                    </p-message>
-                                    <p-message severity="error"
-                                        *ngIf="emailOAuthFG.get('Email')?.errors?.['email'] && emailOAuthFG.get('Email')?.touched && !emailOAuthFG.get('Email')?.errors?.['required']">
-                                        <i class="pi pi-exclamation-circle"></i> El correo no tiene un formato
-                                        válido
-                                    </p-message>
-                                </div>
-                            </div>
-
-                            <div class="flex justify-end space-x-3 pt-4 border-t border-border">
-                                <button type="submit"
-                                    class="rounded-md bg-primary px-4 py-2 text-xs font-semibold text-primary-foreground">
-                                    Guardar
-                                </button>
-                            </div>
-                        </form>
-                    </p-tabpanel>
-                </p-tabpanels>
-            </p-tabs>
+            @if (isDirty()) {
+            <p-tag value="Cambios sin guardar" severity="danger" icon="pi pi-circle-fill"
+                styleClass="ewt-dirty-badge" />
+            }
         </div>
+        <p class="ewt-subtitle">
+            Personaliza los textos fijos del correo. Los datos dinámicos
+            (destinatario, código, QR) los inyecta el Servicio Windows al procesar cada tarea.
+        </p>
+        -->
+
+    <div class="inline-block space-x-4">
+        @if (!loading()) {
+        <div class="ewt-header-actions">
+            <!-- <p-button label="Cancelar" severity="secondary" [outlined]="true" icon="pi pi-times" (onClick)="cancel()"
+            [disabled]="saving() || !isDirty()" />
+        <p-button label="Guardar cambios" icon="pi pi-save" [loading]="saving()" [disabled]="!isDirty()"
+            (onClick)="save()" /> -->
+
+            <button label="Cancelar" severity="secondary" icon="pi pi-times" (click)="cancel()"
+                [disabled]="saving() || !isDirty()"
+                class="rounded-md bg-muted px-4 py-2 text-xs font-semibold text-muted-foreground hover:text-foreground">
+                <i class="pi pi-times"></i>
+                Cancelar
+            </button>
+            <button label="Guardar cambios" icon="pi pi-save" (click)="save()"
+                class="rounded-md bg-primary px-4 py-2 text-xs font-semibold text-primary-foreground">
+                <i class="pi pi-save"></i>
+                Guardar
+            </button>
+        </div>
+        }
+    </div>
+
+
+    @if (!loading()) {
+    <!-- <div class="ewt-header-actions"> -->
+    <!-- <p-button label="Cancelar" severity="secondary" [outlined]="true" icon="pi pi-times" (onClick)="cancel()"
+            [disabled]="saving() || !isDirty()" />
+        <p-button label="Guardar cambios" icon="pi pi-save" [loading]="saving()" [disabled]="!isDirty()"
+            (onClick)="save()" /> -->
+    <!--
+        <button label="Cancelar" severity="secondary" icon="pi pi-times" (onClick)="cancel()"
+            [disabled]="saving() || !isDirty()"
+            class="rounded-md bg-muted px-4 py-2 text-xs font-semibold text-muted-foreground hover:text-foreground">
+            <i class="pi pi-times"></i>
+            Cancelar
+        </button>
+        <button label="Guardar cambios" icon="pi pi-save" [disabled]="!isDirty()" (onClick)="save()"
+            class="rounded-md bg-primary px-4 py-2 text-xs font-semibold text-primary-foreground">
+            <i class="pi pi-save"></i>
+            Guardar
+        </button>
+        -->
+    <!-- </div> -->
+    }
+</div>
+
+<!-- ── Skeleton ────────────────────────────────────────────── -->
+@if (loading()) {
+<div class="ewt-grid">
+    <div class="ewt-form-col">
+        <p-card>
+            <p-skeleton height="2rem" styleClass="mb-3" />
+            <p-skeleton height="2.5rem" styleClass="mb-3" />
+            <p-skeleton height="2.5rem" styleClass="mb-3" />
+            <p-skeleton height="2.5rem" />
+        </p-card>
+    </div>
+    <div class="ewt-preview-col">
+        <p-card>
+            <p-skeleton height="420px" />
+        </p-card>
     </div>
 </div>
+}
+
+<!-- ── Contenido ───────────────────────────────────────────── -->
+@if (!loading()) {
+<div class="ewt-grid" [formGroup]="form">
+
+    <!-- ── Columna formulario ─────────────────────────────── -->
+    <div class="ewt-form-col">
+
+        <!-- Card 1: Datos del correo -->
+        <p-card styleClass="mb-4">
+            <ng-template pTemplate="header">
+                <div class="ewt-card-header">
+                    <i class="pi pi-send ewt-card-icon"></i>
+                    <span>Datos del correo</span>
+                </div>
+            </ng-template>
+
+            <div class="ewt-field">
+                <label for="asunto">Asunto</label>
+                <input pInputText id="asunto" formControlName="asunto" class="w-full"
+                    placeholder="Ej. Código de Acceso - Plataforma HID" />
+                @if (invalid('asunto')) {
+                <small class="ewt-error">El asunto es requerido (máx. 150 caracteres).</small>
+                }
+            </div>
+
+            <div class="ewt-field-row">
+                <div class="ewt-field">
+                    <label for="nombreRemitente">Nombre del remitente</label>
+                    <input pInputText id="nombreRemitente" formControlName="nombreRemitente" class="w-full"
+                        placeholder="Ej. CRC de México" />
+                    @if (invalid('nombreRemitente')) {
+                    <small class="ewt-error">Requerido.</small>
+                    }
+                </div>
+                <div class="ewt-field">
+                    <label for="emailRemitente">Email remitente (SMTP)</label>
+                    <input pInputText id="emailRemitente" formControlName="emailRemitente" class="w-full"
+                        placeholder="cloud@empresa.com" />
+                    @if (invalid('emailRemitente')) {
+                    <small class="ewt-error">Email inválido.</small>
+                    }
+                </div>
+            </div>
+        </p-card>
+
+        <!-- Card 2: Pasos del correo -->
+        <p-card styleClass="mb-4">
+            <ng-template pTemplate="header">
+                <div class="ewt-card-header">
+                    <i class="pi pi-list ewt-card-icon"></i>
+                    <span>Pasos del correo</span>
+                </div>
+            </ng-template>
+
+            <!-- Paso 1 -->
+            <div class="ewt-step-block">
+                <span class="ewt-step-badge">Paso 1</span>
+                <div class="ewt-field">
+                    <label for="tituloPaso1">Título</label>
+                    <input pInputText id="tituloPaso1" formControlName="tituloPaso1" class="w-full" />
+                    @if (invalid('tituloPaso1')) { <small class="ewt-error">Requerido.</small> }
+                </div>
+                <div class="ewt-field">
+                    <label for="textoPaso1">Descripción</label>
+                    <textarea pInputTextarea id="textoPaso1" formControlName="textoPaso1" rows="4" class="w-full"
+                        autoResize="true"></textarea>
+                    @if (invalid('textoPaso1')) { <small class="ewt-error">Requerido.</small> }
+                </div>
+            </div>
+
+            <p-divider />
+
+            <!-- Paso 2 -->
+            <div class="ewt-step-block">
+                <span class="ewt-step-badge">Paso 2</span>
+                <div class="ewt-field">
+                    <label for="tituloPaso2">Título</label>
+                    <input pInputText id="tituloPaso2" formControlName="tituloPaso2" class="w-full" />
+                    @if (invalid('tituloPaso2')) { <small class="ewt-error">Requerido.</small> }
+                </div>
+                <div class="ewt-field">
+                    <label for="textoPaso2">Descripción</label>
+                    <textarea pInputTextarea id="textoPaso2" formControlName="textoPaso2" rows="4" class="w-full"
+                        autoResize="true"></textarea>
+                    @if (invalid('textoPaso2')) { <small class="ewt-error">Requerido.</small> }
+                </div>
+            </div>
+
+            <p-divider />
+
+            <!-- Paso 3 -->
+            <div class="ewt-step-block">
+                <span class="ewt-step-badge">Paso 3</span>
+                <div class="ewt-field">
+                    <label for="tituloPaso3">Título</label>
+                    <input pInputText id="tituloPaso3" formControlName="tituloPaso3" class="w-full" />
+                    @if (invalid('tituloPaso3')) { <small class="ewt-error">Requerido.</small> }
+                </div>
+                <div class="ewt-field">
+                    <label for="textoPaso3">Descripción</label>
+                    <textarea pInputTextarea id="textoPaso3" formControlName="textoPaso3" rows="4" class="w-full"
+                        autoResize="true"></textarea>
+                    @if (invalid('textoPaso3')) { <small class="ewt-error">Requerido.</small> }
+                </div>
+            </div>
+        </p-card>
+
+        <!-- Card 3: Contacto y pie -->
+        <p-card>
+            <ng-template pTemplate="header">
+                <div class="ewt-card-header">
+                    <i class="pi pi-map-marker ewt-card-icon"></i>
+                    <span>Datos de contacto (pie del correo)</span>
+                </div>
+            </ng-template>
+
+            <div class="ewt-field-row">
+                <div class="ewt-field">
+                    <label for="telefonoContacto">Teléfono</label>
+                    <input pInputText id="telefonoContacto" formControlName="telefonoContacto" class="w-full"
+                        placeholder="+52 (443) 340 0992" />
+                    @if (invalid('telefonoContacto')) { <small class="ewt-error">Requerido.</small> }
+                </div>
+                <div class="ewt-field">
+                    <label for="emailContacto">Email de contacto</label>
+                    <input pInputText id="emailContacto" formControlName="emailContacto" class="w-full"
+                        placeholder="contacto@empresa.com" />
+                    @if (invalid('emailContacto')) { <small class="ewt-error">Email inválido.</small> }
+                </div>
+            </div>
+
+            <div class="ewt-field">
+                <label for="direccion">Dirección</label>
+                <input pInputText id="direccion" formControlName="direccion" class="w-full"
+                    placeholder="Calle, colonia, CP, ciudad" />
+                @if (invalid('direccion')) { <small class="ewt-error">Requerido.</small> }
+            </div>
+
+            <div class="ewt-field">
+                <label for="nombreEmpresa">Nombre empresa (pie de página)</label>
+                <input pInputText id="nombreEmpresa" formControlName="nombreEmpresa" class="w-full"
+                    placeholder="Mi Empresa S.A. de C.V." />
+                @if (invalid('nombreEmpresa')) { <small class="ewt-error">Requerido.</small> }
+            </div>
+        </p-card>
+
+    </div><!-- /form-col -->
+
+    <!-- ── Columna preview ────────────────────────────────── -->
+    <div class="ewt-preview-col">
+        <p-card styleClass="ewt-preview-card">
+            <ng-template pTemplate="header">
+                <div class="ewt-preview-header">
+                    <div class="ewt-card-header-inner">
+                        <i class="pi pi-eye ewt-card-icon"></i>
+                        <span>Vista previa</span>
+                    </div>
+                    <!-- Tabs clientes -->
+                    <div class="ewt-client-tabs">
+                        @for (c of previewClients; track c.key) {
+                        <button class="ewt-client-tab" [class.active]="activeClient() === c.key"
+                            (click)="setClient(c.key)" type="button">
+                            <i [class]="c.icon"></i>
+                            {{ c.label }}
+                        </button>
+                        }
+                    </div>
+                </div>
+            </ng-template>
+
+            <!-- Chrome Gmail -->
+            @if (activeClient() === 'gmail') {
+            <div class="ewt-chrome ewt-chrome--gmail">
+                <div class="ewt-chrome-dots">
+                    <span style="background:#f28b82"></span>
+                    <span style="background:#fdd663"></span>
+                    <span style="background:#81c995"></span>
+                </div>
+                <div class="ewt-chrome-bar">mail.google.com/mail</div>
+            </div>
+            }
+            <!-- Chrome Outlook -->
+            @if (activeClient() === 'outlook') {
+            <div class="ewt-chrome ewt-chrome--outlook">
+                <i class="pi pi-microsoft" style="color:white;font-size:13px;"></i>
+                <span class="ewt-chrome-label">Outlook — Bandeja de entrada</span>
+            </div>
+            }
+            <!-- Chrome Apple Mail -->
+            @if (activeClient() === 'apple') {
+            <div class="ewt-chrome ewt-chrome--apple">
+                <div class="ewt-chrome-dots">
+                    <span style="background:#ff5f57"></span>
+                    <span style="background:#febc2e"></span>
+                    <span style="background:#28c840"></span>
+                </div>
+                <span class="ewt-chrome-label-dark">Mail — Bandeja de entrada</span>
+            </div>
+            }
+
+            <!-- Meta del mensaje -->
+            <div class="ewt-meta">
+                <div class="ewt-meta-subject">
+                    {{ form.get('asunto')?.value || 'Asunto del correo' }}
+                </div>
+                <div class="ewt-meta-from">
+                    {{ form.get('nombreRemitente')?.value }}
+                    &lt;{{ form.get('emailRemitente')?.value }}&gt;
+                </div>
+            </div>
+
+            <!-- Cuerpo del correo — preview en tiempo real -->
+            <div class="ewt-email-scroll">
+                <div class="ewt-email-outer">
+                    <div class="ewt-email-body">
+
+                        <div class="ewt-email-header">
+                            <div class="ewt-email-logo">CRC de México</div>
+                        </div>
+
+                        <div class="ewt-email-content">
+                            <h2>
+                                Estimado(a):
+                                <em>{{ previewData().destinatario }}</em>,
+                            </h2>
+                            <p>Gracias por utilizar nuestros servicios. Aquí están los detalles de su acceso:</p>
+
+                            <!-- Paso 1 -->
+                            <div class="ewt-email-section">
+                                <h3>Paso 1. {{ form.get('tituloPaso1')?.value }}</h3>
+                                <p>{{ form.get('textoPaso1')?.value }}</p>
+                                <div class="ewt-store-row">
+                                    <span class="ewt-store-btn">▶ Google Play</span>
+                                    <span class="ewt-store-btn">▶ App Store</span>
+                                </div>
+                            </div>
+
+                            <!-- Paso 2 -->
+                            <div class="ewt-email-section">
+                                <h3>Paso 2. {{ form.get('tituloPaso2')?.value }}</h3>
+                                <p>{{ form.get('textoPaso2')?.value }}</p>
+                                <div class="ewt-qr-box">
+                                    @if (previewData().qrBase64) {
+                                    <img [src]="'data:image/png;base64,' + previewData().qrBase64" alt="QR de muestra"
+                                        class="ewt-qr-img" />
+                                    } @else {
+                                    <div class="ewt-qr-placeholder">
+                                        <i class="pi pi-qrcode"></i>
+                                        <span>QR dinámico<br><small>servicio HID</small></span>
+                                    </div>
+                                    }
+                                </div>
+                                <p class="ewt-qr-caption">
+                                    Escanea este código QR para validar tu acceso.
+                                </p>
+                            </div>
+
+                            <!-- Paso 3 -->
+                            <div class="ewt-email-section">
+                                <h3>Paso 3. {{ form.get('tituloPaso3')?.value }}</h3>
+                                <p>{{ form.get('textoPaso3')?.value }}</p>
+                                <div class="ewt-codigo-box">{{ previewData().codigoInvitacion }}</div>
+                            </div>
+
+                            <div class="ewt-contact-box">
+                                📞 <strong>Tel:</strong> {{ form.get('telefonoContacto')?.value }}<br>
+                                📧 <strong>Email:</strong> {{ form.get('emailContacto')?.value }}<br>
+                                📍 <strong>Dirección:</strong> {{ form.get('direccion')?.value }}
+                            </div>
+                        </div>
+
+                        <div class="ewt-email-footer">
+                            © {{ currentYear }} {{ form.get('nombreEmpresa')?.value }}.
+                            Todos los derechos reservados.<br>
+                            Este es un mensaje automático, por favor no responda a este correo.
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+            <!-- Nota datos dinámicos -->
+            <div class="ewt-dynamic-note">
+                <i class="pi pi-info-circle"></i>
+                <span>
+                    <strong>Destinatario</strong>, <strong>código</strong> y <strong>QR</strong>
+                    son datos de muestra. El Servicio Windows los inyecta al procesar cada tarea HID.
+                </span>
+            </div>
+
+        </p-card>
+    </div><!-- /preview-col -->
+
+</div><!-- /ewt-grid -->
+}
+
+<!-- </div> -->
