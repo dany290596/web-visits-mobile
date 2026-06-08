@@ -13,12 +13,24 @@
             Tipo de credencial: {{ data.tipoCredencial }}
         </div>
 
+        @if (data.dipositivosHID !== undefined && data.dipositivosHID !== null) {
         <div class="col-span-12 md:col-span-6 xl:col-span-3 pt-0">
-            Dispositivo HID:
+            Dispositivo HID: {{data.dipositivosHID.nombre}}
         </div>
+        } @else {
+        <div class="col-span-12 md:col-span-6 xl:col-span-3 pt-0">
+            Dispositivo HID: N/A
+        </div>
+        }
 
+        @if (data.licenciaHidUser !== undefined && data.licenciaHidUser !== null) {
         <div class="col-span-12 md:col-span-6 xl:col-span-6 pt-0">
-            Usuario HID:
+            Usuario HID: {{ data.licenciaHidUser.nombreCompleto }}
+        </div>
+        }
+
+        <div class="col-span-12 md:col-span-6 xl:col-span-3 pt-0">
+            Número de credencial: {{ data.credencialValor }}
         </div>
 
         <!-- 
@@ -74,7 +86,7 @@
         <div class="col-span-12 md:col-span-6">
             <span class="font-medium">Creado:</span> {{ data.fechaCreacion | date:'dd/MM/yyyy HH:mm' }}
             @if (data.usuarioCreadorId) {
-            <span> (ID: {{ data.usuarioCreadorId }})</span>
+            <!-- <span> (ID: {{ data.usuarioCreadorId }})</span> -->
             }
         </div>
         @if (data.fechaModificacion) {

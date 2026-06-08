@@ -95,6 +95,7 @@ export class CredencialHid {
     this.tablaResultados.addTitulo('Tipo de credencial', true, true, true, true, true, 3, 3, 2);
     this.tablaResultados.addTitulo('Dispositivo HID', true, true, true, true, true, 3, 3, 2);
     this.tablaResultados.addTitulo('Usuario HID', true, true, true, true, true, 3, 3, 2);
+    this.tablaResultados.addTitulo('Número de credencial', true, true, true, true, true, 3, 3, 2);
     this.tablaResultados.addTitulo('Fecha de creación', true, true, true, true, true, 1, 1, 1);
     this.tablaResultados.registros = [];
   }
@@ -167,7 +168,7 @@ export class CredencialHid {
         this.sinDatos = false;
 
         listado.forEach(registro => {
-
+          // console.log("CREDENCIAL ::: ", registro);
           let strId: string = registro.id ? registro.id : '';
           let strTipoCredencial: string = registro.tipoCredencial;
           let strDispositivoHID: string = "";
@@ -178,11 +179,13 @@ export class CredencialHid {
           if (registro.licenciaHidUser !== null && registro.licenciaHidUser !== undefined && registro.licenciaHidUser !== "") {
             strUsuarioHID = registro.licenciaHidUser.nombreCompleto;
           }
+          let strNumeroCredencial: string = registro.credencialValor;
 
           let campos: IDataTableRegistroCampo[] = [];
           let campoTipoCredencial: IDataTableRegistroCampo = new DataTableRegistroCampo();
           let campoDispositivoHID: IDataTableRegistroCampo = new DataTableRegistroCampo();
           let campoUsuarioHID: IDataTableRegistroCampo = new DataTableRegistroCampo();
+          let campoNumeroCredencial: IDataTableRegistroCampo = new DataTableRegistroCampo();
           let campoFechaCreacion: IDataTableRegistroCampo = new DataTableRegistroCampo();
           let campoFechaVencimiento: IDataTableRegistroCampo = new DataTableRegistroCampo();
 
@@ -200,6 +203,7 @@ export class CredencialHid {
           campoTipoCredencial.setValores(strTipoCredencial, DataTableRegistroCampo.CAMPO_TEXTO, true, true, true, true, true, 4, 3, 2);
           campoDispositivoHID.setValores(strDispositivoHID, DataTableRegistroCampo.CAMPO_TEXTO, true, true, true, true, true, 3, 3, 2);
           campoUsuarioHID.setValores(strUsuarioHID, DataTableRegistroCampo.CAMPO_TEXTO, true, true, true, true, true, 3, 3, 2);
+          campoNumeroCredencial.setValores(strNumeroCredencial, DataTableRegistroCampo.CAMPO_TEXTO, true, true, true, true, true, 3, 3, 2);
           campoFechaCreacion.setValores(registro.fechaCreacion, DataTableRegistroCampo.CAMPO_TEXTO, true, true, true, true, true, 1, 1, 1);
           campoFechaVencimiento.setValores(
             (!registro.fechaVencimiento)
@@ -222,6 +226,7 @@ export class CredencialHid {
           campos.push(campoTipoCredencial);
           campos.push(campoDispositivoHID);
           campos.push(campoUsuarioHID);
+          campos.push(campoNumeroCredencial);
           campos.push(campoFechaCreacion);
           campos.push(campoFechaVencimiento);
 

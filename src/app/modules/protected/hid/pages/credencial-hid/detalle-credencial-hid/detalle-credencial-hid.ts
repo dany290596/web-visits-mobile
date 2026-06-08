@@ -35,7 +35,7 @@ export class DetalleCredencialHid {
     if (this.id !== undefined && this.id !== null && this.id !== "") {
       this.srvCredencialHID.getById(this.id).subscribe((s: any) => {
         if (s.respuesta === true) {
-          console.log(s);
+          // console.log("CREDENCIAL ::: ", s.data);
           this.data = s.data;
         }
       });
