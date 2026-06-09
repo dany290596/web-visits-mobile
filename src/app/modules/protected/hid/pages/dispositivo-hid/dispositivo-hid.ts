@@ -157,91 +157,91 @@ export class DispositivoHid {
         this.sinDatos = false;
 
         listado.forEach(registro => {
-          this.srvUsuarioHID.getById(registro.id).subscribe((dataById: any) => {
-            if (dataById.respuesta === true) {
-              let strId: string = registro.id ? registro.id : '';
-              let strLicencia: string = "";
-              if (registro.licenciaHID !== undefined && registro.licenciaHID !== null && registro.licenciaHID !== "") {
-                strLicencia = registro.licenciaHID.nombre;
-              }
-              let strCodigoInvitacion: string = registro.codigoInvitacion;
-              let strEndpoint: string = registro.endpointId;
-              let strNombreDispositivo: string = registro.nombreDispositivo;
 
-              let strEstadoInvitacion: string = registro.descripcionEstadoInvitacion;
-              console.log("wWE ", strEstadoInvitacion);
-              let listEstadoInvitacion: IDTRCampoPropiedad[] = [
-                { condicion: 'Pendiente', aplicar: DataTableRegistroCampo.COLOR_BADGE_WARNING },
-                { condicion: 'Cancelado', aplicar: DataTableRegistroCampo.COLOR_BADGE_SECONDARY },
-                { condicion: 'Reconocido', aplicar: DataTableRegistroCampo.COLOR_BADGE_PRIMARY },
-                { condicion: 'Eliminado', aplicar: DataTableRegistroCampo.COLOR_BADGE_DANGER },
-                { condicion: 'Sin estado', aplicar: DataTableRegistroCampo.COLOR_BADGE_DARK }
-              ];
 
-              let campos: IDataTableRegistroCampo[] = [];
-              let campoCodigoInvitacion: IDataTableRegistroCampo = new DataTableRegistroCampo();
-              let campoEndpoint: IDataTableRegistroCampo = new DataTableRegistroCampo();
-              let campoNombreDispositivo: IDataTableRegistroCampo = new DataTableRegistroCampo();
-              let campoEstadoHID: IDataTableRegistroCampo = new DataTableRegistroCampo();
-              let campoEstadoInvitacion: IDataTableRegistroCampo = new DataTableRegistroCampo();
-              let campoFechaCreacion: IDataTableRegistroCampo = new DataTableRegistroCampo();
-              let campoFechaVencimiento: IDataTableRegistroCampo = new DataTableRegistroCampo();
+          let strId: string = registro.id ? registro.id : '';
+          let strLicencia: string = "";
+          if (registro.licenciaHID !== undefined && registro.licenciaHID !== null && registro.licenciaHID !== "") {
+            strLicencia = registro.licenciaHID.nombre;
+          }
+          let strCodigoInvitacion: string = registro.codigoInvitacion;
+          let strEndpoint: string = registro.endpointId;
+          let strNombreDispositivo: string = registro.nombreDispositivo;
 
-              if (registro.fechaCreacion) {
-                const fecha = new Date(registro.fechaCreacion);
+          let strEstadoInvitacion: string = registro.descripcionEstadoInvitacion;
+          console.log("wWE ", strEstadoInvitacion);
+          let listEstadoInvitacion: IDTRCampoPropiedad[] = [
+            { condicion: 'Pendiente', aplicar: DataTableRegistroCampo.COLOR_BADGE_WARNING },
+            { condicion: 'Cancelado', aplicar: DataTableRegistroCampo.COLOR_BADGE_SECONDARY },
+            { condicion: 'Reconocido', aplicar: DataTableRegistroCampo.COLOR_BADGE_PRIMARY },
+            { condicion: 'Eliminado', aplicar: DataTableRegistroCampo.COLOR_BADGE_DANGER },
+            { condicion: 'Sin estado', aplicar: DataTableRegistroCampo.COLOR_BADGE_DARK }
+          ];
+
+          let campos: IDataTableRegistroCampo[] = [];
+          let campoCodigoInvitacion: IDataTableRegistroCampo = new DataTableRegistroCampo();
+          let campoEndpoint: IDataTableRegistroCampo = new DataTableRegistroCampo();
+          let campoNombreDispositivo: IDataTableRegistroCampo = new DataTableRegistroCampo();
+          let campoEstadoHID: IDataTableRegistroCampo = new DataTableRegistroCampo();
+          let campoEstadoInvitacion: IDataTableRegistroCampo = new DataTableRegistroCampo();
+          let campoFechaCreacion: IDataTableRegistroCampo = new DataTableRegistroCampo();
+          let campoFechaVencimiento: IDataTableRegistroCampo = new DataTableRegistroCampo();
+
+          if (registro.fechaCreacion) {
+            const fecha = new Date(registro.fechaCreacion);
+            const dia = String(fecha.getDate()).padStart(2, '0');
+            const mes = String(fecha.getMonth() + 1).padStart(2, '0');
+            const año = fecha.getFullYear();
+            const horas = String(fecha.getHours()).padStart(2, '0');
+            const minutos = String(fecha.getMinutes()).padStart(2, '0');
+
+            registro.fechaCreacion = `${dia}/${mes}/${año} ${horas}:${minutos}`;
+          }
+
+          campoCodigoInvitacion.setValores(strCodigoInvitacion, DataTableRegistroCampo.CAMPO_TEXTO, true, true, true, true, true, 4, 3, 2);
+          campoEndpoint.setValores(strEndpoint, DataTableRegistroCampo.CAMPO_TEXTO, true, true, true, true, true, 2, 2, 2);
+          campoNombreDispositivo.setValores(strNombreDispositivo, DataTableRegistroCampo.CAMPO_TEXTO, true, true, true, true, true, 3, 3, 2);
+          //campoEstadoHID.setValores(strEstadoHID, DataTableRegistroCampo.CAMPO_TEXTO, true, true, true, true, true, 3, 3, 2);
+          campoEstadoInvitacion.setValores(strEstadoInvitacion, DataTableRegistroCampo.CAMPO_BADGE, true, true, false, false, true, 0, 0, 1, listEstadoInvitacion);
+          campoFechaCreacion.setValores(registro.fechaCreacion, DataTableRegistroCampo.CAMPO_TEXTO, true, true, true, true, true, 1, 1, 1);
+          campoFechaVencimiento.setValores(
+            (!registro.fechaVencimiento)
+              ? "N/A"
+              : (() => {
+                const fecha = new Date(registro.fechaVencimiento);
+                if (isNaN(fecha.getTime())) return "NA"; // Validar fecha
                 const dia = String(fecha.getDate()).padStart(2, '0');
                 const mes = String(fecha.getMonth() + 1).padStart(2, '0');
-                const año = fecha.getFullYear();
+                const anio = fecha.getFullYear();
                 const horas = String(fecha.getHours()).padStart(2, '0');
                 const minutos = String(fecha.getMinutes()).padStart(2, '0');
+                const segundos = String(fecha.getSeconds()).padStart(2, '0');
+                return `${dia}/${mes}/${anio} ${horas}:${minutos}:${segundos}`; // <-- string
+              })(),
+            DataTableRegistroCampo.CAMPO_TEXTO,
+            false, true, true, true, true, 1, 1, 1
+          );
 
-                registro.fechaCreacion = `${dia}/${mes}/${año} ${horas}:${minutos}`;
-              }
+          // // campos que aparecerán en línea
+          // campos.push(campoNombre);
+          // campos.push(campoCorreo);
+          // campos.push(campoCorreoSecundario);
 
-              campoCodigoInvitacion.setValores(strCodigoInvitacion, DataTableRegistroCampo.CAMPO_TEXTO, true, true, true, true, true, 4, 3, 2);
-              campoEndpoint.setValores(strEndpoint, DataTableRegistroCampo.CAMPO_TEXTO, true, true, true, true, true, 2, 2, 2);
-              campoNombreDispositivo.setValores(strNombreDispositivo, DataTableRegistroCampo.CAMPO_TEXTO, true, true, true, true, true, 3, 3, 2);
-              //campoEstadoHID.setValores(strEstadoHID, DataTableRegistroCampo.CAMPO_TEXTO, true, true, true, true, true, 3, 3, 2);
-              campoEstadoInvitacion.setValores(strEstadoInvitacion, DataTableRegistroCampo.CAMPO_BADGE, true, true, false, false, true, 0, 0, 1, listEstadoInvitacion);
-              campoFechaCreacion.setValores(registro.fechaCreacion, DataTableRegistroCampo.CAMPO_TEXTO, true, true, true, true, true, 1, 1, 1);
-              campoFechaVencimiento.setValores(
-                (!registro.fechaVencimiento)
-                  ? "N/A"
-                  : (() => {
-                    const fecha = new Date(registro.fechaVencimiento);
-                    if (isNaN(fecha.getTime())) return "NA"; // Validar fecha
-                    const dia = String(fecha.getDate()).padStart(2, '0');
-                    const mes = String(fecha.getMonth() + 1).padStart(2, '0');
-                    const anio = fecha.getFullYear();
-                    const horas = String(fecha.getHours()).padStart(2, '0');
-                    const minutos = String(fecha.getMinutes()).padStart(2, '0');
-                    const segundos = String(fecha.getSeconds()).padStart(2, '0');
-                    return `${dia}/${mes}/${anio} ${horas}:${minutos}:${segundos}`; // <-- string
-                  })(),
-                DataTableRegistroCampo.CAMPO_TEXTO,
-                false, true, true, true, true, 1, 1, 1
-              );
+          // // campos que aparecerán en detalle
+          // 
+          campos.push(campoCodigoInvitacion);
+          campos.push(campoEndpoint);
+          campos.push(campoNombreDispositivo);
+          // campos.push(campoEstadoHID);
+          // campos.push(campoEstadoInvitacion);
+          campos.push(campoFechaCreacion);
+          campos.push(campoFechaVencimiento);
 
-              // // campos que aparecerán en línea
-              // campos.push(campoNombre);
-              // campos.push(campoCorreo);
-              // campos.push(campoCorreoSecundario);
+          if (registro.id !== this.userId) {
+            this.tablaResultados?.addRegistro(strId, registro.estado!, campos);
+          }
 
-              // // campos que aparecerán en detalle
-              // 
-              campos.push(campoCodigoInvitacion);
-              campos.push(campoEndpoint);
-              campos.push(campoNombreDispositivo);
-              // campos.push(campoEstadoHID);
-              // campos.push(campoEstadoInvitacion);
-              campos.push(campoFechaCreacion);
-              campos.push(campoFechaVencimiento);
 
-              if (registro.id !== this.userId) {
-                this.tablaResultados?.addRegistro(strId, registro.estado!, campos);
-              }
-            }
-          });
         });
       }
     });
