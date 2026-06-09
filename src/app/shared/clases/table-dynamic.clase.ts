@@ -252,7 +252,7 @@ export class DataTableRegistroCampo implements IDataTableRegistroCampo {
             case 4:
                 return 'danger';
             case 5:
-                return 'warning';
+                return 'warn';
             case 6:
                 return 'info';
             case 7:

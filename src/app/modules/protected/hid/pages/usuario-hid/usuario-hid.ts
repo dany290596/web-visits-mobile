@@ -106,7 +106,7 @@ export class UsuarioHid {
     this.tablaResultados.addTitulo('Licencia', true, true, true, true, true, 3, 3, 2);
     this.tablaResultados.addTitulo('Usuario', true, true, true, true, true, 2, 2, 2);
     this.tablaResultados.addTitulo('Correo electrónico', true, true, true, true, true, 3, 3, 2);
-    // this.tablaResultados.addTitulo('Estado HID', true, true, true, true, true, 3, 3, 2);
+    this.tablaResultados.addTitulo('Estatus del usuario', true, true, true, true, true, 3, 3, 2);
     this.tablaResultados.addTitulo('Estado invitación', true, true, true, true, true, 1, 1, 1);
     this.tablaResultados.addTitulo('Código de invitación', true, true, true, true, true, 1, 1, 1);
     this.tablaResultados.addTitulo('Tipo de credencial', true, true, true, true, true, 1, 1, 1);
@@ -163,7 +163,7 @@ export class UsuarioHid {
     this.tablaResultados!.registros = [];
     this.srvUsuarioHidTipoCredencial.getAll(filtroBusqueda).subscribe((resp: any) => {
       if (resp.respuesta === true) {
-        console.log("DATA ::: ", resp.data);
+        // console.log("DATA ::: ", resp.data);
         let listado: any[] = resp.data.filter(
           (usuario: any) => usuario.id?.toUpperCase() !== this.userId?.toUpperCase()
         );
@@ -187,6 +187,7 @@ export class UsuarioHid {
         this.sinDatos = false;
 
         listado.forEach(registro => {
+          // console.log("REGISTRO ::: ", registro);
           let strId: string = registro.id ? registro.id : '';
           let strLicencia: string = "";
           if (registro.licenciaHidUser !== undefined && registro.licenciaHidUser !== null && registro.licenciaHidUser !== "") {
@@ -202,9 +203,9 @@ export class UsuarioHid {
           if (registro.licenciaHidUser !== undefined && registro.licenciaHidUser !== null && registro.licenciaHidUser !== "") {
             strEmail = registro.licenciaHidUser.email;
           }
-          let strEstadoHID: string = "";
+          let strStatus: string = "";
           if (registro.licenciaHidUser !== undefined && registro.licenciaHidUser !== null && registro.licenciaHidUser !== "") {
-            strEstadoHID = registro.licenciaHidUser.statusDescripcion;
+            strStatus = registro.licenciaHidUser.statusDescripcion;
           }
           let strEstadoInvitacion: string = "";
           if (registro.licenciaHidUser !== undefined && registro.licenciaHidUser !== null && registro.licenciaHidUser !== "") {
@@ -226,7 +227,14 @@ export class UsuarioHid {
             { condicion: 'Inactivo', aplicar: DataTableRegistroCampo.COLOR_BADGE_DANGER },
             { condicion: 'Sin estado', aplicar: DataTableRegistroCampo.COLOR_BADGE_DARK }
           ];
-
+          let listStatus: IDTRCampoPropiedad[] = [
+            { condicion: 'Pendiente', aplicar: DataTableRegistroCampo.COLOR_BADGE_WARNING },
+            { condicion: 'En proceso', aplicar: DataTableRegistroCampo.COLOR_BADGE_INFO },
+            { condicion: 'Completado', aplicar: DataTableRegistroCampo.COLOR_BADGE_PRIMARY },
+            { condicion: 'Inactivo', aplicar: DataTableRegistroCampo.COLOR_BADGE_DANGER },
+            { condicion: 'Sin estado', aplicar: DataTableRegistroCampo.COLOR_BADGE_DARK },
+            { condicion: 'Estado desconocido', aplicar: DataTableRegistroCampo.COLOR_BADGE_DARK }
+          ];
           let strEstado: string = registro.estado === 1 ? 'Activo' : registro.estado === 2 ? 'Inactivo' : '';
           let listEstado: IDTRCampoPropiedad[] = [
             { condicion: 'Activo', aplicar: DataTableRegistroCampo.COLOR_BADGE_PRIMARY },
@@ -237,7 +245,7 @@ export class UsuarioHid {
           let campoLicencia: IDataTableRegistroCampo = new DataTableRegistroCampo();
           let campoNombre: IDataTableRegistroCampo = new DataTableRegistroCampo();
           let campoEmail: IDataTableRegistroCampo = new DataTableRegistroCampo();
-          let campoEstadoHID: IDataTableRegistroCampo = new DataTableRegistroCampo();
+          let campoEstatus: IDataTableRegistroCampo = new DataTableRegistroCampo();
           let campoEstadoInvitacion: IDataTableRegistroCampo = new DataTableRegistroCampo();
           let campoCodigoInvitacion: IDataTableRegistroCampo = new DataTableRegistroCampo();
           let campoTipoCredencial: IDataTableRegistroCampo = new DataTableRegistroCampo();
@@ -258,7 +266,7 @@ export class UsuarioHid {
           campoLicencia.setValores(strLicencia, DataTableRegistroCampo.CAMPO_TEXTO, true, true, true, true, true, 4, 3, 2);
           campoNombre.setValores(strNombre, DataTableRegistroCampo.CAMPO_TEXTO, true, true, true, true, true, 2, 2, 2);
           campoEmail.setValores(strEmail, DataTableRegistroCampo.CAMPO_TEXTO, true, true, true, true, true, 3, 3, 2);
-          campoEstadoHID.setValores(strEstadoHID, DataTableRegistroCampo.CAMPO_TEXTO, true, true, true, true, true, 3, 3, 2);
+          campoEstatus.setValores(strStatus, DataTableRegistroCampo.CAMPO_BADGE, true, true, false, false, true, 0, 0, 1, listStatus);
           campoEstadoInvitacion.setValores(strEstadoInvitacion, DataTableRegistroCampo.CAMPO_BADGE, true, true, false, false, true, 0, 0, 1, listEstadoInvitacion);
           campoCodigoInvitacion.setValores(strCodigoInvitacion, DataTableRegistroCampo.CAMPO_TEXTO, true, true, true, true, true, 3, 3, 2);
           campoTipoCredencial.setValores(strTipoCredencial, DataTableRegistroCampo.CAMPO_TEXTO, true, true, true, true, true, 3, 3, 2);
@@ -287,13 +295,14 @@ export class UsuarioHid {
           campos.push(campoLicencia);
           campos.push(campoNombre);
           campos.push(campoEmail);
+          campos.push(campoEstatus);
           campos.push(campoEstadoInvitacion);
           campos.push(campoCodigoInvitacion);
           campos.push(campoTipoCredencial);
           campos.push(campoFechaCreacion);
           campos.push(campoEstado);
 
-          console.log("REGISTRO ::: ", registro);
+          // console.log("REGISTRO ::: ", registro);
           const ocultarReactivar = registro.tipoCredencialId === "1a2b3c4d-5e6f-7890-abcd-ef1234567890";
           if (registro.id !== this.userId) {
             this.tablaResultados?.addRegistro(strId, registro.estado!, campos, { mostrarReactivar: !ocultarReactivar });
@@ -444,7 +453,7 @@ export class UsuarioHid {
 
     if (ref && ref.instance) {
       ref.instance.guardadoExitoso.subscribe((s: any) => {
-        console.log("DATA ::: ", s);
+        // console.log("DATA ::: ", s);
         this.buscar(true); // refresca la tabla
       });
     }
@@ -487,7 +496,7 @@ export class UsuarioHid {
 
     if (ref && ref.instance) {
       ref.instance.guardadoExitoso.subscribe((s: any) => {
-        console.log("DATA ::: ", s);
+        // console.log("DATA ::: ", s);
         this.buscar(true); // refresca la tabla
       });
     }
