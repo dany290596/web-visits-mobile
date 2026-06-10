@@ -190,20 +190,20 @@ export class CredencialHid {
           let campoNumeroCredencial: IDataTableRegistroCampo = new DataTableRegistroCampo();
           let campoEstatus: IDataTableRegistroCampo = new DataTableRegistroCampo();
           let listStatus: IDTRCampoPropiedad[] = [
-            { condicion: "Emitida", aplicar: DataTableRegistroCampo.COLOR_BADGE_INFO },
-            { condicion: "Activa", aplicar: DataTableRegistroCampo.COLOR_BADGE_PRIMARY },
+            { condicion: "Creada", aplicar: DataTableRegistroCampo.COLOR_BADGE_INFO },
+            { condicion: "Pendiente", aplicar: DataTableRegistroCampo.COLOR_BADGE_PRIMARY },
+            { condicion: "Asignada", aplicar: DataTableRegistroCampo.COLOR_BADGE_INFO },
             { condicion: "Suspendida", aplicar: DataTableRegistroCampo.COLOR_BADGE_INFO },
-            { condicion: "Revocada", aplicar: DataTableRegistroCampo.COLOR_BADGE_INFO },
             { condicion: "Expirada", aplicar: DataTableRegistroCampo.COLOR_BADGE_DANGER },
             { condicion: "Eliminada", aplicar: DataTableRegistroCampo.COLOR_BADGE_DANGER },
 
 
-            { condicion: "Reservada", aplicar: DataTableRegistroCampo.COLOR_BADGE_PRIMARY },
-            { condicion: "Emitida", aplicar: DataTableRegistroCampo.COLOR_BADGE_INFO },
-            { condicion: "Revocando", aplicar: DataTableRegistroCampo.COLOR_BADGE_INFO },
-            { condicion: "Revocada", aplicar: DataTableRegistroCampo.COLOR_BADGE_INFO },
-            { condicion: "Desvinculada", aplicar: DataTableRegistroCampo.COLOR_BADGE_DANGER },
-            { condicion: "Error de creación", aplicar: DataTableRegistroCampo.COLOR_BADGE_DANGER },
+            { condicion: "Desconocido", aplicar: DataTableRegistroCampo.COLOR_BADGE_DARK },
+            // { condicion: "Emitida", aplicar: DataTableRegistroCampo.COLOR_BADGE_INFO },
+            // { condicion: "Revocando", aplicar: DataTableRegistroCampo.COLOR_BADGE_INFO },
+            // { condicion: "Revocada", aplicar: DataTableRegistroCampo.COLOR_BADGE_INFO },
+            // { condicion: "Desvinculada", aplicar: DataTableRegistroCampo.COLOR_BADGE_DANGER },
+            // { condicion: "Error de creación", aplicar: DataTableRegistroCampo.COLOR_BADGE_DANGER },
           ];
           let campoFechaCreacion: IDataTableRegistroCampo = new DataTableRegistroCampo();
           let campoFechaVencimiento: IDataTableRegistroCampo = new DataTableRegistroCampo();
