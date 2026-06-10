@@ -10,77 +10,30 @@
     <div class="grid grid-cols-12 gap-4">
         <!-- Nombre -->
         <div class="col-span-12 md:col-span-6 xl:col-span-3 pt-0">
-            Nombre del dispositivo: {{ data.nombreDispositivo }}
-        </div>
-
-        <!-- @if (data.dipositivosHID !== undefined && data.dipositivosHID !== null) {
-        <div class="col-span-12 md:col-span-6 xl:col-span-3 pt-0">
-            Dispositivo HID: {{data.dipositivosHID.nombre}}
-        </div>
-        } @else {
-        <div class="col-span-12 md:col-span-6 xl:col-span-3 pt-0">
-            Dispositivo HID: N/A
-        </div>
-        }
-
-        @if (data.licenciaHidUser !== undefined && data.licenciaHidUser !== null) {
-        <div class="col-span-12 md:col-span-6 xl:col-span-6 pt-0">
-            Usuario HID: {{ data.licenciaHidUser.nombreCompleto }}
-        </div>
-        }
-
-        <div class="col-span-12 md:col-span-6 xl:col-span-3 pt-0">
-            Número de credencial: {{ data.credencialValor }}
+            Nombre: {{ data.nombreDispositivo }}
         </div>
 
         <div class="col-span-12 md:col-span-6 xl:col-span-3 pt-0">
-            Status: <p-chip [label]="data.statusDescripcion" icon="" />
-        </div> -->
-
-        <!-- 
-        @if(data.plataforma === 1){
-        <div class="col-span-12 md:col-span-6 xl:col-span-3 pt-0">
-            Plataforma: <p-chip label="Apple" icon="pi pi-apple" />
-        </div>
-        }
-
-        @if(data.plataforma === 2){
-        <div class="col-span-12 md:col-span-6 xl:col-span-3 pt-0">
-            Plataforma: <p-chip label="Google" icon="pi pi-google" />
-        </div>
-        }
-
-        <div class="col-span-12 md:col-span-6 xl:col-span-3 pt-0">
-            Usuario ID: {{ data.userId || 0 }}
+            Código de invitación: {{ data.codigoInvitacion }}
         </div>
 
         <div class="col-span-12 md:col-span-6 xl:col-span-3 pt-0">
-            Fecha invitación:
-            {{ data.invitacionFecha ? (data.invitacionFecha | date:'dd/MM/yyyy HH:mm') : 'Sin datos' }}
+            Endpoint: {{ data.endpointId }}
         </div>
 
         <div class="col-span-12 md:col-span-6 xl:col-span-3 pt-0">
-            Expiración invitación:
-            {{ data.invitacionExpirationDate ? (data.invitacionExpirationDate | date:'dd/MM/yyyy HH:mm') : 'Sin datos'
-            }}
-        </div> -->
+            Versión SDK: {{ data.sdkVersion }}
+        </div>
 
-        <!-- <div class="col-span-12 md:col-span-6 xl:col-span-3 pt-0">
-            Status invitación: <p-chip [label]="data.statusDescripcion" icon="" />
-        </div> -->
+        <div class="col-span-12 md:col-span-6 xl:col-span-3 pt-0">
+            Sistema operativo: {{ data.sistemaOperativo }}
+        </div>
 
         <!-- Estado con badge -->
         <div class="col-span-12 md:col-span-6 xl:col-span-4">
             <label class="block text-sm font-medium text-muted-foreground">Estado</label>
             <p-tag [value]="data.estadoDescripcion" [severity]="data.estado === 1 ? 'success' : 'danger'" />
         </div>
-
-        <!-- Extensiones -->
-        <!-- <div class="col-span-12 md:col-span-6 xl:col-span-4">
-            <label class="block text-sm font-medium text-muted-foreground">Extensiones</label>
-            <p class="mt-1 text-foreground">Fondo: {{ data.extensionImagen }} | Logo: {{ data.extensionImagen
-                }}</p>
-        </div> -->
     </div>
 
 

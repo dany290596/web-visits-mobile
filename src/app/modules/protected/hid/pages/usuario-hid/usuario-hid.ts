@@ -105,7 +105,7 @@ export class UsuarioHid {
 
     // this.tablaResultados.addTitulo('Licencia', true, true, true, true, true, 3, 3, 2);
     this.tablaResultados.addTitulo('Usuario', true, true, true, true, true, 2, 2, 2);
-    this.tablaResultados.addTitulo('Correo electrónico', true, true, true, true, true, 3, 3, 2);
+    this.tablaResultados.addTitulo('Correo electrónico', true, true, true, true, true, 1, 1, 1);
     this.tablaResultados.addTitulo('Estatus', true, true, true, true, true, 3, 3, 2);
     this.tablaResultados.addTitulo('Estado', true, true, true, true, true, 1, 1, 1);
     this.tablaResultados.addTitulo('Código', true, true, true, true, true, 1, 1, 1);
@@ -237,7 +237,7 @@ export class UsuarioHid {
           ];
           let strEstado: string = registro.estado === 1 ? 'Activo' : registro.estado === 2 ? 'Inactivo' : '';
           let listEstado: IDTRCampoPropiedad[] = [
-            { condicion: 'Activo', aplicar: DataTableRegistroCampo.COLOR_BADGE_PRIMARY },
+            { condicion: 'Activo', aplicar: DataTableRegistroCampo.COLOR_BADGE_SUCCESS },
             { condicion: 'Inactivo', aplicar: DataTableRegistroCampo.COLOR_BADGE_DANGER }
           ];
 

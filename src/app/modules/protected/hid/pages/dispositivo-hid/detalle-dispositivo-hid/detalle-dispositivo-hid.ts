@@ -1,14 +1,11 @@
 import { Component, EventEmitter, inject, Input, Output } from '@angular/core';
 
-import { UsuarioHIDService } from '../../../services/usuario-hid.service';
 import { DispositivoHIDService } from '../../../services/dispositivo-hid.service';
 
 import { TagModule } from 'primeng/tag';
 import { CommonModule } from '@angular/common';
 import { CardModule } from 'primeng/card';
 import { ChipModule } from 'primeng/chip';
-
-import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-detalle-dispositivo-hid',

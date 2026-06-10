@@ -43,7 +43,6 @@ import { DetalleDispositivoHid } from './detalle-dispositivo-hid/detalle-disposi
 export class DispositivoHid {
   private srvModal = inject(ModalService);
   private srvForm = inject(FormBuilder);
-  private srvUsuarioHID = inject(UsuarioHIDService);
   private srvStorage = inject(StorageService);
   private srvDispositivoHID = inject(DispositivoHIDService);
 
@@ -82,9 +81,15 @@ export class DispositivoHid {
     this.tablaResultados = new DataTable();
     this.tablaResultados.setTieneAcciones(true, true, true, true);
 
+    this.tablaResultados.addTitulo('Nombre', true, true, true, true, true, 1, 1, 1);
     this.tablaResultados.addTitulo('Código de invitación', true, true, true, true, true, 3, 3, 2);
     this.tablaResultados.addTitulo('Endpoint', true, true, true, true, true, 3, 3, 2);
-    this.tablaResultados.addTitulo('Nombre del dispositivo', true, true, true, true, true, 1, 1, 1);
+
+    this.tablaResultados.addTitulo('Versión SDK', true, true, true, true, true, 3, 3, 2);
+    this.tablaResultados.addTitulo('Sistema operativo', true, true, true, true, true, 3, 3, 2);
+
+    this.tablaResultados.addTitulo('Estado', true, true, true, true, true, 1, 1, 1);
+
     this.tablaResultados.addTitulo('Fecha de creación', true, true, true, true, true, 1, 1, 1);
     this.tablaResultados.registros = [];
   }
@@ -92,19 +97,18 @@ export class DispositivoHid {
   buscar(pagina?: boolean) {
     this.cargando = true;
     const {
-      LicenciaId,
-      Nombre,
-      Email,
-      UserId,
-      Site,
-      Alert,
-      LicenseCount,
-      Telefono,
-      InvitacionFecha,
+      UsuarioId,
+      SistemaOperativo,
+      NombreDispositivo,
+      CodigoInvitacion,
+      EndpointId,
+      SdkVersion,
+      DeviceInfoLastUpdated,
+      DeviceDefault,
+      Status,
       InvitacionExpirationDate,
       InvitacionActividad,
       InvitacionDetalle,
-      Status,
       EmpresaClienteId
     } = this.buscarFG.value;
 
@@ -113,19 +117,18 @@ export class DispositivoHid {
     }
 
     let filtroBusqueda: any = {
-      LicenciaId: LicenciaId,
-      Nombre: Nombre,
-      Email: Email,
-      UserId: UserId,
-      Site: Site,
-      Alert: Alert,
-      LicenseCount: LicenseCount,
-      Telefono: Telefono,
-      InvitacionFecha: InvitacionFecha,
+      UsuarioId: UsuarioId,
+      SistemaOperativo: SistemaOperativo,
+      NombreDispositivo: NombreDispositivo,
+      CodigoInvitacion: CodigoInvitacion,
+      EndpointId: EndpointId,
+      SdkVersion: SdkVersion,
+      DeviceInfoLastUpdated: DeviceInfoLastUpdated,
+      DeviceDefault: DeviceDefault,
+      Status: Status,
       InvitacionExpirationDate: InvitacionExpirationDate,
       InvitacionActividad: InvitacionActividad,
       InvitacionDetalle: InvitacionDetalle,
-      Status: Status,
       EmpresaClienteId: EmpresaClienteId,
 
       DatosCompletos: 1,
@@ -135,7 +138,7 @@ export class DispositivoHid {
     this.tablaResultados!.registros = [];
     this.srvDispositivoHID.getAll(filtroBusqueda).subscribe((resp: any) => {
       if (resp.respuesta === true) {
-        console.log("DATA ::: ", resp.data);
+        // console.log("DATA ::: ", resp.data);
         let listado: any[] = resp.data.filter(
           (usuario: any) => usuario.id?.toUpperCase() !== this.userId?.toUpperCase()
         );
@@ -159,8 +162,7 @@ export class DispositivoHid {
         this.sinDatos = false;
 
         listado.forEach(registro => {
-
-
+          // console.log("REGISTRO ::: ", registro);
           let strId: string = registro.id ? registro.id : '';
           let strLicencia: string = "";
           if (registro.licenciaHID !== undefined && registro.licenciaHID !== null && registro.licenciaHID !== "") {
@@ -171,7 +173,10 @@ export class DispositivoHid {
           let strNombreDispositivo: string = registro.nombreDispositivo;
 
           let strEstadoInvitacion: string = registro.descripcionEstadoInvitacion;
-          console.log("wWE ", strEstadoInvitacion);
+
+          let strVersion: string = registro.sdkVersion;
+          let strSO: string = registro.sistemaOperativo;
+
           let listEstadoInvitacion: IDTRCampoPropiedad[] = [
             { condicion: 'Pendiente', aplicar: DataTableRegistroCampo.COLOR_BADGE_WARNING },
             { condicion: 'Cancelado', aplicar: DataTableRegistroCampo.COLOR_BADGE_SECONDARY },
@@ -184,7 +189,17 @@ export class DispositivoHid {
           let campoCodigoInvitacion: IDataTableRegistroCampo = new DataTableRegistroCampo();
           let campoEndpoint: IDataTableRegistroCampo = new DataTableRegistroCampo();
           let campoNombreDispositivo: IDataTableRegistroCampo = new DataTableRegistroCampo();
-          let campoEstadoHID: IDataTableRegistroCampo = new DataTableRegistroCampo();
+
+          let campoVersion: IDataTableRegistroCampo = new DataTableRegistroCampo();
+          let campoSO: IDataTableRegistroCampo = new DataTableRegistroCampo();
+
+          let strEstado: string = registro.estado === 1 ? 'Activo' : registro.estado === 2 ? 'Inactivo' : '';
+
+          let listEstado: IDTRCampoPropiedad[] = [
+            { condicion: 'Activo', aplicar: DataTableRegistroCampo.COLOR_BADGE_SUCCESS },
+            { condicion: 'Inactivo', aplicar: DataTableRegistroCampo.COLOR_BADGE_DANGER }
+          ];
+
           let campoEstadoInvitacion: IDataTableRegistroCampo = new DataTableRegistroCampo();
           let campoFechaCreacion: IDataTableRegistroCampo = new DataTableRegistroCampo();
           let campoFechaVencimiento: IDataTableRegistroCampo = new DataTableRegistroCampo();
@@ -203,7 +218,10 @@ export class DispositivoHid {
           campoCodigoInvitacion.setValores(strCodigoInvitacion, DataTableRegistroCampo.CAMPO_TEXTO, true, true, true, true, true, 4, 3, 2);
           campoEndpoint.setValores(strEndpoint, DataTableRegistroCampo.CAMPO_TEXTO, true, true, true, true, true, 2, 2, 2);
           campoNombreDispositivo.setValores(strNombreDispositivo, DataTableRegistroCampo.CAMPO_TEXTO, true, true, true, true, true, 3, 3, 2);
-          //campoEstadoHID.setValores(strEstadoHID, DataTableRegistroCampo.CAMPO_TEXTO, true, true, true, true, true, 3, 3, 2);
+
+          campoVersion.setValores(strVersion, DataTableRegistroCampo.CAMPO_TEXTO, true, true, true, true, true, 3, 3, 2);
+          campoSO.setValores(strSO, DataTableRegistroCampo.CAMPO_TEXTO, true, true, true, true, true, 3, 3, 2);
+
           campoEstadoInvitacion.setValores(strEstadoInvitacion, DataTableRegistroCampo.CAMPO_BADGE, true, true, false, false, true, 0, 0, 1, listEstadoInvitacion);
           campoFechaCreacion.setValores(registro.fechaCreacion, DataTableRegistroCampo.CAMPO_TEXTO, true, true, true, true, true, 1, 1, 1);
           campoFechaVencimiento.setValores(
@@ -224,18 +242,19 @@ export class DispositivoHid {
             false, true, true, true, true, 1, 1, 1
           );
 
-          // // campos que aparecerán en línea
-          // campos.push(campoNombre);
-          // campos.push(campoCorreo);
-          // campos.push(campoCorreoSecundario);
+          let campoEstado: IDataTableRegistroCampo = new DataTableRegistroCampo();
 
-          // // campos que aparecerán en detalle
-          // 
+          campoEstado.setValores(strEstado, DataTableRegistroCampo.CAMPO_BADGE, true, true, false, false, true, 0, 0, 1, listEstado);
+
+          campos.push(campoNombreDispositivo);
           campos.push(campoCodigoInvitacion);
           campos.push(campoEndpoint);
-          campos.push(campoNombreDispositivo);
-          // campos.push(campoEstadoHID);
-          // campos.push(campoEstadoInvitacion);
+
+          campos.push(campoVersion);
+          campos.push(campoSO);
+
+          campos.push(campoEstado);
+
           campos.push(campoFechaCreacion);
           campos.push(campoFechaVencimiento);
 
@@ -283,7 +302,7 @@ export class DispositivoHid {
   }
 
   showBuscar(pagina?: boolean): void {
-    // this.buscar(true);
+    this.buscar(true);
   }
 
   showLimpiar(): void {
