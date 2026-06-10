@@ -103,15 +103,15 @@ export class UsuarioHid {
     this.tablaResultados = new DataTable();
     this.tablaResultados.setTieneAcciones(true, true, true, false);
 
-    this.tablaResultados.addTitulo('Licencia', true, true, true, true, true, 3, 3, 2);
+    // this.tablaResultados.addTitulo('Licencia', true, true, true, true, true, 3, 3, 2);
     this.tablaResultados.addTitulo('Usuario', true, true, true, true, true, 2, 2, 2);
     this.tablaResultados.addTitulo('Correo electrónico', true, true, true, true, true, 3, 3, 2);
-    this.tablaResultados.addTitulo('Estatus del usuario', true, true, true, true, true, 3, 3, 2);
-    this.tablaResultados.addTitulo('Estado invitación', true, true, true, true, true, 1, 1, 1);
-    this.tablaResultados.addTitulo('Código de invitación', true, true, true, true, true, 1, 1, 1);
-    this.tablaResultados.addTitulo('Tipo de credencial', true, true, true, true, true, 1, 1, 1);
+    this.tablaResultados.addTitulo('Estatus', true, true, true, true, true, 3, 3, 2);
+    this.tablaResultados.addTitulo('Estado', true, true, true, true, true, 1, 1, 1);
+    this.tablaResultados.addTitulo('Código', true, true, true, true, true, 1, 1, 1);
+    this.tablaResultados.addTitulo('Credencial', true, true, true, true, true, 1, 1, 1);
     this.tablaResultados.addTitulo('Fecha de creación', true, true, true, true, true, 1, 1, 1);
-    this.tablaResultados.addTitulo('Estado WV', true, true, true, true, true, 1, 1, 1);
+    this.tablaResultados.addTitulo('Estado WVM', true, true, true, true, true, 1, 1, 1);
     this.tablaResultados.registros = [];
   }
 
@@ -292,7 +292,7 @@ export class UsuarioHid {
 
           campoEstado.setValores(strEstado, DataTableRegistroCampo.CAMPO_BADGE, true, true, false, false, true, 0, 0, 1, listEstado);
 
-          campos.push(campoLicencia);
+          // campos.push(campoLicencia);
           campos.push(campoNombre);
           campos.push(campoEmail);
           campos.push(campoEstatus);

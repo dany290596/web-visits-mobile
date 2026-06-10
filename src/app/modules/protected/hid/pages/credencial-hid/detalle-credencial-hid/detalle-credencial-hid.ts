@@ -47,7 +47,7 @@ export class DetalleCredencialHid {
   }
 
   suspender() {
-    console.log("ID ::: ", this.id);
+    // console.log("ID ::: ", this.id);
     Swal.fire({
       title: '¡Advertencia!',
       text: 'La credencial está por suspenderse.',

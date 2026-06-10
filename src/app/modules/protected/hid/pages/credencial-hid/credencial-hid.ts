@@ -4,13 +4,12 @@ import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 
 import { ModalService } from '../../../../../shared/services/modal.service';
-import { UsuarioHIDService } from '../../services/usuario-hid.service';
 import { StorageService } from '../../../../auth/services/storage.service';
 import { CredencialHIDService } from '../../services/credencial-hid.service';
 
 import { DataTable, DataTableRegistroCampo } from '../../../../../shared/clases/table-dynamic.clase';
 
-import { IDataTable, IDataTableRegistroCampo } from '../../../../../shared/interfaces/table-dynamic.interface';
+import { IDataTable, IDataTableRegistroCampo, IDTRCampoPropiedad } from '../../../../../shared/interfaces/table-dynamic.interface';
 
 import { TableDynamic } from '../../../../../shared/components/table-dynamic/table-dynamic';
 
@@ -49,7 +48,6 @@ import { filter, take } from 'rxjs';
 export class CredencialHid {
   private srvModal = inject(ModalService);
   private srvForm = inject(FormBuilder);
-  private srvUsuarioHID = inject(UsuarioHIDService);
   private srvStorage = inject(StorageService);
   private srvCredencialHID = inject(CredencialHIDService);
 
@@ -96,6 +94,7 @@ export class CredencialHid {
     this.tablaResultados.addTitulo('Dispositivo HID', true, true, true, true, true, 3, 3, 2);
     this.tablaResultados.addTitulo('Usuario HID', true, true, true, true, true, 3, 3, 2);
     this.tablaResultados.addTitulo('Número de credencial', true, true, true, true, true, 3, 3, 2);
+    this.tablaResultados.addTitulo('Estatus', true, true, true, true, true, 3, 3, 2);
     this.tablaResultados.addTitulo('Fecha de creación', true, true, true, true, true, 1, 1, 1);
     this.tablaResultados.registros = [];
   }
@@ -169,6 +168,8 @@ export class CredencialHid {
 
         listado.forEach(registro => {
           // console.log("CREDENCIAL ::: ", registro);
+
+
           let strId: string = registro.id ? registro.id : '';
           let strTipoCredencial: string = registro.tipoCredencial;
           let strDispositivoHID: string = "";
@@ -180,12 +181,30 @@ export class CredencialHid {
             strUsuarioHID = registro.licenciaHidUser.nombreCompleto;
           }
           let strNumeroCredencial: string = registro.credencialValor;
+          let strStatus: string = registro.statusDescripcion;
 
           let campos: IDataTableRegistroCampo[] = [];
           let campoTipoCredencial: IDataTableRegistroCampo = new DataTableRegistroCampo();
           let campoDispositivoHID: IDataTableRegistroCampo = new DataTableRegistroCampo();
           let campoUsuarioHID: IDataTableRegistroCampo = new DataTableRegistroCampo();
           let campoNumeroCredencial: IDataTableRegistroCampo = new DataTableRegistroCampo();
+          let campoEstatus: IDataTableRegistroCampo = new DataTableRegistroCampo();
+          let listStatus: IDTRCampoPropiedad[] = [
+            { condicion: "Emitida", aplicar: DataTableRegistroCampo.COLOR_BADGE_INFO },
+            { condicion: "Activa", aplicar: DataTableRegistroCampo.COLOR_BADGE_PRIMARY },
+            { condicion: "Suspendida", aplicar: DataTableRegistroCampo.COLOR_BADGE_INFO },
+            { condicion: "Revocada", aplicar: DataTableRegistroCampo.COLOR_BADGE_INFO },
+            { condicion: "Expirada", aplicar: DataTableRegistroCampo.COLOR_BADGE_DANGER },
+            { condicion: "Eliminada", aplicar: DataTableRegistroCampo.COLOR_BADGE_DANGER },
+
+
+            { condicion: "Reservada", aplicar: DataTableRegistroCampo.COLOR_BADGE_PRIMARY },
+            { condicion: "Emitida", aplicar: DataTableRegistroCampo.COLOR_BADGE_INFO },
+            { condicion: "Revocando", aplicar: DataTableRegistroCampo.COLOR_BADGE_INFO },
+            { condicion: "Revocada", aplicar: DataTableRegistroCampo.COLOR_BADGE_INFO },
+            { condicion: "Desvinculada", aplicar: DataTableRegistroCampo.COLOR_BADGE_DANGER },
+            { condicion: "Error de creación", aplicar: DataTableRegistroCampo.COLOR_BADGE_DANGER },
+          ];
           let campoFechaCreacion: IDataTableRegistroCampo = new DataTableRegistroCampo();
           let campoFechaVencimiento: IDataTableRegistroCampo = new DataTableRegistroCampo();
 
@@ -204,6 +223,7 @@ export class CredencialHid {
           campoDispositivoHID.setValores(strDispositivoHID, DataTableRegistroCampo.CAMPO_TEXTO, true, true, true, true, true, 3, 3, 2);
           campoUsuarioHID.setValores(strUsuarioHID, DataTableRegistroCampo.CAMPO_TEXTO, true, true, true, true, true, 3, 3, 2);
           campoNumeroCredencial.setValores(strNumeroCredencial, DataTableRegistroCampo.CAMPO_TEXTO, true, true, true, true, true, 3, 3, 2);
+          campoEstatus.setValores(strStatus, DataTableRegistroCampo.CAMPO_BADGE, true, true, false, false, true, 0, 0, 1, listStatus);
           campoFechaCreacion.setValores(registro.fechaCreacion, DataTableRegistroCampo.CAMPO_TEXTO, true, true, true, true, true, 1, 1, 1);
           campoFechaVencimiento.setValores(
             (!registro.fechaVencimiento)
@@ -227,6 +247,7 @@ export class CredencialHid {
           campos.push(campoDispositivoHID);
           campos.push(campoUsuarioHID);
           campos.push(campoNumeroCredencial);
+          campos.push(campoEstatus);
           campos.push(campoFechaCreacion);
           campos.push(campoFechaVencimiento);
 

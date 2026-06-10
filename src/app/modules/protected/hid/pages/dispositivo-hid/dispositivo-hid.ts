@@ -22,6 +22,8 @@ import { InputTextModule } from 'primeng/inputtext';
 import { AutocEstado } from '../../../../../shared/components/autoc-estado/autoc-estado';
 import { AutocUsuarioHid } from '../../components/autoc/autoc-usuario-hid/autoc-usuario-hid';
 
+import { DetalleDispositivoHid } from './detalle-dispositivo-hid/detalle-dispositivo-hid';
+
 @Component({
   selector: 'app-dispositivo-hid',
   standalone: true,
@@ -240,8 +242,6 @@ export class DispositivoHid {
           if (registro.id !== this.userId) {
             this.tablaResultados?.addRegistro(strId, registro.estado!, campos);
           }
-
-
         });
       }
     });
@@ -257,7 +257,17 @@ export class DispositivoHid {
 
   ver(id: string) {
     if (id.trim().length == 0) { return }
+    const ref = this.srvModal.open(DetalleDispositivoHid, {
+      id: id,
+      nombre: "Detalle del dispositivo HID"
+    }, 'max-w-5xl');
 
+    if (ref && ref.instance) {
+      ref.instance.guardadoExitoso.subscribe((s: any) => {
+        // console.log("DATA ::: ", s);
+        this.buscar(true); // refresca la tabla
+      });
+    }
   }
 
   detalle(id: string) {
