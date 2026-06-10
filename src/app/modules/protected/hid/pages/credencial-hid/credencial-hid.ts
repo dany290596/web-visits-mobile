@@ -88,7 +88,7 @@ export class CredencialHid {
 
   prepararTablaResultados() {
     this.tablaResultados = new DataTable();
-    this.tablaResultados.setTieneAcciones(true, true, true, true);
+    this.tablaResultados.setTieneAcciones(false, true, true, false);
 
     this.tablaResultados.addTitulo('Tipo de credencial', true, true, true, true, true, 3, 3, 2);
     this.tablaResultados.addTitulo('Dispositivo HID', true, true, true, true, true, 3, 3, 2);
