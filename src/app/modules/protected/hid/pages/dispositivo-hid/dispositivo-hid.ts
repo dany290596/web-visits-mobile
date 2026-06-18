@@ -82,10 +82,11 @@ export class DispositivoHid {
     this.tablaResultados.setTieneAcciones(true, true, true, true);
 
     this.tablaResultados.addTitulo('Nombre', true, true, true, true, true, 1, 1, 1);
-    this.tablaResultados.addTitulo('Código de invitación', true, true, true, true, true, 3, 3, 2);
-    this.tablaResultados.addTitulo('Endpoint', true, true, true, true, true, 3, 3, 2);
 
-    this.tablaResultados.addTitulo('Versión SDK', true, true, true, true, true, 3, 3, 2);
+    this.tablaResultados.addTitulo('Código de invitación', false, true, true, true, true, 3, 3, 2);
+    this.tablaResultados.addTitulo('Endpoint', false, true, true, true, true, 3, 3, 2);
+    this.tablaResultados.addTitulo('Versión SDK', false, true, true, true, true, 3, 3, 2);
+
     this.tablaResultados.addTitulo('Sistema operativo', true, true, true, true, true, 3, 3, 2);
 
     this.tablaResultados.addTitulo('Estado', true, true, true, true, true, 1, 1, 1);
@@ -215,11 +216,11 @@ export class DispositivoHid {
             registro.fechaCreacion = `${dia}/${mes}/${año} ${horas}:${minutos}`;
           }
 
-          campoCodigoInvitacion.setValores(strCodigoInvitacion, DataTableRegistroCampo.CAMPO_TEXTO, true, true, true, true, true, 4, 3, 2);
-          campoEndpoint.setValores(strEndpoint, DataTableRegistroCampo.CAMPO_TEXTO, true, true, true, true, true, 2, 2, 2);
-          campoNombreDispositivo.setValores(strNombreDispositivo, DataTableRegistroCampo.CAMPO_TEXTO, true, true, true, true, true, 3, 3, 2);
+          campoCodigoInvitacion.setValores(strCodigoInvitacion, DataTableRegistroCampo.CAMPO_TEXTO, false, true, true, true, true, 4, 3, 2);
+          campoEndpoint.setValores(strEndpoint, DataTableRegistroCampo.CAMPO_TEXTO, false, true, true, true, true, 2, 2, 2);
+          campoVersion.setValores(strVersion, DataTableRegistroCampo.CAMPO_TEXTO, false, true, true, true, true, 3, 3, 2);
 
-          campoVersion.setValores(strVersion, DataTableRegistroCampo.CAMPO_TEXTO, true, true, true, true, true, 3, 3, 2);
+          campoNombreDispositivo.setValores(strNombreDispositivo, DataTableRegistroCampo.CAMPO_TEXTO, true, true, true, true, true, 3, 3, 2);
           campoSO.setValores(strSO, DataTableRegistroCampo.CAMPO_TEXTO, true, true, true, true, true, 3, 3, 2);
 
           campoEstadoInvitacion.setValores(strEstadoInvitacion, DataTableRegistroCampo.CAMPO_BADGE, true, true, false, false, true, 0, 0, 1, listEstadoInvitacion);
@@ -247,10 +248,11 @@ export class DispositivoHid {
           campoEstado.setValores(strEstado, DataTableRegistroCampo.CAMPO_BADGE, true, true, false, false, true, 0, 0, 1, listEstado);
 
           campos.push(campoNombreDispositivo);
+
           campos.push(campoCodigoInvitacion);
           campos.push(campoEndpoint);
-
           campos.push(campoVersion);
+
           campos.push(campoSO);
 
           campos.push(campoEstado);

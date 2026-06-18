@@ -303,9 +303,8 @@ export class UsuarioHid {
           campos.push(campoEstado);
 
           // console.log("REGISTRO ::: ", registro);
-          const ocultarReactivar = registro.tipoCredencialId === "1a2b3c4d-5e6f-7890-abcd-ef1234567890";
           if (registro.id !== this.userId) {
-            this.tablaResultados?.addRegistro(strId, registro.estado!, campos, { mostrarReactivar: !ocultarReactivar });
+            this.tablaResultados?.addRegistro(strId, registro.estado!, campos, { mostrarReactivar: false });
           }
         });
       }

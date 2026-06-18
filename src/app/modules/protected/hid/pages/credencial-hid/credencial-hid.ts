@@ -95,6 +95,7 @@ export class CredencialHid {
     this.tablaResultados.addTitulo('Usuario HID', true, true, true, true, true, 3, 3, 2);
     this.tablaResultados.addTitulo('Número de credencial', true, true, true, true, true, 3, 3, 2);
     this.tablaResultados.addTitulo('Estatus', true, true, true, true, true, 3, 3, 2);
+    this.tablaResultados.addTitulo('Estado', false, true, true, true, true, 1, 1, 1);
     this.tablaResultados.addTitulo('Fecha de creación', true, true, true, true, true, 1, 1, 1);
     this.tablaResultados.registros = [];
   }
@@ -144,6 +145,7 @@ export class CredencialHid {
 
     this.tablaResultados!.registros = [];
     this.srvCredencialHID.getAll(filtroBusqueda).subscribe((resp: any) => {
+      // console.log("RESP :: ", resp);
       if (resp.respuesta === true) {
 
         let listado: any[] = resp.data;
@@ -224,6 +226,14 @@ export class CredencialHid {
           campoUsuarioHID.setValores(strUsuarioHID, DataTableRegistroCampo.CAMPO_TEXTO, true, true, true, true, true, 3, 3, 2);
           campoNumeroCredencial.setValores(strNumeroCredencial, DataTableRegistroCampo.CAMPO_TEXTO, true, true, true, true, true, 3, 3, 2);
           campoEstatus.setValores(strStatus, DataTableRegistroCampo.CAMPO_BADGE, true, true, false, false, true, 0, 0, 1, listStatus);
+          let strEstado: string = registro.estado === 1 ? 'Activo' : registro.estado === 2 ? 'Inactivo' : '';
+          let listEstado: IDTRCampoPropiedad[] = [
+            { condicion: 'Activo', aplicar: DataTableRegistroCampo.COLOR_BADGE_SUCCESS },
+            { condicion: 'Inactivo', aplicar: DataTableRegistroCampo.COLOR_BADGE_DANGER }
+          ];
+          let campoEstado: IDataTableRegistroCampo = new DataTableRegistroCampo();
+          campoEstado.setValores(strEstado, DataTableRegistroCampo.CAMPO_BADGE, false, true, false, false, true, 0, 0, 1, listEstado);
+
           campoFechaCreacion.setValores(registro.fechaCreacion, DataTableRegistroCampo.CAMPO_TEXTO, true, true, true, true, true, 1, 1, 1);
           campoFechaVencimiento.setValores(
             (!registro.fechaVencimiento)
@@ -248,10 +258,13 @@ export class CredencialHid {
           campos.push(campoUsuarioHID);
           campos.push(campoNumeroCredencial);
           campos.push(campoEstatus);
+          campos.push(campoEstado);
           campos.push(campoFechaCreacion);
           campos.push(campoFechaVencimiento);
 
-          this.tablaResultados?.addRegistro(strId, registro.estado!, campos);
+          // this.tablaResultados?.addRegistro(strId, registro.estado!, campos);
+
+          this.tablaResultados?.addRegistro(strId, registro.estado!, campos, { mostrarReactivar: false });
         });
       }
     });

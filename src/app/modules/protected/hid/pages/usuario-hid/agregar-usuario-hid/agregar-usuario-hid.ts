@@ -12,6 +12,7 @@ import Swal from 'sweetalert2';
 import { MessageService } from 'primeng/api';
 import { UsuarioHIDService } from '../../../services/usuario-hid.service';
 import { StorageService } from '../../../../../auth/services/storage.service';
+import { PlataformaService } from '../../../../../../shared/services/plataforma.service';
 
 import { AutocPlantillaCredencial } from '../../../components/autoc/autoc-plantilla-credencial/autoc-plantilla-credencial';
 
@@ -64,6 +65,7 @@ export class AgregarUsuarioHid implements OnInit {
   private srvUsuarioHid = inject(UsuarioHIDService);
   private srvMessage = inject(MessageService);
   private srvStorage = inject(StorageService);
+  private srvPlataforma = inject(PlataformaService);
 
   private readonly ID_WALLET = '2b3c4d5e-6f70-8901-bcde-f12345678901';
 
@@ -245,9 +247,19 @@ export class AgregarUsuarioHid implements OnInit {
     request.nombre = formValue.nombre;
     request.apellidos = formValue.apellidos;
     request.email = formValue.email;
+
     request.telefono = formValue.telefono;
-    request.fechaInicio = formValue.fechaInicio;
-    request.fechaFin = formValue.fechaFin;
+    if (
+      formValue.fechaInicio != '' && formValue.fechaInicio != undefined && formValue.fechaInicio != null
+    ) {
+      request.fechaInicio = this.srvPlataforma.dateToFormatEntrada(formValue.fechaInicio);
+    }
+
+    if (
+      formValue.fechaFin != '' && formValue.fechaFin != undefined && formValue.fechaFin != null
+    ) {
+      request.fechaFin = this.srvPlataforma.dateToFormatSalida(formValue.fechaFin);
+    }
 
     request.imagen = formValue.imagen;
     request.extensionImagen = formValue.extensionImagen;
@@ -269,7 +281,7 @@ export class AgregarUsuarioHid implements OnInit {
       }
     }
 
-    console.log("REQUEST ::: ", request);
+    // console.log("REQUEST ::: ", JSON.stringify(request));
 
     this.srvUsuarioHid.create(request).subscribe((resp: any) => {
       if (resp.respuesta === true) {

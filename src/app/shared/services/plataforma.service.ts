@@ -168,4 +168,33 @@ export class PlataformaService {
         var dd = ((fechaDate.getDate() + 1) < 10 ? '0' : '') + (fechaDate.getDate());
         return fechaDate.getFullYear() + "-" + MM + "-" + dd + " " + "23" + ":" + "59" + ":" + "59";
     }
+
+    dateToFormatEspecial(fecha: any) {
+        const fechaDate = new Date(fecha);
+        var MM = ((fechaDate.getMonth() + 1) < 10 ? '0' : '') + (fechaDate.getMonth() + 1);
+        var dd = ((fechaDate.getDate() + 1) < 10 ? '0' : '') + (fechaDate.getDate());
+        return dd + "/" + MM + "/" + fechaDate.getFullYear();
+    }
+
+
+    dateToFormatComplete(fecha: any) {
+        const fechaDate = new Date(fecha);
+        var MM = ((fechaDate.getMonth() + 1) < 10 ? '0' : '') + (fechaDate.getMonth() + 1);
+        var dd = ((fechaDate.getDate() + 1) < 10 ? '0' : '') + (fechaDate.getDate());
+        return fechaDate.getFullYear() + "-" + MM + "-" + dd + " " + fechaDate.getHours() + ':' + fechaDate.getMinutes() + ':' + fechaDate.getSeconds();
+    }
+
+    dateToFormatEntrada(fecha: any) {
+        const fechaDate = new Date(fecha);
+        var MM = ((fechaDate.getMonth() + 1) < 10 ? '0' : '') + (fechaDate.getMonth() + 1);
+        var dd = ((fechaDate.getDate() + 1) < 10 ? '0' : '') + (fechaDate.getDate());
+        return fechaDate.getFullYear() + "-" + MM + "-" + dd + "T" + "00" + ":" + "00" + ":" + "00";
+    }
+
+    dateToFormatSalida(fecha: any) {
+        const fechaDate = new Date(fecha);
+        var MM = ((fechaDate.getMonth() + 1) < 10 ? '0' : '') + (fechaDate.getMonth() + 1);
+        var dd = ((fechaDate.getDate() + 1) < 10 ? '0' : '') + (fechaDate.getDate());
+        return fechaDate.getFullYear() + "-" + MM + "-" + dd + "T" + "23" + ":" + "59" + ":" + "00";
+    }
 }
