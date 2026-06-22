@@ -27,6 +27,7 @@ import { TipoCredencialService } from '../../../services/tipo-credencial.service
       (onChange)="onChangeMulti($event)"
       (onClear)="onClear()"
       styleClass="w-full"
+      appendTo="body"
       emptyFilterMessage="No se encontraron resultados"
     ></p-multiSelect>
   `,

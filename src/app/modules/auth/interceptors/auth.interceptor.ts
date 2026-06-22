@@ -59,6 +59,7 @@ export const AuthInterceptor: HttpInterceptorFn = (
     if (isPublicUrl(req.url)) {
         return next(req).pipe(
             catchError((error: HttpErrorResponse) => {
+                // console.log("ERROR ::: ", error);
                 if (
                     error.status === 404 &&
                     error.error == null &&
@@ -213,6 +214,7 @@ export const AuthInterceptor: HttpInterceptorFn = (
 
             return next(authReq).pipe(
                 catchError((error: HttpErrorResponse) => {
+                    // console.log("ERROR ::: ", error);
                     if (error.status === 0) {
                         Swal.fire({
                             icon: 'warning',
@@ -275,6 +277,26 @@ export const AuthInterceptor: HttpInterceptorFn = (
                         error.status === 409 &&
                         error.error !== null &&
                         error.statusText === 'OK' &&
+                        error.ok === false &&
+                        error.type === undefined
+                    ) {
+                        if (error.error.codigo === 409 && error.error.respuesta === false) {
+                            Swal.fire({
+                                icon: 'warning',
+                                title: '¡Advertencia!',
+                                text: error.error.mensaje,
+                                confirmButtonText: 'Aceptar',
+                                allowOutsideClick: false,
+                                allowEscapeKey: false,
+                                customClass: { popup: 'swal-theme' }
+                            });
+                        }
+                    }
+
+                    if (
+                        error.status === 409 &&
+                        error.error !== null &&
+                        error.statusText === 'Conflict' &&
                         error.ok === false &&
                         error.type === undefined
                     ) {

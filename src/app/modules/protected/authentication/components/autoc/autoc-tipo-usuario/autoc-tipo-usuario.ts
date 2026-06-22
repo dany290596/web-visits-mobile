@@ -27,6 +27,7 @@ import { TipoUsuarioService } from '../../../services/tipo-usuario.service';
       (onSelect)="onSelect($event)"
       (onClear)="onClear()"
       styleClass="w-full"
+      appendTo="body"
       emptyMessage="No se encontraron resultados"
     >
       <ng-template let-item pTemplate="item">

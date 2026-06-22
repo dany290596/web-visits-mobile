@@ -124,7 +124,7 @@
             <div class="col-span-12 md:col-span-6 xl:col-span-3 pt-0">
                 <label class="form-label fw-semibold">Fecha de inicio <span class="text-red-500">*</span></label>
                 <p-datepicker formControlName="fechaInicio" [minDate]="currentDate" [showIcon]="true"
-                    inputId="fechaInicio" [showOnFocus]="false" class="w-full"></p-datepicker>
+                    inputId="fechaInicio" [showOnFocus]="false" class="w-full" appendTo="body"></p-datepicker>
                 <p-message severity="error" *ngIf="isInvalid('fechaInicio', 'required')" class="p-error block">
                     <i class="pi pi-exclamation-circle"></i> La fecha de inicio es requerida.
                 </p-message>
@@ -146,7 +146,7 @@
             <div class="col-span-12 md:col-span-6 xl:col-span-3 pt-0">
                 <label class="form-label fw-semibold">Fecha de fin <span class="text-red-500">*</span></label>
                 <p-datepicker formControlName="fechaFin" [minDate]="currentDate" [showIcon]="true" inputId="fechaFin"
-                    [showOnFocus]="false" class="w-full"></p-datepicker>
+                    [showOnFocus]="false" class="w-full" appendTo="body"></p-datepicker>
                 <p-message severity="error" *ngIf="isInvalid('fechaFin', 'required')" class="p-error block">
                     <i class="pi pi-exclamation-circle"></i> La fecha de fin es requerida.
                 </p-message>

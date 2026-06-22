@@ -1,7 +1,6 @@
 import { Component, EventEmitter, Input, Output, inject } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-import { Router } from '@angular/router';
 
 import { InputTextModule } from 'primeng/inputtext';
 import { PasswordModule } from 'primeng/password';
@@ -215,5 +214,17 @@ export class AgregarUsuario {
       password += all[Math.floor(Math.random() * all.length)];
     }
     return password.split('').sort(() => 0.5 - Math.random()).join('');
+  }
+
+  onEmailInput(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    const lowerValue = input.value.toLowerCase();
+
+    if (input.value !== lowerValue) {
+      input.value = lowerValue;
+
+      // sincroniza con el FormControl
+      this.form.get('email')?.setValue(lowerValue, { emitEvent: false });
+    }
   }
 }

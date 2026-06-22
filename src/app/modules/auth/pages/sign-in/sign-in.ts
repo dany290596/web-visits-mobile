@@ -475,14 +475,15 @@ export class SignIn implements OnInit {
   }
 
   enviarCorreo() {
-    // this.srvAuth.ObtenerCodigoRecuperacion(this.FormularioContrasena.value.email).subscribe((res: any) => {
-    //   if (res === true) {
-    //     this.errorCorreo = false;
-    //     this.PasoCambioContrasena = 2;
-    //   } else {
-    //     this.errorCorreo = true;
-    //   }
-    // });
+    this.srvAuth.ObtenerCodigoRecuperacion(this.FormularioContrasena.value.email).subscribe((res: any) => {
+      if (res === true) {
+        console.log("ASAS ", res);
+        this.errorCorreo = false;
+        this.PasoCambioContrasena = 2;
+      } else {
+        this.errorCorreo = true;
+      }
+    });
   }
 
   enviarCorreoNuevo() {

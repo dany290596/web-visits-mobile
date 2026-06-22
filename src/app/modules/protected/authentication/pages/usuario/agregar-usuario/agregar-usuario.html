@@ -12,7 +12,8 @@
             <div class="col-span-12 md:col-span-6 xl:col-span-3 pt-0">
                 <label class="form-label fw-semibold">Email <span class="text-red-500">*</span></label>
                 <input pInputText type="email" formControlName="email" placeholder="Email" class="w-full"
-                    autocomplete="off" readonly (focus)="$event.target.removeAttribute('readonly')" />
+                    autocomplete="off" readonly (focus)="$event.target.removeAttribute('readonly')"
+                    (input)="onEmailInput($event)" />
                 <!-- Mensajes de error -->
                 <p-message severity="error" *ngIf="isInvalid('email', 'required')" class="p-error block">
                     <i class="pi pi-exclamation-circle"></i> El correo es requerido.
@@ -103,7 +104,7 @@
             <div class="col-span-12 md:col-span-6 xl:col-span-3 pt-0" *ngIf="form.get('vence')?.value">
                 <label class="form-label fw-semibold">Fecha de vencimiento</label>
                 <p-datepicker formControlName="fechaVencimiento" [minDate]="currentDate" [showIcon]="true"
-                    inputId="buttondisplay" [showOnFocus]="false" class="w-full"></p-datepicker>
+                    inputId="buttondisplay" [showOnFocus]="false" class="w-full" appendTo="body"></p-datepicker>
                 <p-message severity="error"
                     *ngIf="form.errors?.['fechaVencimientoRequerida'] && (formSubmitted || form.get('fechaVencimiento')?.touched)"
                     class="error block">

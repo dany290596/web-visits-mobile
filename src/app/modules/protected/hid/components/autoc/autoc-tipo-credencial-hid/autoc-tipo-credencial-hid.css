@@ -1,0 +1,4 @@
+.p-autocomplete-panel,
+.p-autocomplete-overlay {
+  z-index: 11000 !important;
+}

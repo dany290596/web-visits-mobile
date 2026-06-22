@@ -28,7 +28,11 @@ import { TipoCredencialService } from '../../../services/tipo-credencial.service
       (onClear)="onClear()"
       styleClass="w-full"
       emptyMessage="No se encontraron resultados"
-    >
+      appendTo="body"
+      [autoHighlight]="true"
+      [autoZIndex]="true"
+      
+      [baseZIndex]="11000">
       <ng-template let-item pTemplate="item">
         <div>{{ item.nombre }}</div>
       </ng-template>
