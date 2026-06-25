@@ -518,39 +518,39 @@ export class SignIn implements OnInit {
   }
 
   validarCodigo() {
-    // this.srvAuth.ValidarCodigoRecuperacion(this.FormularioContrasena.value.codigo, this.FormularioContrasena.value.email).subscribe((res: any) => {
-    //   if (res === true) {
-    //     this.PasoCambioContrasena = 3;
-    //     this.errorCorreo = false;
-    //   } else {
-    //     this.errorCorreo = true;
-    //   }
-    // });
+    this.srvAuth.ValidarCodigoRecuperacion(this.FormularioContrasena.value.codigo, this.FormularioContrasena.value.email).subscribe((res: any) => {
+      if (res === true) {
+        this.PasoCambioContrasena = 3;
+        this.errorCorreo = false;
+      } else {
+        this.errorCorreo = true;
+      }
+    });
   }
 
   cambiarContraForm() {
-    // if (this.FormularioContrasena.value.contrasena !== this.FormularioContrasena.value.contrasenavalidacion) {
-    //   return;
-    // }
+    if (this.FormularioContrasena.value.contrasena !== this.FormularioContrasena.value.contrasenavalidacion) {
+      return;
+    }
 
-    // let datos = {
-    //   correo: this.FormularioContrasena.value.email,
-    //   codigo: this.FormularioContrasena.value.codigo,
-    //   contrasena: this.FormularioContrasena.value.contrasena
-    // };
+    let datos = {
+      correo: this.FormularioContrasena.value.email,
+      codigo: this.FormularioContrasena.value.codigo,
+      contrasena: this.FormularioContrasena.value.contrasena
+    };
 
-    // this.srvAuth.RecuperarContrasena(datos).subscribe(async (res: any) => {
-    //   if (res) {
-    //     this.CambiarContrasena = false;
-    //     var alert = (await Swal.fire('Éxito', 'Se cambió la contraseña del usuario correctamente.', 'success')).isConfirmed;
-    //     if (alert) {
-    //     }
-    //     this.PasoCambioContrasena = 1;
-    //     this.FormularioContrasena.reset();
-    //   } else {
-    //     this.errorCorreo = true;
-    //   }
-    // });
+    this.srvAuth.RecuperarContrasena(datos).subscribe(async (res: any) => {
+      if (res) {
+        this.CambiarContrasena = false;
+        var alert = (await Swal.fire('Éxito', 'Se cambió la contraseña del usuario correctamente.', 'success')).isConfirmed;
+        if (alert) {
+        }
+        this.PasoCambioContrasena = 1;
+        this.FormularioContrasena.reset();
+      } else {
+        this.errorCorreo = true;
+      }
+    });
   }
 
 

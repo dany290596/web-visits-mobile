@@ -8,5 +8,6 @@ export const environment = {
     dummyDataUrl: '/assets/dummy-data',
 
     //api: 'https://localhost:7239/api/'
-    api: 'https://192.168.1.126/WebVisitsMobile/api/'
+    //api: 'https://192.168.1.126/WebVisitsMobile/api/'
+    api: 'https://webvisits.app/WebVisitsMobile/api/'
 }

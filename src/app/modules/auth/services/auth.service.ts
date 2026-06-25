@@ -96,15 +96,15 @@ export class AuthService {
     }
 
     ObtenerCodigoRecuperacion(correo: string) {
-        return this.http.get(`${this.url}Login/ObtenerCodigoDeRecuperacion?correo=${correo}`).pipe(catchError(err => of(err)));
+        return this.http.get(`${this.url}Login/GetRecoveryCode?correo=${correo}`).pipe(catchError(err => of(err)));
     }
 
     ValidarCodigoRecuperacion(codigo: string, correo: string) {
-        return this.http.get(`${this.url}Login/ValidarCodigo?codigo=${codigo}&correo=${correo}`).pipe(catchError(err => of(err)));
+        return this.http.get(`${this.url}Login/GetValidateCode?codigo=${codigo}&correo=${correo}`).pipe(catchError(err => of(err)));
     }
 
     RecuperarContrasena(datos: any) {
-        return this.http.post(`${this.url}Login/RecuperarContrasena`, datos).pipe(catchError(err => of(err)));
+        return this.http.post(`${this.url}Login/RecoverPassword`, datos).pipe(catchError(err => of(err)));
     }
 
     CambiarContrasena(puesto: any) {

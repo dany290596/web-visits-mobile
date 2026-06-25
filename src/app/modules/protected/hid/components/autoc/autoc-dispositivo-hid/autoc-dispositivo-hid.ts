@@ -74,7 +74,7 @@ export class AutocDispositivoHid implements OnInit, ControlValueAccessor {
     this.srvDispositivoHID.getAll({ Estado: 1, PageNumber: 1, PageSize: 1000 }).subscribe((res: any) => {
       if (res?.respuesta) {
         // this.items = res.data.map((m: any) => ({ id: m.id, nombre: m.nombre }));
-        this.items = res.data.map((m: any) => ({ id: m.id, nombre: m.nombre })).filter((item: any) => item.id !== idExcluir);
+        this.items = res.data.map((m: any) => ({ id: m.id, nombre: m.nombreDispositivo })).filter((item: any) => item.id !== idExcluir);
         if (this.pendingValue) {
           this.valorSeleccionado = this.items.find(item => item.id === this.pendingValue) || null;
           this.pendingValue = null;

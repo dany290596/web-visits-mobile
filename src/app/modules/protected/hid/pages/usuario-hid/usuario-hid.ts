@@ -132,7 +132,8 @@ export class UsuarioHid {
       InvitacionActividad,
       InvitacionDetalle,
       Status,
-      EmpresaClienteId
+      EmpresaClienteId,
+      Estado
     } = this.buscarFG.value;
 
     if (pagina) {
@@ -157,7 +158,8 @@ export class UsuarioHid {
       EmpresaClienteId: EmpresaClienteId,
 
       DatosCompletos: 1,
-      PageNumber: this.paginaActual
+      PageNumber: this.paginaActual,
+      Estado: Estado
     };
 
     this.tablaResultados!.registros = [];

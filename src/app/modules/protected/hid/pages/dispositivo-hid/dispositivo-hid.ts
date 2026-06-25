@@ -79,7 +79,7 @@ export class DispositivoHid {
 
   prepararTablaResultados() {
     this.tablaResultados = new DataTable();
-    this.tablaResultados.setTieneAcciones(true, true, true, true);
+    this.tablaResultados.setTieneAcciones(true, false, true, false);
 
     this.tablaResultados.addTitulo('Nombre', true, true, true, true, true, 1, 1, 1);
 
@@ -110,7 +110,8 @@ export class DispositivoHid {
       InvitacionExpirationDate,
       InvitacionActividad,
       InvitacionDetalle,
-      EmpresaClienteId
+      EmpresaClienteId,
+      Estado
     } = this.buscarFG.value;
 
     if (pagina) {
@@ -133,7 +134,8 @@ export class DispositivoHid {
       EmpresaClienteId: EmpresaClienteId,
 
       DatosCompletos: 1,
-      PageNumber: this.paginaActual
+      PageNumber: this.paginaActual,
+      Estado: Estado
     };
 
     this.tablaResultados!.registros = [];

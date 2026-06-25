@@ -261,8 +261,8 @@
             </div>
 
             <div class="form-actions">
-                <button class="bg-primary btn-login" type="button" [disabled]="FormularioContrasena.get('email')!.invalid"
-                    (click)="enviarCorreo()">Enviar</button>
+                <button class="bg-primary btn-login" type="button"
+                    [disabled]="FormularioContrasena.get('email')!.invalid" (click)="enviarCorreo()">Enviar</button>
             </div>
         </div>
 
@@ -289,8 +289,9 @@
             </div>
 
             <div class="form-actions">
-                <button class="btn-login" type="button" [disabled]="FormularioContrasena.get('codigo')!.invalid"
-                    (click)="validarCodigo()">Validar código</button>
+                <button class="bg-primary btn-login" type="button"
+                    [disabled]="FormularioContrasena.get('codigo')!.invalid" (click)="validarCodigo()">Validar
+                    código</button>
             </div>
 
             <!-- Temporizador y reenvío -->
@@ -321,8 +322,8 @@
             </div>
 
             <div class="change-email" *ngIf="timeIsUp">
-                <button pButton pRipple type="button" label="Cambiar correo electrónico" icon="pi pi-envelope"
-                    class="secondary-button" (click)="this.PasoCambioContrasena=1"></button>
+                <button class="bg-primary btn-login" type="button" label="Cambiar correo electrónico"
+                    icon="pi pi-envelope" (click)="this.PasoCambioContrasena=1">Cambiar correo electrónico</button>
             </div>
         </div>
 
@@ -426,7 +427,7 @@
                 </div>
 
                 <div class="col-12 flex justify-content-end">
-                    <button class="btn-login" type="button" [disabled]="!isPasswordValid()"
+                    <button class="bg-primary btn-login" type="button" [disabled]="!isPasswordValid()"
                         (click)="cambiarContraForm()">Guardar nueva contraseña</button>
                 </div>
             </div>

@@ -116,7 +116,13 @@ export class CredencialHid {
       InvitacionActividad,
       InvitacionDetalle,
       Status,
-      EmpresaClienteId
+      EmpresaClienteId,
+
+      CredencialValor,
+      DispositivoId,
+      UsuarioId,
+      Estado
+
     } = this.buscarFG.value;
 
     if (pagina) {
@@ -138,6 +144,11 @@ export class CredencialHid {
       InvitacionDetalle: InvitacionDetalle,
       Status: Status,
       EmpresaClienteId: EmpresaClienteId,
+
+      CredencialValor: CredencialValor,
+      DispositivoId: DispositivoId,
+      Usuarioid: UsuarioId,
+      Estado: Estado,
 
       DatosCompletos: 1,
       PageNumber: this.paginaActual

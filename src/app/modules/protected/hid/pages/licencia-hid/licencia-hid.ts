@@ -106,7 +106,8 @@ export class LicenciaHid {
       FechaFin,
       EstadoLicencia,
       EstadoPeriodo,
-      MensajeEstado
+      MensajeEstado,
+      Estado
     } = this.buscarFG.value;
 
     if (pagina) {
@@ -126,13 +127,14 @@ export class LicenciaHid {
       MensajeEstado: MensajeEstado,
 
       DatosCompletos: 1,
-      PageNumber: this.paginaActual
+      PageNumber: this.paginaActual,
+      Estado: Estado
     };
 
     this.tablaResultados!.registros = [];
     this.srvLicenciaHID.getAll(filtroBusqueda).subscribe((resp: any) => {
       if (resp.respuesta === true) {
-        console.log("DATA ::: ", resp.data);
+        // console.log("DATA ::: ", resp.data);
         let listado: any[] = resp.data.filter(
           (usuario: any) => usuario.id?.toUpperCase() !== this.userId?.toUpperCase()
         );
