@@ -1,5 +1,6 @@
 export class IDipositivoHIDFilter {
     UsuarioId?: string = "";
+    UsuarioNombre?: string = "";
     SistemaOperativo?: string = "";
     NombreDispositivo?: string = "";
     CodigoInvitacion?: string = "";

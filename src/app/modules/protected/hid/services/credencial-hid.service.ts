@@ -26,6 +26,9 @@ export class CredencialHIDService {
         if (filter.Usuarioid !== null && filter.Usuarioid !== undefined && filter.Usuarioid !== "") {
             params = params.set('Usuarioid', filter.Usuarioid);
         }
+        if (filter.UsuarioNombre !== null && filter.UsuarioNombre !== undefined && filter.UsuarioNombre !== "") {
+            params = params.set('UsuarioNombre', filter.UsuarioNombre);
+        }
         if (filter.CredencialValor !== null && filter.CredencialValor !== undefined && filter.CredencialValor !== "") {
             params = params.set('CredencialValor', filter.CredencialValor);
         }

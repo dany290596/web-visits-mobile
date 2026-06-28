@@ -2,6 +2,7 @@ export class ICredencialHIDFilter {
     TipoCredencial: string = "";
     DispositivoId: string = "";
     Usuarioid: string = "";
+    UsuarioNombre: string = "";
     CredencialValor: string = "";
     Validity: string = "";
     Status: any;

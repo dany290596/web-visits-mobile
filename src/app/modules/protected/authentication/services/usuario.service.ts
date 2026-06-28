@@ -164,7 +164,7 @@ export class UsuarioService {
     }
 
     CambiarContrasena(puesto: any) {
-        return this.http.post(`${url}Usuario/CambiarContrasena/CambiarContrasena`, puesto, {
+        return this.http.post(`${url}Usuario/ChangePassword/ChangePassword`, puesto, {
             headers: new HttpHeaders(
                 {
                     'Content-Type': 'application/json',

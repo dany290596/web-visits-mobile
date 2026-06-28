@@ -20,6 +20,9 @@ export class DispositivoHIDService {
         if (filter.UsuarioId !== null && filter.UsuarioId !== undefined && filter.UsuarioId !== "") {
             params = params.set('UsuarioId', filter.UsuarioId);
         }
+        if (filter.UsuarioNombre !== null && filter.UsuarioNombre !== undefined && filter.UsuarioNombre !== "") {
+            params = params.set('UsuarioNombre', filter.UsuarioNombre);
+        }
         if (filter.SistemaOperativo !== null && filter.SistemaOperativo !== undefined && filter.SistemaOperativo !== "") {
             params = params.set('SistemaOperativo', filter.SistemaOperativo);
         }

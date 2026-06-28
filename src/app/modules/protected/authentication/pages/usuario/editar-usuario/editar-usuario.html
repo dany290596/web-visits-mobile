@@ -137,7 +137,7 @@
             <div class="col-span-12 md:col-span-6 xl:col-span-3 pt-0" *ngIf="form.get('vence')?.value">
                 <label class="form-label fw-semibold">Fecha de vencimiento</label>
                 <p-datepicker formControlName="fechaVencimiento" [minDate]="currentDate" [showIcon]="true"
-                    inputId="buttondisplay" [showOnFocus]="false" class="w-full"></p-datepicker>
+                    inputId="buttondisplay" [showOnFocus]="false" class="w-full" appendTo="body"></p-datepicker>
                 <p-message severity="error"
                     *ngIf="form.errors?.['fechaVencimientoRequerida'] && (formSubmitted || form.get('fechaVencimiento')?.touched)"
                     class="error block">

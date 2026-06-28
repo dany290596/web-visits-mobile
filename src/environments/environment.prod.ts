@@ -7,6 +7,7 @@ export const environment = {
     apiUrl: 'https://tu-api.crcdemexico.com.mx/api',
     dummyDataUrl: '/assets/dummy-data',
 
-    //api: 'https://localhost:7239/api/'
-    api: 'https://192.168.1.126/WebVisitsMobile/api/'
+    // api: 'http://localhost:5071/api/'
+    // api: 'https://192.168.1.126/WebVisitsMobile/api/'
+    api: 'https://webvisits.app/WebVisitsMobile/api/'
 }

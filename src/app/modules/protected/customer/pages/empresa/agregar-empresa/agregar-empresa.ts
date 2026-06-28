@@ -648,27 +648,27 @@ export class AgregarEmpresa implements OnInit {
           });
           this.closeModal.emit(true);
         } else {
-          Swal.fire({
-            icon: 'warning',
-            title: '¡Advertencia!',
-            text: resp?.mensaje || 'No se pudo guardar',
-            confirmButtonText: 'Aceptar',
-            allowOutsideClick: false,
-            allowEscapeKey: false,
-            showCloseButton: false
-          });
+          // Swal.fire({
+          //   icon: 'warning',
+          //   title: '¡Advertencia!',
+          //   text: resp?.mensaje || 'No se pudo guardar',
+          //   confirmButtonText: 'Aceptar',
+          //   allowOutsideClick: false,
+          //   allowEscapeKey: false,
+          //   showCloseButton: false
+          // });
         }
       },
       error: () => {
-        Swal.fire({
-          icon: 'error',
-          title: '¡Error!',
-          text: 'Error al guardar la empresa',
-          confirmButtonText: 'Aceptar',
-          allowOutsideClick: false,
-          allowEscapeKey: false,
-          showCloseButton: false
-        });
+        // Swal.fire({
+        //   icon: 'error',
+        //   title: '¡Error!',
+        //   text: 'Error al guardar la empresa',
+        //   confirmButtonText: 'Aceptar',
+        //   allowOutsideClick: false,
+        //   allowEscapeKey: false,
+        //   showCloseButton: false
+        // });
       }
     });
 

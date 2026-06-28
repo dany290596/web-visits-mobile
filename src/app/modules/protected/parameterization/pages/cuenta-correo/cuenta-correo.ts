@@ -1,8 +1,8 @@
-import { Component, EventEmitter, OnDestroy, OnInit, Output, effect, inject } from '@angular/core';
+import { Component, OnDestroy, OnInit, effect, inject } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
-import { forkJoin, Subscription } from 'rxjs';
+import { filter, forkJoin, Subscription, take } from 'rxjs';
 
 import { InputTextModule } from 'primeng/inputtext';
 import { MessageModule } from 'primeng/message';
@@ -13,7 +13,7 @@ import { MessageService } from 'primeng/api';
 import { ConfiguracionService } from '../../../configuration/services/configuration.service';
 import { StorageService } from '../../../../auth/services/storage.service';
 
-import { IUsuarioResponse } from '../../../authentication/interfaces/usuario.interface';
+import { IUsuarioAutenticado, IUsuarioResponse } from '../../../authentication/interfaces/usuario.interface';
 
 import Swal from 'sweetalert2';
 
@@ -76,6 +76,8 @@ export class CuentaCorreo implements OnInit, OnDestroy {
   tls2SMTPData: any;
   protocoloEnvioCorreoData: any;
 
+  userData!: IUsuarioAutenticado;
+
   emailSMTPFG: FormGroup = this.srvForm.group({
     Email: ['', [Validators.required, Validators.email]],
     ServidorSMTP: ['', [Validators.required]],
@@ -102,6 +104,15 @@ export class CuentaCorreo implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
+    this.srvStorage.userData$
+      .pipe(
+        filter((data: any) => !!data?.perfilId),
+        take(1)
+      )
+      .subscribe((data: IUsuarioAutenticado) => {
+        this.userData = data;
+      });
+
     forkJoin({
       tenant: this.srvConfiguracion.getById(this.tenant),
       client: this.srvConfiguracion.getById(this.client),
@@ -118,7 +129,7 @@ export class CuentaCorreo implements OnInit, OnDestroy {
       protocoloEnvioCorreo: this.srvConfiguracion.getById(this.protocoloEnvioCorreoId),
     }).subscribe({
       next: (responses) => {
-        console.log("RESPONSE ", responses);
+        // console.log("RESPONSE ", responses);
 
         this.validarTlsInicial();
         this.setupTlsValidation();
@@ -232,6 +243,20 @@ export class CuentaCorreo implements OnInit, OnDestroy {
   }
 
   showEmailOAuth(): void {
+    if (this.userData.usuarioId === undefined || this.userData.usuarioId === null || this.userData.usuarioId === "") {
+      Swal.fire({
+        title: '¡Advertencia!',
+        text: 'El Id del usuario es requerido para continuar.',
+        icon: 'warning',
+        confirmButtonText: 'Aceptar',
+        allowOutsideClick: false,
+        customClass: {
+          popup: 'swal-theme',
+        }
+      });
+      return;
+    }
+
     if (this.emailOAuthFG.invalid) {
       Object.keys(this.emailOAuthFG.controls).forEach(key => {
         const control = this.emailOAuthFG.get(key);
@@ -243,7 +268,10 @@ export class CuentaCorreo implements OnInit, OnDestroy {
         text: 'Por favor, complete todos los campos obligatorios',
         icon: 'warning',
         confirmButtonText: 'Aceptar',
-        confirmButtonColor: '#2563EB'
+        confirmButtonColor: '#2563EB',
+        customClass: {
+          popup: 'swal-theme',
+        }
       });
       return;
     }
@@ -259,7 +287,8 @@ export class CuentaCorreo implements OnInit, OnDestroy {
       valor2: this.tenantData.valor2,
       valor3: this.tenantData.valor3,
       editable: this.tenantData.editable,
-      lectura: this.tenantData.lectura
+      lectura: this.tenantData.lectura,
+      usuarioCreadorId: this.userData.usuarioId
     };
 
     const clientRequest: any = {
@@ -271,7 +300,8 @@ export class CuentaCorreo implements OnInit, OnDestroy {
       valor2: this.clientData.valor2,
       valor3: this.clientData.valor3,
       editable: this.clientData.editable,
-      lectura: this.clientData.lectura
+      lectura: this.clientData.lectura,
+      usuarioCreadorId: this.userData.usuarioId
     };
 
     const clientSecretRequest: any = {
@@ -283,7 +313,8 @@ export class CuentaCorreo implements OnInit, OnDestroy {
       valor2: this.clientSecretData.valor2,
       valor3: this.clientSecretData.valor3,
       editable: this.clientSecretData.editable,
-      lectura: this.clientSecretData.lectura
+      lectura: this.clientSecretData.lectura,
+      usuarioCreadorId: this.userData.usuarioId
     };
 
     const emailRequest: any = {
@@ -295,7 +326,8 @@ export class CuentaCorreo implements OnInit, OnDestroy {
       valor2: this.emailData.valor2,
       valor3: this.emailData.valor3,
       editable: this.emailData.editable,
-      lectura: this.emailData.lectura
+      lectura: this.emailData.lectura,
+      usuarioCreadorId: this.userData.usuarioId
     };
 
     const protocolRequest: any = {
@@ -307,14 +339,15 @@ export class CuentaCorreo implements OnInit, OnDestroy {
       valor2: this.protocoloEnvioCorreoData.valor2,
       valor3: this.protocoloEnvioCorreoData.valor3,
       editable: this.protocoloEnvioCorreoData.editable,
-      lectura: this.protocoloEnvioCorreoData.lectura
+      lectura: this.protocoloEnvioCorreoData.lectura,
+      usuarioCreadorId: this.userData.usuarioId
     };
 
-    console.log(tenantRequest);
-    console.log(clientRequest);
-    console.log(clientSecretRequest);
-    console.log(emailRequest);
-    console.log(protocolRequest);
+    // console.log(tenantRequest);
+    // console.log(clientRequest);
+    // console.log(clientSecretRequest);
+    // console.log(emailRequest);
+    // console.log(protocolRequest);
 
     forkJoin({
       tenant: this.srvConfiguracion.update(this.tenantData.id, tenantRequest),
@@ -335,7 +368,10 @@ export class CuentaCorreo implements OnInit, OnDestroy {
             icon: 'success',
             confirmButtonText: 'Aceptar',
             confirmButtonColor: '#2563EB',
-            timerProgressBar: true
+            timerProgressBar: true,
+            customClass: {
+              popup: 'swal-theme',
+            }
           });
         } else {
           Swal.fire({
@@ -343,7 +379,10 @@ export class CuentaCorreo implements OnInit, OnDestroy {
             text: 'Algunas configuraciones no se pudieron guardar',
             icon: 'warning',
             confirmButtonText: 'Aceptar',
-            confirmButtonColor: '#2563EB'
+            confirmButtonColor: '#2563EB',
+            customClass: {
+              popup: 'swal-theme',
+            }
           });
         }
       },
@@ -353,13 +392,30 @@ export class CuentaCorreo implements OnInit, OnDestroy {
           text: 'No se pudieron guardar las configuraciones',
           icon: 'warning',
           confirmButtonText: 'Aceptar',
-          confirmButtonColor: '#2563EB'
+          confirmButtonColor: '#2563EB',
+          customClass: {
+            popup: 'swal-theme',
+          }
         });
       }
     });
   }
 
   showEmailSMTP(): void {
+    if (this.userData.usuarioId === undefined || this.userData.usuarioId === null || this.userData.usuarioId === "") {
+      Swal.fire({
+        title: '¡Advertencia!',
+        text: 'El Id del usuario es requerido para continuar.',
+        icon: 'warning',
+        confirmButtonText: 'Aceptar',
+        allowOutsideClick: false,
+        customClass: {
+          popup: 'swal-theme',
+        }
+      });
+      return;
+    }
+
     if (this.emailSMTPFG.invalid) {
       Object.keys(this.emailSMTPFG.controls).forEach(key => {
         const control = this.emailSMTPFG.get(key);
@@ -371,12 +427,15 @@ export class CuentaCorreo implements OnInit, OnDestroy {
         text: 'Por favor, complete todos los campos obligatorios',
         icon: 'warning',
         confirmButtonText: 'Aceptar',
-        confirmButtonColor: '#2563EB'
+        confirmButtonColor: '#2563EB',
+        customClass: {
+          popup: 'swal-theme',
+        }
       });
       return;
     }
 
-    let form = this.emailSMTPFG.getRawValue();;
+    let form = this.emailSMTPFG.getRawValue();
 
     const emailRequest: any = {
       id: this.emailSMTPData.id,
@@ -387,7 +446,8 @@ export class CuentaCorreo implements OnInit, OnDestroy {
       valor2: this.emailSMTPData.valor2,
       valor3: this.emailSMTPData.valor3,
       editable: this.emailSMTPData.editable,
-      lectura: this.emailSMTPData.lectura
+      lectura: this.emailSMTPData.lectura,
+      usuarioCreadorId: this.userData.usuarioId
     };
 
     const servidorRequest: any = {
@@ -399,7 +459,8 @@ export class CuentaCorreo implements OnInit, OnDestroy {
       valor2: this.servidorSMTPData.valor2,
       valor3: this.servidorSMTPData.valor3,
       editable: this.servidorSMTPData.editable,
-      lectura: this.servidorSMTPData.lectura
+      lectura: this.servidorSMTPData.lectura,
+      usuarioCreadorId: this.userData.usuarioId
     };
 
     const puertoRequest: any = {
@@ -411,7 +472,8 @@ export class CuentaCorreo implements OnInit, OnDestroy {
       valor2: this.puertoSMTPData.valor2,
       valor3: this.puertoSMTPData.valor3,
       editable: this.puertoSMTPData.editable,
-      lectura: this.puertoSMTPData.lectura
+      lectura: this.puertoSMTPData.lectura,
+      usuarioCreadorId: this.userData.usuarioId
     };
 
     const usuarioRequest: any = {
@@ -423,7 +485,8 @@ export class CuentaCorreo implements OnInit, OnDestroy {
       valor2: this.usuarioSMTPData.valor2,
       valor3: this.usuarioSMTPData.valor3,
       editable: this.usuarioSMTPData.editable,
-      lectura: this.usuarioSMTPData.lectura
+      lectura: this.usuarioSMTPData.lectura,
+      usuarioCreadorId: this.userData.usuarioId
     };
 
     const contrasenaRequest: any = {
@@ -435,7 +498,8 @@ export class CuentaCorreo implements OnInit, OnDestroy {
       valor2: this.contrasenaSMTPData.valor2,
       valor3: this.contrasenaSMTPData.valor3,
       editable: this.contrasenaSMTPData.editable,
-      lectura: this.contrasenaSMTPData.lectura
+      lectura: this.contrasenaSMTPData.lectura,
+      usuarioCreadorId: this.userData.usuarioId
     };
 
     const sslRequest: any = {
@@ -443,11 +507,12 @@ export class CuentaCorreo implements OnInit, OnDestroy {
       aplicacionId: this.sslSMTPData.aplicacionId,
       nombreParametro: this.sslSMTPData.nombreParametro,
       valorGuid: this.sslSMTPData.valorGuid,
-      valor1: form.SSL ? 1 : 2,
+      valor1: form.SSL ? '1' : '2',
       valor2: this.sslSMTPData.valor2,
       valor3: this.sslSMTPData.valor3,
       editable: this.sslSMTPData.editable,
-      lectura: this.sslSMTPData.lectura
+      lectura: this.sslSMTPData.lectura,
+      usuarioCreadorId: this.userData.usuarioId
     };
 
     const tls1Request: any = {
@@ -455,11 +520,12 @@ export class CuentaCorreo implements OnInit, OnDestroy {
       aplicacionId: this.tls1SMTPData.aplicacionId,
       nombreParametro: this.tls1SMTPData.nombreParametro,
       valorGuid: this.tls1SMTPData.valorGuid,
-      valor1: form.TLS1 ? 1 : 2,
+      valor1: form.TLS1 ? '1' : '2',
       valor2: this.tls1SMTPData.valor2,
       valor3: this.tls1SMTPData.valor3,
       editable: this.tls1SMTPData.editable,
-      lectura: this.tls1SMTPData.lectura
+      lectura: this.tls1SMTPData.lectura,
+      usuarioCreadorId: this.userData.usuarioId
     };
 
     const tls2Request: any = {
@@ -467,11 +533,12 @@ export class CuentaCorreo implements OnInit, OnDestroy {
       aplicacionId: this.tls2SMTPData.aplicacionId,
       nombreParametro: this.tls2SMTPData.nombreParametro,
       valorGuid: this.tls2SMTPData.valorGuid,
-      valor1: form.TLS2 ? 1 : 2,
+      valor1: form.TLS2 ? '1' : '2',
       valor2: this.tls2SMTPData.valor2,
       valor3: this.tls2SMTPData.valor3,
       editable: this.tls2SMTPData.editable,
-      lectura: this.tls2SMTPData.lectura
+      lectura: this.tls2SMTPData.lectura,
+      usuarioCreadorId: this.userData.usuarioId
     };
 
     const protocolRequest: any = {
@@ -483,18 +550,19 @@ export class CuentaCorreo implements OnInit, OnDestroy {
       valor2: this.protocoloEnvioCorreoData.valor2,
       valor3: this.protocoloEnvioCorreoData.valor3,
       editable: this.protocoloEnvioCorreoData.editable,
-      lectura: this.protocoloEnvioCorreoData.lectura
+      lectura: this.protocoloEnvioCorreoData.lectura,
+      usuarioCreadorId: this.userData.usuarioId
     };
 
-    console.log(emailRequest);
-    console.log(servidorRequest);
-    console.log(puertoRequest);
-    console.log(usuarioRequest);
-    console.log(contrasenaRequest);
-    console.log(sslRequest);
-    console.log(tls1Request);
-    console.log(tls2Request);
-    console.log(protocolRequest);
+    // console.log(emailRequest);
+    // console.log(servidorRequest);
+    // console.log(puertoRequest);
+    // console.log(usuarioRequest);
+    // console.log(contrasenaRequest);
+    // console.log(sslRequest);
+    // console.log(tls1Request);
+    // console.log(tls2Request);
+    // console.log(protocolRequest);
 
     forkJoin({
       email: this.srvConfiguracion.update(this.emailSMTPData.id, emailRequest),
@@ -523,7 +591,10 @@ export class CuentaCorreo implements OnInit, OnDestroy {
             icon: 'success',
             confirmButtonText: 'Aceptar',
             confirmButtonColor: '#2563EB',
-            timerProgressBar: true
+            timerProgressBar: true,
+            customClass: {
+              popup: 'swal-theme',
+            }
           });
         } else {
           Swal.fire({
@@ -531,7 +602,10 @@ export class CuentaCorreo implements OnInit, OnDestroy {
             text: 'Algunas configuraciones SMTP no se pudieron guardar',
             icon: 'warning',
             confirmButtonText: 'Aceptar',
-            confirmButtonColor: '#2563EB'
+            confirmButtonColor: '#2563EB',
+            customClass: {
+              popup: 'swal-theme',
+            }
           });
         }
       },
@@ -541,7 +615,10 @@ export class CuentaCorreo implements OnInit, OnDestroy {
           text: 'No se pudieron guardar las configuraciones SMTP',
           icon: 'warning',
           confirmButtonText: 'Aceptar',
-          confirmButtonColor: '#2563EB'
+          confirmButtonColor: '#2563EB',
+          customClass: {
+            popup: 'swal-theme',
+          }
         });
       }
     });
@@ -614,7 +691,10 @@ export class CuentaCorreo implements OnInit, OnDestroy {
       confirmButtonText: 'Sí, continuar',
       cancelButtonText: 'Cancelar',
       confirmButtonColor: '#2563EB',
-      cancelButtonColor: '#d33'
+      cancelButtonColor: '#d33',
+      customClass: {
+        popup: 'swal-theme',
+      }
     }).then((result) => {
       if (result.isConfirmed) {
         // Aplicar el cambio: el control tocado al nuevo valor, el opuesto al contrario

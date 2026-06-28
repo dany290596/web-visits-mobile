@@ -21,6 +21,7 @@ import { InputTextModule } from 'primeng/inputtext';
 import { AutocEstado } from '../../../../../shared/components/autoc-estado/autoc-estado';
 import { AutocUsuarioHid } from '../../components/autoc/autoc-usuario-hid/autoc-usuario-hid';
 import { AutocDispositivoHid } from '../../components/autoc/autoc-dispositivo-hid/autoc-dispositivo-hid';
+import { AutocQueryHid } from '../../components/autoc/autoc-query-hid/autoc-query-hid';
 
 import { CrearCredencialHid } from './crear-credencial-hid/crear-credencial-hid';
 import { DetalleCredencialHid } from './detalle-credencial-hid/detalle-credencial-hid';
@@ -40,7 +41,8 @@ import { filter, take } from 'rxjs';
     InputTextModule,
     AutocEstado,
     AutocUsuarioHid,
-    AutocDispositivoHid
+    AutocDispositivoHid,
+    AutocQueryHid
   ],
   templateUrl: './credencial-hid.html',
   styleUrl: './credencial-hid.css',
@@ -67,6 +69,7 @@ export class CredencialHid {
 
   buscarFG: FormGroup = this.srvForm.group({
     UsuarioId: [''],
+    UsuarioNombre: [''],
     DispositivoId: [''],
     CredencialValor: [''],
     Estado: [''],
@@ -117,7 +120,7 @@ export class CredencialHid {
       InvitacionDetalle,
       Status,
       EmpresaClienteId,
-
+      UsuarioNombre,
       CredencialValor,
       DispositivoId,
       UsuarioId,
@@ -134,6 +137,7 @@ export class CredencialHid {
       Nombre: Nombre,
       Email: Email,
       UserId: UserId,
+      UsuarioNombre: UsuarioNombre,
       Site: Site,
       Alert: Alert,
       LicenseCount: LicenseCount,

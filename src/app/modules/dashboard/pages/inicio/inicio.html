@@ -34,4 +34,105 @@
         </div>
 
     </div>
+
+
+    <p-dialog header="¡Bienvenido a WebVisitsMobile!" [(visible)]="PrimeraConexion" [modal]="true"
+        [style]="{width: '50vw', borderRadius: '12px', boxShadow: '0 10px 25px rgba(0,0,0,0.1)'}" [baseZIndex]="10000"
+        [closable]="true" [draggable]="true" [resizable]="true" [showHeader]="true"
+        [breakpoints]="{'960px': '75vw', '640px': '90vw'}" class="modern-dialog">
+
+        <div class="dialog-content">
+            <div class="text-center mb-4">
+                <img src="menu_wvm.png" class="welcome-logo">
+            </div>
+
+            <div class="text-center" *ngIf="CambiarContrasena==false">
+                <p class="welcome-text">
+                    Gracias por elegir WebVisitsMobile para la gestionó de sus reuniones. Con
+                    WebVisitsMobile, puede programar, modificar o cancelar reuniones en cualquier
+                    momento y desde cualquier lugar, de forma rápida y sencilla.
+                </p>
+
+                <p class="welcome-text">
+                    Para proteger la seguridad de su cuenta, le recomendamos actualizar su contraseña
+                    periódicamente. Puede hacerlo de manera rápida y sencilla haciendo clic en el
+                    siguiente botón:
+                </p>
+
+                <p class="mt-4">
+                    <button pButton type="button" label="Cambiar Contraseña" icon="pi pi-key"
+                        class="bg-primary p-button-raised p-button-primary" (click)="CambiarContrasena=true"></button>
+                </p>
+
+                <p class="welcome-text">
+                    Si tiene alguna pregunta o requiere de asistencia no dude en contactarnos.
+                </p>
+
+                <p class="welcome-text highlight-text">
+                    ¡Gracias por confiar en nosotros para la gestión de tus reuniones!
+                </p>
+            </div>
+
+            <div class="text-center" *ngIf="CambiarContrasena==true">
+                <form autocomplete="off" [formGroup]="FormularioContrasena" class="password-form">
+                    <h4 class="form-title">Cambiar contraseña</h4>
+
+                    <div class="p-fluid grid">
+                        <div class="field col-12 md:col-12">
+                            <label for="password" class="form-label">Nueva contraseña</label>
+                            <p-password [style]="{'width':'100%'}" [inputStyle]="{'width':'100%'}"
+                                placeholder="Contraseña" appendTo="body" promptLabel="Ingresa tu contraseña"
+                                formControlName="contrasena" [toggleMask]="true" [feedback]="false">
+                            </p-password>
+                            <p-message severity="error"
+                                *ngIf="FormularioContrasena.controls['contrasena'].errors?.['required'] && FormularioContrasena.controls['contrasena'].touched"
+                                class="p-error block">
+                                <i class="pi pi-exclamation-circle"></i> La nueva contraseña es requerida.
+                            </p-message>
+                            <p-message severity="error"
+                                *ngIf="FormularioContrasena.controls['contrasena'].errors?.['pattern'] && FormularioContrasena.controls['contrasena'].touched"
+                                class="p-error block">
+                                <i class="pi pi-exclamation-circle"></i> La nueva contraseña debe tener mayúscula,
+                                minúscula, número y
+                                carácter especial.
+                            </p-message>
+                        </div>
+
+                        <div class="field col-12 md:col-12">
+                            <label for="confirmPassword" class="form-label">Confirmar contraseña</label>
+                            <p-password [style]="{'width':'100%'}" [inputStyle]="{'width':'100%'}" appendTo="body"
+                                placeholder="Confirmar contraseña" promptLabel="Ingresa tu contraseña"
+                                formControlName="contrasenavalidacion" [toggleMask]="true" [feedback]="false">
+                            </p-password>
+                            <p-message severity="error"
+                                *ngIf="FormularioContrasena.controls['contrasenavalidacion'].errors?.['required'] && FormularioContrasena.controls['contrasenavalidacion'].touched"
+                                class="p-error block">
+                                <i class="pi pi-exclamation-circle"></i> Debes confirmar la contraseña.
+                            </p-message>
+                            <p-message severity="error"
+                                *ngIf="FormularioContrasena.controls['contrasenavalidacion'].errors?.['pattern'] && FormularioContrasena.controls['contrasenavalidacion'].touched"
+                                class="p-error block">
+                                <i class="pi pi-exclamation-circle"></i> La confirmación debe tener mayúscula,
+                                minúscula,
+                                número
+                                y carácter especial.
+                            </p-message>
+                            <p-message severity="error"
+                                *ngIf="FormularioContrasena.errors?.['noCoincide'] && FormularioContrasena.controls['contrasenavalidacion'].touched"
+                                class="p-error block">
+                                <i class="pi pi-exclamation-circle"></i> Las contraseñas no coinciden.
+                            </p-message>
+                        </div>
+                    </div>
+
+                    <div class="form-actions mt-4">
+                        <button pButton type="button" label="Guardar cambios" icon="pi pi-check"
+                            class="p-button-raised p-button-success" [disabled]="FormularioContrasena.invalid"
+                            (click)="cambiarContraForm()"></button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </p-dialog>
+
 </div>

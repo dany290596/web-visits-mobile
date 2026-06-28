@@ -21,6 +21,7 @@ import { InputTextModule } from 'primeng/inputtext';
 
 import { AutocEstado } from '../../../../../shared/components/autoc-estado/autoc-estado';
 import { AutocUsuarioHid } from '../../components/autoc/autoc-usuario-hid/autoc-usuario-hid';
+import { AutocQueryHid } from '../../components/autoc/autoc-query-hid/autoc-query-hid';
 
 import { DetalleDispositivoHid } from './detalle-dispositivo-hid/detalle-dispositivo-hid';
 
@@ -35,7 +36,8 @@ import { DetalleDispositivoHid } from './detalle-dispositivo-hid/detalle-disposi
     InputNumberModule,
     InputTextModule,
     AutocEstado,
-    AutocUsuarioHid
+    AutocUsuarioHid,
+    AutocQueryHid
   ],
   templateUrl: './dispositivo-hid.html',
   styleUrl: './dispositivo-hid.css',
@@ -60,6 +62,7 @@ export class DispositivoHid {
 
   buscarFG: FormGroup = this.srvForm.group({
     UsuarioId: [''],
+    UsuarioNombre: [''],
     CodigoInvitacion: [''],
     NombreDispositivo: [''],
     SistemaOperativo: [''],
@@ -82,6 +85,7 @@ export class DispositivoHid {
     this.tablaResultados.setTieneAcciones(true, false, true, false);
 
     this.tablaResultados.addTitulo('Nombre', true, true, true, true, true, 1, 1, 1);
+    this.tablaResultados.addTitulo('Usuario HID', true, true, true, true, true, 1, 1, 1);
 
     this.tablaResultados.addTitulo('Código de invitación', false, true, true, true, true, 3, 3, 2);
     this.tablaResultados.addTitulo('Endpoint', false, true, true, true, true, 3, 3, 2);
@@ -111,6 +115,7 @@ export class DispositivoHid {
       InvitacionActividad,
       InvitacionDetalle,
       EmpresaClienteId,
+      UsuarioNombre,
       Estado
     } = this.buscarFG.value;
 
@@ -132,6 +137,7 @@ export class DispositivoHid {
       InvitacionActividad: InvitacionActividad,
       InvitacionDetalle: InvitacionDetalle,
       EmpresaClienteId: EmpresaClienteId,
+      UsuarioNombre: UsuarioNombre,
 
       DatosCompletos: 1,
       PageNumber: this.paginaActual,
@@ -171,6 +177,10 @@ export class DispositivoHid {
           if (registro.licenciaHID !== undefined && registro.licenciaHID !== null && registro.licenciaHID !== "") {
             strLicencia = registro.licenciaHID.nombre;
           }
+          let strUserHID: string = "";
+          if (registro.licenciaHidUser !== undefined && registro.licenciaHidUser !== null) {
+            strUserHID = registro.licenciaHidUser.nombreCompleto;
+          }
           let strCodigoInvitacion: string = registro.codigoInvitacion;
           let strEndpoint: string = registro.endpointId;
           let strNombreDispositivo: string = registro.nombreDispositivo;
@@ -189,6 +199,7 @@ export class DispositivoHid {
           ];
 
           let campos: IDataTableRegistroCampo[] = [];
+          let campoUserHID: IDataTableRegistroCampo = new DataTableRegistroCampo();
           let campoCodigoInvitacion: IDataTableRegistroCampo = new DataTableRegistroCampo();
           let campoEndpoint: IDataTableRegistroCampo = new DataTableRegistroCampo();
           let campoNombreDispositivo: IDataTableRegistroCampo = new DataTableRegistroCampo();
@@ -218,6 +229,7 @@ export class DispositivoHid {
             registro.fechaCreacion = `${dia}/${mes}/${año} ${horas}:${minutos}`;
           }
 
+          campoUserHID.setValores(strUserHID, DataTableRegistroCampo.CAMPO_TEXTO, true, true, true, true, true, 3, 3, 2);
           campoCodigoInvitacion.setValores(strCodigoInvitacion, DataTableRegistroCampo.CAMPO_TEXTO, false, true, true, true, true, 4, 3, 2);
           campoEndpoint.setValores(strEndpoint, DataTableRegistroCampo.CAMPO_TEXTO, false, true, true, true, true, 2, 2, 2);
           campoVersion.setValores(strVersion, DataTableRegistroCampo.CAMPO_TEXTO, false, true, true, true, true, 3, 3, 2);
@@ -250,7 +262,7 @@ export class DispositivoHid {
           campoEstado.setValores(strEstado, DataTableRegistroCampo.CAMPO_BADGE, true, true, false, false, true, 0, 0, 1, listEstado);
 
           campos.push(campoNombreDispositivo);
-
+          campos.push(campoUserHID);
           campos.push(campoCodigoInvitacion);
           campos.push(campoEndpoint);
           campos.push(campoVersion);

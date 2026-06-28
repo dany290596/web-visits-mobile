@@ -80,7 +80,7 @@
             <div class="col-span-12 md:col-span-6 xl:col-span-3 pt-0">
                 <label class="form-label fw-semibold">País <span class="text-red-500">*</span></label>
                 <p-select [options]="paises()" optionLabel="nombre" optionValue="id" formControlName="paisId"
-                    placeholder="Seleccione un país" class="w-full"></p-select>
+                    placeholder="Seleccione un país" class="w-full" appendTo="body"></p-select>
                 @if (form.controls['paisId'].invalid && form.controls['paisId'].touched) {
                 <p-message severity="error" class="p-error block"><i class="pi pi-exclamation-circle"></i> País
                     requerido</p-message>
@@ -90,7 +90,8 @@
             <div class="col-span-12 md:col-span-6 xl:col-span-3 pt-0">
                 <label class="form-label fw-semibold">Estado <span class="text-red-500">*</span></label>
                 <p-select [options]="estados()" optionLabel="nombre" optionValue="id" formControlName="estadoId"
-                    placeholder="Seleccione un estado" class="w-full" [loading]="loadingEstados()"></p-select>
+                    placeholder="Seleccione un estado" class="w-full" [loading]="loadingEstados()"
+                    appendTo="body"></p-select>
                 @if (form.controls['estadoId'].invalid && form.controls['estadoId'].touched) {
                 <p-message severity="error" class="p-error block"><i class="pi pi-exclamation-circle"></i> Estado
                     requerido</p-message>
@@ -100,7 +101,8 @@
             <div class="col-span-12 md:col-span-6 xl:col-span-3 pt-0">
                 <label class="form-label fw-semibold">Ciudad <span class="text-red-500">*</span></label>
                 <p-select [options]="ciudades()" optionLabel="nombre" optionValue="id" formControlName="ciudadId"
-                    placeholder="Seleccione una ciudad" class="w-full" [loading]="loadingCiudades()"></p-select>
+                    placeholder="Seleccione una ciudad" class="w-full" [loading]="loadingCiudades()"
+                    appendTo="body"></p-select>
                 @if (form.controls['ciudadId'].invalid && form.controls['ciudadId'].touched) {
                 <p-message severity="error" class="p-error block"><i class="pi pi-exclamation-circle"></i> Ciudad
                     requerida</p-message>

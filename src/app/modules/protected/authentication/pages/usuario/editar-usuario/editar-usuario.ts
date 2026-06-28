@@ -92,7 +92,7 @@ export class EditarUsuario {
 
 
           let usuario: any = data.data;
-          console.log("USUARIO ::: ", usuario);
+          // console.log("USUARIO ::: ", usuario);
           this.form.controls['email'].setValue(usuario.correo);
           this.form.controls['contrasena'].reset();
           this.form.controls['contrasenavalidacion'].reset();

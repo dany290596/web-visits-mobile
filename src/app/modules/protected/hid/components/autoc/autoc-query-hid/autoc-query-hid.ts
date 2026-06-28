@@ -1,13 +1,14 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit, inject, forwardRef, Optional, Attribute } from '@angular/core';
+import { Component, OnInit, inject, forwardRef, Optional, Attribute, Input } from '@angular/core';
 import { ControlContainer, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { AutoCompleteModule } from 'primeng/autocomplete';
 
-import { DispositivoHIDService } from '../../../services/dispositivo-hid.service';
+import { UsuarioHIDService } from '../../../services/usuario-hid.service';
+
 
 @Component({
-  selector: 'app-autoc-dispositivo-hid',
+  selector: 'app-autoc-query-hid',
   imports: [
     CommonModule,
     FormsModule,
@@ -15,7 +16,7 @@ import { DispositivoHIDService } from '../../../services/dispositivo-hid.service
     AutoCompleteModule
   ],
   template: `
-    <label class="form-label">Dispositivo HID <span class="text-red-500" *ngIf="isRequired">*</span></label>
+    <label class="form-label">Usuario HID <span class="text-red-500" *ngIf="isRequired">*</span></label>
     <p-autoComplete
       [ngModel]="valorSeleccionado"
       [suggestions]="filteredItems"
@@ -23,7 +24,7 @@ import { DispositivoHIDService } from '../../../services/dispositivo-hid.service
       optionLabel="nombre"
       dataKey="id"
       [dropdown]="true"
-      placeholder="Busque dispositivo HID"
+      placeholder="Busque usuario HID"
       (onSelect)="onSelect($event)"
       (onClear)="onClear()"
       styleClass="w-full"
@@ -34,20 +35,23 @@ import { DispositivoHIDService } from '../../../services/dispositivo-hid.service
       </ng-template>
     </p-autoComplete>
   `,
-  styleUrl: './autoc-dispositivo-hid.css',
+  styleUrl: './autoc-query-hid.css',
   providers: [{
     provide: NG_VALUE_ACCESSOR,
-    useExisting: forwardRef(() => AutocDispositivoHid),
+    useExisting: forwardRef(() => AutocQueryHid),
     multi: true
   }]
 })
-export class AutocDispositivoHid implements OnInit, ControlValueAccessor {
+export class AutocQueryHid implements OnInit, ControlValueAccessor {
   items: any[] = [];
   filteredItems: any[] = [];
   valorSeleccionado: any = null;
   private pendingValue: any = null;
 
-  private srvDispositivoHID = inject(DispositivoHIDService);
+  @Input() query: string = "";
+  @Input() dataComplete: string = "";
+
+  private srvUsuarioHID = inject(UsuarioHIDService);
 
   private onChange: (value: any) => void = () => { };
   private onTouched: () => void = () => { };
@@ -58,7 +62,7 @@ export class AutocDispositivoHid implements OnInit, ControlValueAccessor {
   ) { }
 
   ngOnInit() {
-    this.cargarPerfiles();
+    this.cargarData();
   }
 
   get isRequired(): boolean {
@@ -69,14 +73,13 @@ export class AutocDispositivoHid implements OnInit, ControlValueAccessor {
     return false;
   }
 
-  cargarPerfiles() {
+  cargarData() {
     const idExcluir = '442aeb8f-f667-4210-be63-f7f2822dfdf5';
-    this.srvDispositivoHID.getAll({ Estado: 1, PageNumber: 1, PageSize: 1000 }).subscribe((res: any) => {
+    this.srvUsuarioHID.getAllQuery({ Estado: 1, PageNumber: 1, PageSize: 1000, TipoQuery: this.query, DatosCompletos: this.dataComplete }).subscribe((res: any) => {
       if (res?.respuesta) {
-        // console.log("RESP }:: ", res);
         // this.items = res.data.map((m: any) => ({ id: m.id, nombre: m.nombre }));
-        this.items = res.data.map((m: any) => ({ id: m.id, nombre: m.nombreDispositivo })).filter((item: any) => item.id !== idExcluir);
-        // console.log("ITEMS ::: ", this.items);
+        // this.items = res.data.map((m: any) => ({ id: m.id, nombre: m.nombre })).filter((item: any) => item.id !== idExcluir);
+        this.items = res.data.map((m: any) => ({ id: m.nombre, nombre: m.nombre })).filter((item: any) => item.id !== idExcluir);
         if (this.pendingValue) {
           this.valorSeleccionado = this.items.find(item => item.id === this.pendingValue) || null;
           this.pendingValue = null;
@@ -87,7 +90,7 @@ export class AutocDispositivoHid implements OnInit, ControlValueAccessor {
 
   filtrar(event: any) {
     const query = event.query.toLowerCase();
-    this.filteredItems = this.items.filter(item => item.nombre?.toLowerCase().includes(query));
+    this.filteredItems = this.items.filter(item => item.nombre.toLowerCase().includes(query));
   }
 
   onSelect(event: any) {
