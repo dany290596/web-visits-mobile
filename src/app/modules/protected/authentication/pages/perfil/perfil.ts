@@ -1,27 +1,27 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, effect, inject, OnInit } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 
-import { PerfilService } from '../../services/perfil.service';
-
 import { DataTable, DataTableRegistroCampo } from '../../../../../shared/clases/table-dynamic.clase';
-
-import { IDataTable, IDataTableRegistroCampo, IDTRCampoPropiedad } from '../../../../../shared/interfaces/table-dynamic.interface';
 
 import { TableDynamic } from '../../../../../shared/components/table-dynamic/table-dynamic';
 
 import { InputNumberModule } from 'primeng/inputnumber';
 import { InputTextModule } from 'primeng/inputtext';
 
-import { ModalService } from '../../../../../shared/services/modal.service';
+import Swal from 'sweetalert2';
 
 import { AgregarPerfil } from './agregar-perfil/agregar-perfil';
 import { DetallePerfil } from './detalle-perfil/detalle-perfil';
-
-import Swal from 'sweetalert2';
-
 import { AutocEstado } from '../../../../../shared/components/autoc-estado/autoc-estado';
+
+import { IDataTable, IDataTableRegistroCampo, IDTRCampoPropiedad } from '../../../../../shared/interfaces/table-dynamic.interface';
+import { IPermisoDetalle } from '../../interfaces/permiso.interface';
+
+import { PerfilService } from '../../services/perfil.service';
+import { PermisoService } from '../../services/permiso.service';
+import { ModalService } from '../../../../../shared/services/modal.service';
 
 @Component({
   selector: 'app-perfil',
@@ -39,9 +39,20 @@ import { AutocEstado } from '../../../../../shared/components/autoc-estado/autoc
   styleUrl: './perfil.css',
 })
 export class Perfil implements OnInit {
+  idSection: string = "9929D72C-60F4-4AEE-A6C2-86E115266513";
+  permission: IPermisoDetalle | undefined;
+
   private srvPerfil = inject(PerfilService);
   private srvForm = inject(FormBuilder);
   private srvModal = inject(ModalService);
+  private srvPermiso = inject(PermisoService);
+
+  constructor() {
+    effect(() => {
+      this.permission = this.srvPermiso.getDetallePermiso(this.idSection);
+      // console.log("SECCIÓN ::: ", this.permission);
+    });
+  }
 
   paginaActual: number = 1;
   totalPaginas: number = 0;

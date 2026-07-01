@@ -86,21 +86,22 @@
             <!-- Enhanced Actions Column -->
             <td *ngIf="tabla.ColumnaAcciones" class="text-center align-middle py-3 px-4">
                 <div class="flex justify-content-center gap-1">
-                    <button *ngIf="tabla.AccionVer && (registro.mostrarDetalle !== false)" pButton icon="pi pi-eye"
-                        (click)="ver(registro.registroId)" tooltipPosition="bottom" pTooltip="Ver detalles"
-                        severity="info" [rounded]="true" [outlined]="true"></button>
+                    <button *ngIf="tabla.AccionVer && (registro.mostrarDetalle !== false) && permission?.ver === true"
+                        pButton icon="pi pi-eye" (click)="ver(registro.registroId)" tooltipPosition="bottom"
+                        pTooltip="Ver detalles" severity="info" [rounded]="true" [outlined]="true"></button>
 
-                    <button *ngIf="tabla.AccionEditar && (registro.mostrarEditar !== false) && registro.estado == 1"
+                    <button
+                        *ngIf="tabla.AccionEditar && (registro.mostrarEditar !== false) && registro.estado == 1 && permission?.editar === true"
                         pButton icon="pi pi-pencil" (click)="detalle(registro.registroId)" tooltipPosition="bottom"
                         pTooltip="Editar" severity="warn" [rounded]="true" [outlined]="true"></button>
 
                     <button
-                        *ngIf="tabla.AccionEliminar && (registro.mostrarInactivar !== false) && registro.estado == 1"
+                        *ngIf="tabla.AccionEliminar && (registro.mostrarInactivar !== false) && registro.estado == 1 && permission?.eliminar === true"
                         pButton icon="pi pi-times" (click)="inactivar(registro.registroId)" tooltipPosition="bottom"
                         pTooltip="Desactivar" severity="danger" [rounded]="true" [outlined]="true"></button>
 
                     <button
-                        *ngIf="tabla.AccionEliminar && (registro.mostrarReactivar !== false) && registro.estado == 2"
+                        *ngIf="tabla.AccionEliminar && (registro.mostrarReactivar !== false) && registro.estado == 2 && permission?.eliminar === true"
                         pButton icon="pi pi-refresh" (click)="reactivar(registro.registroId)" tooltipPosition="bottom"
                         pTooltip="Reactivar" severity="success" [rounded]="true" [outlined]="true"></button>
 

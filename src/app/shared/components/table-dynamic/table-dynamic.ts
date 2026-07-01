@@ -1,8 +1,8 @@
 import { Component, Input, Output, EventEmitter, inject, effect } from '@angular/core';
-import { IDataTable, IDataTableRegistro } from '../../interfaces/table-dynamic.interface';
 import { FormBuilder, FormGroup, ReactiveFormsModule, FormsModule } from '@angular/forms';
-import { DataTable, DataTableRegistroCampo } from '../../clases/table-dynamic.clase';
 import { CommonModule } from '@angular/common';
+
+import { DataTable, DataTableRegistroCampo } from '../../clases/table-dynamic.clase';
 
 import { AccordionModule } from 'primeng/accordion';
 import { BadgeModule } from 'primeng/badge';
@@ -20,6 +20,9 @@ import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { TagModule } from 'primeng/tag';
 import { AvatarModule } from 'primeng/avatar';
 import { ChipModule } from 'primeng/chip';
+
+import { IDataTable, IDataTableRegistro } from '../../interfaces/table-dynamic.interface';
+import { IPermisoDetalle } from '../../../modules/protected/authentication/interfaces/permiso.interface';
 
 @Component({
   selector: 'app-table-dynamic',
@@ -52,6 +55,7 @@ export class TableDynamic {
 
   _tabla: IDataTable = new DataTable();
   _registrosVisibles: IDataTableRegistro[] = [];
+  _permission?: IPermisoDetalle;
 
   @Input() minimo: number = 0;
   @Input() maximo: number = 10;
@@ -60,6 +64,10 @@ export class TableDynamic {
   @Input() totalRegistros: number = 20;
   @Input() tituloTabla?: string = 'Registros encontrados';
   @Input() cargando: boolean = false;
+  @Input()
+  set permission(value: IPermisoDetalle | undefined) {
+    this._permission = value;
+  }
 
   @Output() CambiarPaginaEmit = new EventEmitter();
 
@@ -88,7 +96,6 @@ export class TableDynamic {
   }
 
   get registros() {
-
     this._registrosVisibles = [];
 
     if (this._tabla.registros.length > 0) {
@@ -108,6 +115,10 @@ export class TableDynamic {
       arrPaginas.push(i);
     }
     return arrPaginas;
+  }
+
+  get permission(): IPermisoDetalle | undefined {
+    return this._permission;
   }
 
   miFormulario: FormGroup = this.srvForm.group({

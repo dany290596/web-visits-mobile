@@ -1,7 +1,8 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, effect, inject } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
+import { filter, take } from 'rxjs';
 
 import { EmpresaService } from '../../services/empresa.service';
 
@@ -16,6 +17,7 @@ import { InputTextModule } from 'primeng/inputtext';
 
 import { ModalService } from '../../../../../shared/services/modal.service';
 import { StorageService } from '../../../../auth/services/storage.service';
+import { PermisoService } from '../../../authentication/services/permiso.service';
 
 import Swal from 'sweetalert2';
 
@@ -25,8 +27,8 @@ import { AgregarEmpresa } from './agregar-empresa/agregar-empresa';
 import { DetalleEmpresa } from './detalle-empresa/detalle-empresa';
 import { EditarEmpresa } from './editar-empresa/editar-empresa';
 
-import { filter, take } from 'rxjs';
 import { IUsuarioAutenticado } from '../../../authentication/interfaces/usuario.interface';
+import { IPermisoDetalle } from '../../../authentication/interfaces/permiso.interface';
 
 @Component({
   selector: 'app-empresa',
@@ -43,10 +45,21 @@ import { IUsuarioAutenticado } from '../../../authentication/interfaces/usuario.
   styleUrl: './empresa.css',
 })
 export class Empresa {
+  idSection: string = "99CD2FB3-584A-4B3B-B876-4E96F5F16A1F";
+  permission: IPermisoDetalle | undefined;
+
   private srvStorage = inject(StorageService);
   private srvEmpresa = inject(EmpresaService);
   private srvForm = inject(FormBuilder);
   private srvModal = inject(ModalService);
+  private srvPermiso = inject(PermisoService);
+
+  constructor() {
+    effect(() => {
+      this.permission = this.srvPermiso.getDetallePermiso(this.idSection);
+      // console.log("SECCIÓN ::: ", this.permission);
+    });
+  }
 
   paginaActual: number = 1;
   totalPaginas: number = 0;
@@ -263,7 +276,7 @@ export class Empresa {
 
     if (ref && ref.instance) {
       ref.instance.guardadoExitoso.subscribe((s: any) => {
-        console.log("DATA ::: ", s);
+        // console.log("DATA ::: ", s);
         this.buscar(true); // refresca la tabla
       });
     }
@@ -310,7 +323,7 @@ export class Empresa {
 
     if (ref && ref.instance) {
       ref.instance.closeModal.subscribe((guardadoExitoso: boolean) => {
-        console.log("Se cerró el modal, guardadoExitoso:", guardadoExitoso);
+        // console.log("Se cerró el modal, guardadoExitoso:", guardadoExitoso);
         if (guardadoExitoso) {
           this.buscar(true); // refresca la tabla solo si se guardó algo
         }

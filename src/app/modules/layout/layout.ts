@@ -7,6 +7,7 @@ import { Sidebar } from './components/sidebar/sidebar';
 import { MenuService } from '../layout/services/menu.service';
 import { MenuAppService } from '../../shared/services/menu-app.service';
 import { StorageService } from '../../modules/auth/services/storage.service';
+import { PermisoService } from '../protected/authentication/services/permiso.service';
 
 import { IMenuFilter } from '../../shared/interfaces/menu-app.interface';
 import { MenuItem, SubMenuItem } from '../../core/models/menu.model';
@@ -26,12 +27,13 @@ export class Layout implements OnInit {
   private srvMenu = inject(MenuService);
   private srvMenuApp = inject(MenuAppService);
   private srvStorage = inject(StorageService);
+  private srvPermiso = inject(PermisoService);
 
   private readonly iconMapping: Record<string, string> = {
     'fas fa-cog': 'assets/icons/heroicons/outline/cog.svg',
     'fas fa-users-cog': 'assets/icons/heroicons/outline/users.svg', // o 'cog-6-tooth.svg'
     'fas fa-qrcode': 'assets/icons/heroicons/outline/view-grid.svg', // o 'cube.svg'
-    'fas fa-building':'assets/icons/heroicons/outline/bookmark.svg'
+    'fas fa-building': 'assets/icons/heroicons/outline/bookmark.svg'
     // Puedes agregar más mapeos si la API devuelve otros iconos
   };
 
@@ -72,7 +74,9 @@ export class Layout implements OnInit {
       })
     ).subscribe(menu => {
       if (menu.respuesta) {
+        this.srvPermiso.setModulos(menu.data);
         const menuItems = this.buildMenuFromApi(menu.data);
+        // console.log("MENU ::: ", JSON.stringify(menu.data));
         this.srvMenu._pagesMenu.set(menuItems);
       }
     });

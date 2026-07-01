@@ -9,7 +9,7 @@
 <div class="mb-4 flex justify-between">
 
     <div class="inline-block">
-        <h3 class="font-semibold text-foreground">Plantilla de correo
+        <h3 class="font-semibold text-foreground">Plantilla de correo Wallet
             <span><!-- Badge modo dummy — visible solo en desarrollo -->
                 @if (isDummy) {
                 <p-tag value="Wallet" severity="warn" icon="pi pi-database" styleClass="ewt-dummy-badge"
@@ -167,6 +167,7 @@
         </p-card>
 
         <!-- Card 2: Pasos del correo -->
+        <!--
         <p-card styleClass="mb-4">
             <ng-template pTemplate="header">
                 <div class="ewt-card-header">
@@ -175,7 +176,6 @@
                 </div>
             </ng-template>
 
-            <!-- Paso 1 -->
             <div class="ewt-step-block">
                 <span class="ewt-step-badge">Paso 1</span>
                 <div class="ewt-field">
@@ -193,7 +193,6 @@
 
             <p-divider />
 
-            <!-- Paso 2 -->
             <div class="ewt-step-block">
                 <span class="ewt-step-badge">Paso 2</span>
                 <div class="ewt-field">
@@ -211,7 +210,6 @@
 
             <p-divider />
 
-            <!-- Paso 3 -->
             <div class="ewt-step-block">
                 <span class="ewt-step-badge">Paso 3</span>
                 <div class="ewt-field">
@@ -227,6 +225,7 @@
                 </div>
             </div>
         </p-card>
+        -->
 
         <!-- Card 3: Contacto y pie -->
         <p-card>
@@ -346,9 +345,10 @@
                                 Estimado(a):
                                 <em>{{ previewData().destinatario }}</em>,
                             </h2>
-                            <p>Gracias por utilizar nuestros servicios. Aquí están los detalles de su acceso:</p>
+                            <p>Gracias por utilizar nuestros servicios.</p>
+                            <!-- <p>Gracias por utilizar nuestros servicios. Aquí están los detalles de su acceso:</p> -->
 
-                            <!-- Paso 1 -->
+                            <!--
                             <div class="ewt-email-section">
                                 <h3>Paso 1. {{ form.get('tituloPaso1')?.value }}</h3>
                                 <p>{{ form.get('textoPaso1')?.value }}</p>
@@ -358,7 +358,6 @@
                                 </div>
                             </div>
 
-                            <!-- Paso 2 -->
                             <div class="ewt-email-section">
                                 <h3>Paso 2. {{ form.get('tituloPaso2')?.value }}</h3>
                                 <p>{{ form.get('textoPaso2')?.value }}</p>
@@ -378,12 +377,12 @@
                                 </p>
                             </div>
 
-                            <!-- Paso 3 -->
                             <div class="ewt-email-section">
                                 <h3>Paso 3. {{ form.get('tituloPaso3')?.value }}</h3>
                                 <p>{{ form.get('textoPaso3')?.value }}</p>
                                 <div class="ewt-codigo-box">{{ previewData().codigoInvitacion }}</div>
                             </div>
+                            -->
 
                             <div class="ewt-contact-box">
                                 📞 <strong>Tel:</strong> {{ form.get('telefonoContacto')?.value }}<br>

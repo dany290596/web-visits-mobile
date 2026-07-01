@@ -1,29 +1,27 @@
-import { Component, inject } from '@angular/core';
+import { Component, effect, inject } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 
-import { ModalService } from '../../../../../shared/services/modal.service';
-import { UsuarioHIDService } from '../../services/usuario-hid.service';
-import { StorageService } from '../../../../auth/services/storage.service';
-import { DispositivoHIDService } from '../../services/dispositivo-hid.service';
-
 import { DataTable, DataTableRegistroCampo } from '../../../../../shared/clases/table-dynamic.clase';
 
-import { IDataTable, IDataTableRegistroCampo, IDTRCampoPropiedad } from '../../../../../shared/interfaces/table-dynamic.interface';
-
 import { TableDynamic } from '../../../../../shared/components/table-dynamic/table-dynamic';
-
-import { IUsuarioResponse } from '../../../authentication/interfaces/usuario.interface';
 
 import { InputNumberModule } from 'primeng/inputnumber';
 import { InputTextModule } from 'primeng/inputtext';
 
 import { AutocEstado } from '../../../../../shared/components/autoc-estado/autoc-estado';
-import { AutocUsuarioHid } from '../../components/autoc/autoc-usuario-hid/autoc-usuario-hid';
 import { AutocQueryHid } from '../../components/autoc/autoc-query-hid/autoc-query-hid';
-
 import { DetalleDispositivoHid } from './detalle-dispositivo-hid/detalle-dispositivo-hid';
+
+import { IDataTable, IDataTableRegistroCampo, IDTRCampoPropiedad } from '../../../../../shared/interfaces/table-dynamic.interface';
+import { IPermisoDetalle } from '../../../authentication/interfaces/permiso.interface';
+import { IUsuarioResponse } from '../../../authentication/interfaces/usuario.interface';
+
+import { ModalService } from '../../../../../shared/services/modal.service';
+import { PermisoService } from '../../../authentication/services/permiso.service';
+import { StorageService } from '../../../../auth/services/storage.service';
+import { DispositivoHIDService } from '../../services/dispositivo-hid.service';
 
 @Component({
   selector: 'app-dispositivo-hid',
@@ -36,17 +34,20 @@ import { DetalleDispositivoHid } from './detalle-dispositivo-hid/detalle-disposi
     InputNumberModule,
     InputTextModule,
     AutocEstado,
-    AutocUsuarioHid,
     AutocQueryHid
   ],
   templateUrl: './dispositivo-hid.html',
   styleUrl: './dispositivo-hid.css',
 })
 export class DispositivoHid {
+  idSection: string = "807619F8-FA90-4824-94C7-9738F30B26CD";
+  permission: IPermisoDetalle | undefined;
+
   private srvModal = inject(ModalService);
   private srvForm = inject(FormBuilder);
   private srvStorage = inject(StorageService);
   private srvDispositivoHID = inject(DispositivoHIDService);
+  private srvPermiso = inject(PermisoService);
 
   user: IUsuarioResponse | undefined;
   userId: string = '';
@@ -69,6 +70,13 @@ export class DispositivoHid {
     SdkVersion: [''],
     Estado: [''],
   });
+
+  constructor() {
+    effect(() => {
+      this.permission = this.srvPermiso.getDetallePermiso(this.idSection);
+      // console.log("SECCIÓN ::: ", this.permission);
+    });
+  }
 
   ngOnInit(): void {
     this.buscar(true);

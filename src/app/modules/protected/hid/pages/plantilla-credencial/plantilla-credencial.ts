@@ -1,31 +1,31 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, effect, inject, OnInit } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-
-import { PlantillaCredencialService } from '../../services/plantilla-credencial.service';
+import { filter, take } from 'rxjs';
 
 import { DataTable, DataTableRegistroCampo } from '../../../../../shared/clases/table-dynamic.clase';
-
-import { IDataTable, IDataTableRegistroCampo, IDTRCampoPropiedad } from '../../../../../shared/interfaces/table-dynamic.interface';
 
 import { TableDynamic } from '../../../../../shared/components/table-dynamic/table-dynamic';
 
 import { InputNumberModule } from 'primeng/inputnumber';
 import { InputTextModule } from 'primeng/inputtext';
 
-import { ModalService } from '../../../../../shared/services/modal.service';
+import Swal from 'sweetalert2';
 
 import { AgregarPlantillaCredencial } from './agregar-plantilla-credencial/agregar-plantilla-credencial';
 import { DetallePlantillaCredencial } from './detalle-plantilla-credencial/detalle-plantilla-credencial';
 import { EditarPlantillaCredencial } from './editar-plantilla-credencial/editar-plantilla-credencial';
-
-import Swal from 'sweetalert2';
-
 import { AutocEstado } from '../../../../../shared/components/autoc-estado/autoc-estado';
+
 import { StorageService } from '../../../../auth/services/storage.service';
+import { PermisoService } from '../../../authentication/services/permiso.service';
+import { PlantillaCredencialService } from '../../services/plantilla-credencial.service';
+import { ModalService } from '../../../../../shared/services/modal.service';
+
+import { IDataTable, IDataTableRegistroCampo, IDTRCampoPropiedad } from '../../../../../shared/interfaces/table-dynamic.interface';
+import { IPermisoDetalle } from '../../../authentication/interfaces/permiso.interface';
 import { IUsuarioAutenticado } from '../../../authentication/interfaces/usuario.interface';
-import { filter, take } from 'rxjs';
 
 @Component({
   selector: 'app-plantilla-credencial',
@@ -42,10 +42,14 @@ import { filter, take } from 'rxjs';
   styleUrl: './plantilla-credencial.css',
 })
 export class PlantillaCredencial implements OnInit {
+  idSection: string = "5EB4575C-4588-4CD4-A6A3-3F15978A4F93";
+  permission: IPermisoDetalle | undefined;
+
   private srvPlantillaCredencial = inject(PlantillaCredencialService);
   private srvForm = inject(FormBuilder);
   private srvModal = inject(ModalService);
   private srvStorage = inject(StorageService);
+  private srvPermiso = inject(PermisoService);
 
   paginaActual: number = 1;
   totalPaginas: number = 0;
@@ -62,6 +66,13 @@ export class PlantillaCredencial implements OnInit {
     nombre: [''],
     estado: [''],
   });
+
+  constructor() {
+    effect(() => {
+      this.permission = this.srvPermiso.getDetallePermiso(this.idSection);
+      // console.log("SECCIÓN ::: ", this.permission);
+    });
+  }
 
   ngOnInit(): void {
     this.buscar(true);

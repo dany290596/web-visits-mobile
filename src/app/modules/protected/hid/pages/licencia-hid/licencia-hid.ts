@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, effect, inject } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
@@ -6,6 +6,7 @@ import { CommonModule } from '@angular/common';
 import { DataTable, DataTableRegistroCampo } from '../../../../../shared/clases/table-dynamic.clase';
 
 import { IDataTable, IDataTableRegistroCampo, IDTRCampoPropiedad } from '../../../../../shared/interfaces/table-dynamic.interface';
+import { IPermisoDetalle } from '../../../authentication/interfaces/permiso.interface';
 
 import { TableDynamic } from '../../../../../shared/components/table-dynamic/table-dynamic';
 
@@ -15,12 +16,11 @@ import { InputTextModule } from 'primeng/inputtext';
 import { IUsuarioResponse } from '../../../authentication/interfaces/usuario.interface';
 
 import { ModalService } from '../../../../../shared/services/modal.service';
-import { UsuarioHIDService } from '../../services/usuario-hid.service';
 import { StorageService } from '../../../../auth/services/storage.service';
 import { LicenciaHIDService } from '../../services/licencia-hid.service';
+import { PermisoService } from '../../../authentication/services/permiso.service';
 
 import { AutocEstado } from '../../../../../shared/components/autoc-estado/autoc-estado';
-
 import { DetalleLicenciaHid } from './detalle-licencia-hid/detalle-licencia-hid';
 
 @Component({
@@ -39,10 +39,14 @@ import { DetalleLicenciaHid } from './detalle-licencia-hid/detalle-licencia-hid'
   styleUrl: './licencia-hid.css',
 })
 export class LicenciaHid {
+  idSection: string = "00592364-A1F1-4518-AF56-3F1C936CA80D";
+  permission: IPermisoDetalle | undefined;
+
   private srvForm = inject(FormBuilder);
   private srvStorage = inject(StorageService);
   private srvLicenciaHID = inject(LicenciaHIDService);
   private srvModal = inject(ModalService);
+  private srvPermiso = inject(PermisoService);
 
   user: IUsuarioResponse | undefined;
   userId: string = '';
@@ -69,6 +73,13 @@ export class LicenciaHid {
     MensajeEstado: [''],
     Estado: [''],
   });
+
+  constructor() {
+    effect(() => {
+      this.permission = this.srvPermiso.getDetallePermiso(this.idSection);
+      // console.log("SECCIÓN ::: ", this.permission);
+    });
+  }
 
   ngOnInit(): void {
     this.buscar(true);

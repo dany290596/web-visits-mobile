@@ -88,16 +88,17 @@
                     <div class="grid animate__animated animate__fadeInUp">
                         @if(mostrarTabla){
                         <div class="col-12">
-                            <app-table-dynamic [tabla]="tablaResultados" tituloTabla="Dispositivos encontrados"
-                                [totalPaginas]="totalPaginas" [paginaActual]="paginaActual"
-                                [totalRegistros]="totalRegistros" (CambiarPaginaEmit)="cambiar($event)"
-                                (onVer)="ver( $event )" (onDet)="detalle( $event )" (onInactivar)="inactivar( $event )"
+                            <app-table-dynamic [tabla]="tablaResultados" [permission]="permission"
+                                tituloTabla="Dispositivos encontrados" [totalPaginas]="totalPaginas"
+                                [paginaActual]="paginaActual" [totalRegistros]="totalRegistros"
+                                (CambiarPaginaEmit)="cambiar($event)" (onVer)="ver( $event )"
+                                (onDet)="detalle( $event )" (onInactivar)="inactivar( $event )"
                                 (onReactivar)="reactivar( $event )"></app-table-dynamic>
                         </div>
                         }
                         @if(!mostrarTabla){
                         <div class="col-12">
-                            <app-table-dynamic [tabla]="tablaResultados" [cargando]="cargando"
+                            <app-table-dynamic [tabla]="tablaResultados" [permission]="permission" [cargando]="cargando"
                                 [totalPaginas]="totalPaginas" [paginaActual]="paginaActual"
                                 [totalRegistros]="totalRegistros" (CambiarPaginaEmit)="cambiar($event)"
                                 (onVer)="ver( $event )" (onDet)="detalle( $event )" (onInactivar)="inactivar( $event )"

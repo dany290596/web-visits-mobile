@@ -1,12 +1,7 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, effect, inject } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-
-import { UsuarioService } from '../../services/usuario.service';
-import { StorageService } from '../../../../auth/services/storage.service';
-
-import { IUsuarioResponse } from '../../interfaces/usuario.interface';
 
 import { DataTable, DataTableRegistroCampo } from '../../../../../shared/clases/table-dynamic.clase';
 
@@ -17,8 +12,6 @@ import { TableDynamic } from '../../../../../shared/components/table-dynamic/tab
 import { InputNumberModule } from 'primeng/inputnumber';
 import { InputTextModule } from 'primeng/inputtext';
 
-import { ModalService } from '../../../../../shared/services/modal.service';
-
 import { AgregarUsuario } from './agregar-usuario/agregar-usuario';
 import { DetalleUsuario } from './detalle-usuario/detalle-usuario';
 import { EditarUsuario } from './editar-usuario/editar-usuario';
@@ -28,6 +21,14 @@ import Swal from 'sweetalert2';
 import { AutocEstado } from '../../../../../shared/components/autoc-estado/autoc-estado';
 import { AutocPerfil } from '../../components/autoc/autoc-perfil/autoc-perfil';
 import { AutocTipoUsuario } from '../../components/autoc/autoc-tipo-usuario/autoc-tipo-usuario';
+
+import { IPermisoDetalle } from '../../interfaces/permiso.interface';
+import { IUsuarioResponse } from '../../interfaces/usuario.interface';
+
+import { PermisoService } from '../../services/permiso.service';
+import { UsuarioService } from '../../services/usuario.service';
+import { StorageService } from '../../../../auth/services/storage.service';
+import { ModalService } from '../../../../../shared/services/modal.service';
 
 @Component({
   selector: 'app-usuario',
@@ -47,12 +48,22 @@ import { AutocTipoUsuario } from '../../components/autoc/autoc-tipo-usuario/auto
   styleUrl: './usuario.css',
 })
 export class Usuario {
+  idSection: string = "0AEBCF3F-E8BA-4579-8194-BAF8B18FB1E7";
+  permission: IPermisoDetalle | undefined;
+
   private srvUsuario = inject(UsuarioService);
   private srvForm = inject(FormBuilder);
   private srvStorage = inject(StorageService);
   private srvModal = inject(ModalService);
+  private srvPermiso = inject(PermisoService);
 
-  user: IUsuarioResponse | undefined;
+  constructor() {
+    effect(() => {
+      this.permission = this.srvPermiso.getDetallePermiso(this.idSection);
+      // console.log("SECCIÓN ::: ", this.permission);
+    });
+  }
+
   userId: string = '';
 
   paginaActual: number = 1;
@@ -79,11 +90,6 @@ export class Usuario {
   ngOnInit(): void {
     this.buscar(true);
     this.prepararTablaResultados();
-
-    if (this.srvStorage.getUserDetailData() !== undefined && this.srvStorage.getUserDetailData() !== null) {
-      this.user = this.srvStorage.getUserDetailData()!;
-      this.userId = this.user.id!;
-    }
   }
 
   prepararTablaResultados() {
