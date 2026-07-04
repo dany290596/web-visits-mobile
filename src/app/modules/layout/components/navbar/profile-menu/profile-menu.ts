@@ -8,6 +8,8 @@ import { ClickOutsideDirective } from '../../../../../shared/directives/click-ou
 import { StorageService } from '../../../../auth/services/storage.service';
 import { IUsuarioAutenticado } from '../../../../protected/authentication/interfaces/usuario.interface';
 
+import { Router } from '@angular/router';
+
 @Component({
   selector: 'app-profile-menu',
   imports: [ClickOutsideDirective, NgClass, AngularSvgIconModule],
@@ -41,14 +43,15 @@ export class ProfileMenu implements OnInit {
   userId: string = '';
 
   private srvStorage = inject(StorageService);
+  private router = inject(Router);
 
   public isOpen = false;
   public profileMenu = [
     {
       id: '1519333a-8316-4f4e-96f7-3853edc3767e',
-      title: 'Tu perfil',
+      title: 'Mi cuenta',
       icon: './assets/icons/heroicons/outline/user-circle.svg',
-      // link: '/profile',
+      link: '/layout/account',
     },
     {
       id: 'ff0bc3ae-84e8-4d64-89dc-65fbf703ffe5',
@@ -131,6 +134,12 @@ export class ProfileMenu implements OnInit {
   }
 
   optionProfileMenu(item: any) {
+    if (item.link) {
+      this.router.navigate([item.link]);
+      this.isOpen = false;
+      return;
+    }
+
     if (item.id === 'f4f8b0d6-b3a5-4cd9-b61d-e1306db5cd03') {
       this.srvStorage.closeSession();
     }

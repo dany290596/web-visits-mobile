@@ -31,13 +31,15 @@ export class Layout implements OnInit {
 
   private readonly iconMapping: Record<string, string> = {
     'fas fa-cog': 'assets/icons/heroicons/outline/cog.svg',
-    'fas fa-users-cog': 'assets/icons/heroicons/outline/users.svg', // o 'cog-6-tooth.svg'
-    'fas fa-qrcode': 'assets/icons/heroicons/outline/view-grid.svg', // o 'cube.svg'
-    'fas fa-building': 'assets/icons/heroicons/outline/bookmark.svg'
-    // Puedes agregar más mapeos si la API devuelve otros iconos
+    'fas fa-users-cog': 'assets/icons/heroicons/outline/users.svg',
+    'fas fa-qrcode': 'assets/icons/heroicons/outline/view-grid.svg',
+    'fas fa-building': 'assets/icons/heroicons/outline/bookmark.svg',
+    'fas fa-user': 'assets/icons/heroicons/outline/user-circle.svg',
   };
 
-  constructor(private router: Router) {
+  constructor(
+    private router: Router
+  ) {
     this.router.events.subscribe((event: Event) => {
       if (event instanceof NavigationEnd) {
         if (this.mainContent) {
@@ -49,22 +51,6 @@ export class Layout implements OnInit {
 
   ngOnInit(): void {
     this.mainContent = document.getElementById('main-content');
-    /*
-    if (this.srvStorage.getUserData() !== undefined && this.srvStorage.getUserData() !== null) {
-      if (this.srvStorage.getUserData()?.perfilId !== undefined && this.srvStorage.getUserData()?.perfilId !== null && this.srvStorage.getUserData()?.perfilId !== "") {
-        const filter = new IMenuFilter();
-        filter.PerfilId = this.srvStorage.getUserData()?.perfilId;
-        this.srvMenuApp.getSectionsGroupedByModule(filter).subscribe((menu: any) => {
-          if (menu.respuesta === true) {
-            // console.log("DATA ::: ", JSON.stringify(menu.data));
-            const menuItems = this.buildMenuFromApi(menu.data);
-            // console.log("MENU ITEMS ::: ", JSON.stringify(menuItems));
-            this.srvMenu._pagesMenu.set(menuItems);
-          }
-        });
-      }
-    }
-    */
     this.srvStorage.userData$.pipe(
       filter(data => !!data?.perfilId),
       switchMap(data => {
@@ -76,71 +62,11 @@ export class Layout implements OnInit {
       if (menu.respuesta) {
         this.srvPermiso.setModulos(menu.data);
         const menuItems = this.buildMenuFromApi(menu.data);
-        // console.log("MENU ::: ", JSON.stringify(menu.data));
+        // console.log("MENU ITEMS ::: ", JSON.stringify(menu.data));
         this.srvMenu._pagesMenu.set(menuItems);
       }
     });
   }
-
-  /*
-  private buildMenuFromApi(modules: IMenu[]): MenuItem[] {
-    const groupMap = new Map<string, MenuItem>();
-
-    for (const modulo of modules) {
-      // 1. Determinar el grupo según el nombre del módulo
-      let groupName: string;
-      if (modulo.moduloNombre === 'Parametrización' || modulo.moduloNombre === 'Autenticación') {
-        groupName = 'Menú';
-      } else if (modulo.moduloNombre === 'HID') {
-        groupName = 'Aplicacion';
-      } else {
-        groupName = 'Otros'; // Puedes omitir módulos no deseados con 'continue'
-      }
-
-      // 2. Crear el grupo si no existe en el Map
-      if (!groupMap.has(groupName)) {
-        groupMap.set(groupName, {
-          group: groupName,
-          separator: false,
-          items: []
-        });
-      }
-
-      const grupo = groupMap.get(groupName)!;
-
-      // 3. Construir el SubMenuItem del módulo
-      const moduloItem: SubMenuItem = {
-        icon: this.mapIcon(modulo.moduloImagen),   // Convertir clase FontAwesome a SVG o mantener clase
-        label: modulo.moduloNombre,
-        route: null,                                // Sin ruta propia
-        children: []
-      };
-
-      // 4. Mapear las secciones a children del módulo
-      moduloItem.children = modulo.secciones
-        .sort((a, b) => a.orden - b.orden)
-        .map(seccion => {
-          // Generar ruta: /modulo/seccion (todo en kebab-case)
-          const moduloRuta = modulo.moduloNombre.toLowerCase().replace(/\s+/g, '-');
-          const seccionRuta = seccion.path
-            .replace(/([a-z0-9])([A-Z])/g, '$1-$2')
-            .toLowerCase();
-          const rutaCompleta = `/${moduloRuta}/${seccionRuta}`;
-
-          return {
-            label: seccion.nombre,
-            route: rutaCompleta
-          } as SubMenuItem;
-        });
-
-      // 5. Agregar el módulo al grupo
-      grupo.items.push(moduloItem);
-    }
-
-    // Convertir el Map a array y ordenar los grupos (opcional)
-    return Array.from(groupMap.values());
-  }
-  */
 
   private buildMenuFromApi(modules: IMenu[]): MenuItem[] {
     const groupMap = new Map<string, MenuItem>();
@@ -207,8 +133,20 @@ export class Layout implements OnInit {
       ]
     };
 
+    const miCuentaGroup: MenuItem = {
+      group: 'Mi cuenta',
+      separator: false,           // true si quieres una línea separadora antes
+      items: [
+        {
+          icon: 'assets/icons/heroicons/outline/user-circle.svg',  // ajusta la ruta a tu icono
+          label: 'Mi cuenta',
+          route: '/layout/account'  // ruta que deberás definir en el routing
+        }
+      ]
+    };
+
     // Insertar Dashboard al principio del array
-    return [dashboardGroup, ...menuGroups];
+    return [dashboardGroup, ...menuGroups, miCuentaGroup];
   }
 
   private mapIcon(faClass: string): string {

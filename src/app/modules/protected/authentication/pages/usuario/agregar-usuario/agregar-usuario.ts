@@ -160,7 +160,7 @@ export class AgregarUsuario {
     request.fechaVencimiento = formValue.fechaVencimiento
       ? formValue.fechaVencimiento
       : null;
-    console.log("REQUEST ::: ", request);
+    // console.log("REQUEST ::: ", request);
     this.srvUsuario.create(request).subscribe((resp: any) => {
       if (resp.respuesta === true) {
         this.srvMessage.add({ severity: 'success', summary: 'Éxito', detail: 'Usuario creado', life: 3000 });

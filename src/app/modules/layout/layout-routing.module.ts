@@ -9,6 +9,16 @@ const routes: Routes = [
         loadChildren: () => import('../dashboard/dashboard.module').then((m) => m.DashboardModule),
     },
     {
+        path: 'account',
+        component: Layout,          // Layout se carga y envuelve todo con menú
+        children: [                 // El contenido real va dentro de su <router-outlet>
+            {
+                path: '',           // Ruta vacía → /layout/account
+                loadComponent: () => import('../account/account').then(c => c.Account)
+            }
+        ]
+    },
+    {
         path: 'authentication',
         component: Layout,
         loadChildren: () => import('../protected/authentication/authentication.routes').then(m => m),
