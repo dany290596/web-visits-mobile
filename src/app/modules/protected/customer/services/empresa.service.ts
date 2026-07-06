@@ -146,6 +146,24 @@ export class EmpresaService {
         );
     }
 
+    GetWithSettingEncrypted(id: string) {
+        return this.http.get(`${url}EmpresaCliente/CredentialConfigurationEncrypted/${id}`, {
+            headers: new HttpHeaders(
+                {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${localStorage.getItem('token')}`,
+                    'Empresa': `${localStorage.getItem('empresa')}`
+                })
+        }).pipe(
+            catchError((e: any) =>
+                of(e)
+            ),
+            switchMap((response: any) => {
+                return of(response);
+            })
+        );
+    }
+
     /**
  * Crea una tarea para probar la conexión HID.
  * POST /api/EmpresaCliente/TestConnection
@@ -188,27 +206,32 @@ export class EmpresaService {
         );
     }
 
-withSettingEncrypted(data: { 
-  id: string | null; 
-  empresa: any; 
-  settingEncryptedHID: string; 
-  settingEncryptedWallet: string; 
-}): Observable<ApiResponse<any>> {
-  const headers = new HttpHeaders({
-    'Content-Type': 'application/json',
-    'Authorization': `Bearer ${localStorage.getItem('token')}`,
-    'Empresa': `${localStorage.getItem('empresa')}`
-  });
+    withSettingEncrypted(data: {
+        id: string | null;
+        empresa: any;
+        settingEncryptedHID: string;
+        settingEncryptedWallet: string;
+    }): Observable<ApiResponse<any>> {
+        const headers = new HttpHeaders({
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${localStorage.getItem('token')}`,
+            'Empresa': `${localStorage.getItem('empresa')}`
+        });
 
-  return this.http.post<ApiResponse<any>>(`${url}EmpresaCliente/WithSettingEncrypted`, data, { headers }).pipe(
-    catchError((error) => {
-      console.error('Error al guardar empresa:', error);
-      return of({ respuesta: false, mensaje: 'Error al guardar', codigo: 500, data: null } as any);
-    })
-  );
-}
-    update(data: { id: string; empresa: any; configuraciones: any[]; }, id: string): Observable<any> {
-        return this.http.put(`${url}EmpresaCliente/${id}`, data, {
+        return this.http.post<ApiResponse<any>>(`${url}EmpresaCliente/WithSettingEncrypted`, data, { headers }).pipe(
+            catchError((error) => {
+                console.error('Error al guardar empresa:', error);
+                return of({ respuesta: false, mensaje: 'Error al guardar', codigo: 500, data: null } as any);
+            })
+        );
+    }
+    update(data: {
+        id: string | null;
+        empresa: any;
+        settingEncryptedHID: string;
+        settingEncryptedWallet: string;
+    }): Observable<any> {
+        return this.http.put(`${url}EmpresaCliente/${data.id}`, data, {
             headers: new HttpHeaders(
                 {
                     'Content-Type': 'application/json',

@@ -109,58 +109,89 @@
                 }
             </div>
 
-            <div class="col-span-12 md:col-span-6 xl:col-span-3 pt-0 flex flex-col">
+            <!-- Toggle HID -->
+            <div class="col-span-12 md:col-span-12 xl:col-span-12 pt-0 flex flex-col">
                 <label class="form-label fw-semibold">Usa credenciales HID</label>
                 <p-toggleswitch formControlName="usaCredencialesHID"></p-toggleswitch>
+                @if (isHid()) {
+                <div class="mt-4">
+                    <p-tabs [(value)]="activeTabHID">
+                        <p-tablist>
+                            @for (tab of configHID; track tab.key) {
+                            <p-tab [value]="tab.key">{{ tab.label }}</p-tab>
+                            }
+                        </p-tablist>
+                        <p-tabpanels>
+                            @for (tab of configHID; track tab.key) {
+                            <p-tabpanel [value]="tab.key">
+                                <div class="space-y-3 mt-3">
+                                    @for (item of tab.items; track item.tipoConfiguracion) {
+                                    <div class="flex items-start gap-3">
+                                        <strong class="min-w-40 text-sm pt-1">{{ item.nombre }}:</strong>
+                                        <div class="flex-grow">
+                                            <input pInputText
+                                                [type]="esCampoPassword(item.tipoConfiguracion) ? 'password' : 'text'"
+                                                [value]="item.valor1"
+                                                (input)="actualizarValorConfig('HID', tab.key, item.tipoConfiguracion, $event)"
+                                                class="w-full" />
+                                        </div>
+                                    </div>
+                                    }
+                                </div>
+                            </p-tabpanel>
+                            }
+                        </p-tabpanels>
+                    </p-tabs>
+                </div>
+                }
+            </div>
+
+            <!-- Toggle Wallet -->
+            <div class="col-span-12 md:col-span-12 xl:col-span-12 pt-0 flex flex-col">
+                <label class="form-label fw-semibold">Usa credenciales Wallet</label>
+                <p-toggleswitch formControlName="usaCredencialesWallet"></p-toggleswitch>
+                @if (isWallet()) {
+                <div class="mt-4">
+                    <p-tabs [(value)]="activeTabWallet">
+                        <p-tablist>
+                            @for (tab of configWallet; track tab.key) {
+                            <p-tab [value]="tab.key">{{ tab.label }}</p-tab>
+                            }
+                        </p-tablist>
+                        <p-tabpanels>
+                            @for (tab of configWallet; track tab.key) {
+                            <p-tabpanel [value]="tab.key">
+                                <div class="space-y-3 mt-3">
+                                    @for (item of tab.items; track item.tipoConfiguracion) {
+                                    <div class="flex items-start gap-3">
+                                        <strong class="min-w-40 text-sm pt-1">{{ item.nombre }}:</strong>
+                                        <div class="flex-grow">
+                                            <input pInputText
+                                                [type]="esCampoPassword(item.tipoConfiguracion) ? 'password' : 'text'"
+                                                [value]="item.valor1"
+                                                (input)="actualizarValorConfig('WALLET', tab.key, item.tipoConfiguracion, $event)"
+                                                class="w-full" />
+                                        </div>
+                                    </div>
+                                    }
+                                </div>
+                            </p-tabpanel>
+                            }
+                        </p-tabpanels>
+                    </p-tabs>
+                </div>
+                }
             </div>
         </div>
 
-        @if (isHid()) {
-        <div class="mt-4">
-            <p-tabs [(value)]="activeTab">
-                <p-tablist>
-                    @for (tab of groupedConfigs(); track tab.key) {
-                    <p-tab [value]="tab.key">{{ tab.label }}</p-tab>
-                    }
-                </p-tablist>
-                <p-tabpanels>
-                    @for (tab of groupedConfigs(); track tab.key) {
-                    <p-tabpanel [value]="tab.key">
-                        <div class="space-y-3 mt-3">
-                            @for (item of tab.items; track item.tipoConfiguracion) {
-                            <div class="flex items-start gap-3">
-                                <strong class="min-w-40 text-sm pt-1">{{ item.nombreParametro }}:</strong>
-                                <div class="flex-grow">
-                                    @if (item.editable === 1) {
-                                    <input pInputText
-                                        [type]="esCampoPassword(item.tipoConfiguracion) ? 'password' : 'text'"
-                                        [value]="item.valor1"
-                                        (input)="actualizarValorConfig(tab.key, item.tipoConfiguracion, $event)"
-                                        class="w-full" />
-                                    @if (item.valor2) {
-                                    <small class="text-muted-foreground block mt-1">{{ item.valor2 }}</small>
-                                    }
-                                    } @else {
-                                    <span class="text-sm">{{ item.valor1 }}</span>
-                                    }
-                                </div>
-                            </div>
-                            }
-                        </div>
-                    </p-tabpanel>
-                    }
-                </p-tabpanels>
-            </p-tabs>
-        </div>
-        }
-
+        <!-- Botones finales -->
         <div class="flex justify-end space-x-3 pt-4 border-t border-border">
             <button type="button" (click)="cerrar()"
                 class="rounded-md bg-muted px-4 py-2 text-xs font-semibold text-muted-foreground hover:text-foreground">
                 Cancelar
             </button>
 
-            @if (isHid() && !conexionExitosa()) {
+            @if (isHid() && form.controls['usaCredencialesHID'].dirty && !conexionExitosa()) {
             <button type="button" (click)="probarConexion()"
                 class="rounded-md bg-primary px-4 py-2 text-xs font-semibold text-primary-foreground"
                 [disabled]="probandoConexion()">
@@ -170,7 +201,7 @@
             </button>
             }
 
-            @if (!isHid() || conexionExitosa()) {
+            @if (!isHid() || !form.controls['usaCredencialesHID'].dirty || conexionExitosa()) {
             <button type="submit" class="rounded-md bg-primary px-4 py-2 text-xs font-semibold text-primary-foreground">
                 Actualizar
             </button>

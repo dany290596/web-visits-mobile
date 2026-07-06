@@ -87,7 +87,7 @@
             <div class="col-span-12 md:col-span-6 xl:col-span-3 pt-0">
                 <label class="form-label fw-semibold">Correo electrónico <span class="text-red-500">*</span></label>
                 <input pInputText type="email" formControlName="correoElectronico" placeholder="Correo electrónico"
-                    class="w-full" />
+                    class="w-full" (input)="onEmailInput($event)" />
                 @if (form.controls['correoElectronico'].invalid && form.controls['correoElectronico'].touched) {
                 <p-message severity="error" class="p-error block"><i class="pi pi-exclamation-circle"></i> Correo
                     electrónico válido requerido</p-message>
@@ -130,13 +130,82 @@
             </div>
 
             <!-- Toggle HID -->
-            <div class="col-span-12 md:col-span-6 xl:col-span-3 pt-0 flex flex-col">
+            <div class="col-span-12 md:col-span-12 xl:col-span-12 pt-0 flex flex-col">
                 <label class="form-label fw-semibold">Usa credenciales HID</label>
                 <p-toggleswitch formControlName="usaCredencialesHID"></p-toggleswitch>
+                @if (isHid()) {
+                <div class="mt-4">
+                    <p-tabs [(value)]="activeTabHID">
+                        <p-tablist>
+                            @for (tab of configHID; track tab.key) {
+                            <p-tab [value]="tab.key">{{ tab.label }}</p-tab>
+                            }
+                        </p-tablist>
+                        <p-tabpanels>
+                            @for (tab of configHID; track tab.key) {
+                            <p-tabpanel [value]="tab.key">
+                                <div class="space-y-3 mt-3">
+                                    @for (item of tab.items; track item.tipoConfiguracion) {
+                                    <div class="flex items-start gap-3">
+                                        <strong class="min-w-40 text-sm pt-1">{{ item.nombre }}:</strong>
+                                        <div class="flex-grow">
+                                            <input pInputText
+                                                [type]="esCampoPassword(item.tipoConfiguracion) ? 'password' : 'text'"
+                                                [value]="item.valor1"
+                                                (input)="actualizarValorConfig('HID', tab.key, item.tipoConfiguracion, $event)"
+                                                class="w-full" />
+                                        </div>
+                                    </div>
+                                    }
+                                </div>
+                            </p-tabpanel>
+                            }
+                        </p-tabpanels>
+                    </p-tabs>
+                </div>
+                }
+            </div>
+
+            <!-- Toggle Wallet -->
+            <div class="col-span-12 md:col-span-12 xl:col-span-12 pt-0 flex flex-col">
+                <label class="form-label fw-semibold">Usa credenciales Wallet</label>
+                <p-toggleswitch formControlName="usaCredencialesWallet"></p-toggleswitch>
+                @if (isWallet()) {
+                <div class="mt-4">
+                    <p-tabs [(value)]="activeTabWallet">
+                        <p-tablist>
+                            @for (tab of configWallet; track tab.key) {
+                            <p-tab [value]="tab.key">{{ tab.label }}</p-tab>
+                            }
+                        </p-tablist>
+                        <p-tabpanels>
+                            @for (tab of configWallet; track tab.key) {
+                            <p-tabpanel [value]="tab.key">
+                                <div class="space-y-3 mt-3">
+                                    @for (item of tab.items; track item.tipoConfiguracion) {
+                                    <div class="flex items-start gap-3">
+                                        <strong class="min-w-40 text-sm pt-1">{{ item.nombre }}:</strong>
+                                        <div class="flex-grow">
+                                            <input pInputText
+                                                [type]="esCampoPassword(item.tipoConfiguracion) ? 'password' : 'text'"
+                                                [value]="item.valor1"
+                                                (input)="actualizarValorConfig('WALLET', tab.key, item.tipoConfiguracion, $event)"
+                                                class="w-full" />
+                                        </div>
+                                    </div>
+                                    }
+                                </div>
+                            </p-tabpanel>
+                            }
+                        </p-tabpanels>
+                    </p-tabs>
+                </div>
+                }
             </div>
         </div>
 
         <!-- Sección HID con pestañas (solo si el toggle está activo) -->
+        <!--
         @if (isHid()) {
         <div class="mt-4">
             <p-tabs [(value)]="activeTab">
@@ -175,6 +244,7 @@
             </p-tabs>
         </div>
         }
+        -->
 
         <!-- Diálogo de progreso de conexión -->
         <!--
@@ -193,6 +263,12 @@
                 class="rounded-md bg-muted px-4 py-2 text-xs font-semibold text-muted-foreground hover:text-foreground">
                 Cancelar
             </button>
+
+            <!--
+            <button type="submit" class="rounded-md bg-primary px-4 py-2 text-xs font-semibold text-primary-foreground">
+                Guardar
+            </button>
+            -->
 
             @if (isHid() && !conexionExitosa()) {
             <button type="button" (click)="probarConexion()"
