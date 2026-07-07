@@ -138,43 +138,6 @@ export class AgregarEmpresa implements OnInit {
       this.isWallet.set(val);
     });
 
-    /*
-    this.configuracionService.settingsGroupedType().subscribe({
-      next: (n) => {
-        if (n.respuesta === true) {
-          this.tabsConfig = n.data.map((a: any) => {
-            return {
-              key: a.key,
-              label: a.label,
-              items: a.items.map((b: any) => b.tipoConfiguracion.toUpperCase())
-            } as any;
-          });
-
-          this.activeTabHID.set(this.tabsConfig[0].key || "");
-          this.configuracionService.settingsGrouped().subscribe({
-            next: (x) => {
-              if (x.respuesta === true) {
-                // console.log("X ::: ", x);
-                this.configuraciones.set(x.data.map((m: any) => {
-                  return {
-                    tipoConfiguracion: m.tipoConfiguracion.toUpperCase(),
-                    nombreParametro: m.nombreParametro,
-                    valor1: m.valor1,
-                    valor2: m.valor2,
-                    valor3: m.valor3,
-                    editable: m.editable,
-                    lectura: m.lectura,
-                    estado: m.estado
-                  } as any;
-                }));
-              }
-            }
-          });
-        }
-      }
-    });
-    */
-
     this.configuracionService.settingsHIDGrouped().subscribe({
       next: (n) => {
         if (n.respuesta === true) {
@@ -297,7 +260,6 @@ export class AgregarEmpresa implements OnInit {
     });
   }
 
-
   validadorLongitudRFC(): ValidatorFn {
     return (control: AbstractControl): ValidationErrors | null => {
       const valor: string = control.value || '';
@@ -310,82 +272,7 @@ export class AgregarEmpresa implements OnInit {
 
   // ------------------------------------------------------------
   // ✅ NUEVO: Probar conexión real usando el servicio
-  // ------------------------------------------------------------
-  // probarConexion(): void {
-  //   if (this.form.invalid) {
-  //     this.form.markAllAsTouched();
-  //     this.messageService.add({ severity: 'warn', summary: 'Formulario incompleto', detail: 'Complete todos los campos requeridos' });
-  //     return;
-  //   }
-
-  //   const configsRaw = this.configuraciones();
-  //   const testData: TestConnectionDTO = {
-  //     CustomerId: configsRaw.find(c => c.tipoConfiguracion === '742CE98B-684B-4A76-BA0D-CF62621FC3E7')?.valor1 || '',
-  //     ClientId: configsRaw.find(c => c.tipoConfiguracion === 'BB617929-5F49-4FDC-8C28-62435505B600')?.valor1 || '',
-  //     ClientSecretOrCertificate: configsRaw.find(c => c.tipoConfiguracion === '29625587-4A45-495A-B728-203608694C44')?.valor1 || '',
-  //     IdpAuthenticationUrl: configsRaw.find(c => c.tipoConfiguracion === '60ADEBFE-01B5-497A-828B-CF3801F37495')?.valor1 || '',
-  //   };
-
-  //   this.probandoConexion.set(true);
-
-  //   this.srvEmpresa.testConnection(testData).subscribe({
-  //     next: (resp) => {
-  //       if (resp?.respuesta && resp.data?.id) {
-  //         this.monitorearTarea(resp.data.id);
-  //       } else {
-  //         this.probandoConexion.set(false);
-  //         this.messageService.add({
-  //           severity: 'warn',
-  //           summary: 'Error',
-  //           detail: resp?.mensaje || 'No se pudo crear la tarea'
-  //         });
-  //       }
-  //     },
-  //     error: () => {
-  //       this.probandoConexion.set(false);
-  //       this.messageService.add({
-  //         severity: 'error',
-  //         summary: 'Error',
-  //         detail: 'Error al iniciar la prueba de conexión'
-  //       });
-  //     }
-  //   });
-  // }
-  /*
-  probarConexion(): void {
-    if (this.form.invalid) {
-      this.form.markAllAsTouched();
-      this.messageService.add({ severity: 'warn', summary: 'Formulario incompleto', detail: 'Complete todos los campos requeridos' });
-      return;
-    }
-
-    const configsRaw = this.configuraciones();
-    const testData: TestConnectionDTO = {
-      CustomerId: configsRaw.find(c => c.tipoConfiguracion === '742CE98B-684B-4A76-BA0D-CF62621FC3E7')?.valor1 || '',
-      ClientId: configsRaw.find(c => c.tipoConfiguracion === 'BB617929-5F49-4FDC-8C28-62435505B600')?.valor1 || '',
-      ClientSecretOrCertificate: configsRaw.find(c => c.tipoConfiguracion === '29625587-4A45-495A-B728-203608694C44')?.valor1 || '',
-      IdpAuthenticationUrl: configsRaw.find(c => c.tipoConfiguracion === '60ADEBFE-01B5-497A-828B-CF3801F37495')?.valor1 || '',
-    };
-
-    this.probandoConexion.set(true);
-
-    this.srvEmpresa.testConnection(testData).subscribe({
-      next: (resp) => {
-        if (resp?.respuesta && resp.data?.id) {
-          // Abre el diálogo de progreso con SweetAlert2 y comienza el monitoreo
-          this.iniciarDialogoProgreso(resp.data.id);
-        } else {
-          this.probandoConexion.set(false);
-          this.messageService.add({ severity: 'warn', summary: 'Error', detail: resp?.mensaje || 'No se pudo crear la tarea' });
-        }
-      },
-      error: () => {
-        this.probandoConexion.set(false);
-        this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Error al iniciar la prueba de conexión' });
-      }
-    });
-  }
-  */
+  // ------------------------------------------------------------ 
   probarConexion(): void {
     if (this.form.invalid) {
       this.form.markAllAsTouched();
@@ -443,21 +330,10 @@ export class AgregarEmpresa implements OnInit {
             popup: 'swal-theme',
           }
         });
-        return; // Detiene la ejecución si falta algún campo
+        return;
       }
     }
     console.log('REQUEST BODY:', testData);
-
-
-
-
-    // const configsRaw = this.configuraciones();
-    // const testData: TestConnectionDTO = {
-    //   CustomerId: configsRaw.find(c => c.tipoConfiguracion === '742CE98B-684B-4A76-BA0D-CF62621FC3E7')?.valor1 || '',
-    //   ClientId: configsRaw.find(c => c.tipoConfiguracion === 'BB617929-5F49-4FDC-8C28-62435505B600')?.valor1 || '',
-    //   ClientSecretOrCertificate: configsRaw.find(c => c.tipoConfiguracion === '29625587-4A45-495A-B728-203608694C44')?.valor1 || '',
-    //   IdpAuthenticationUrl: configsRaw.find(c => c.tipoConfiguracion === '60ADEBFE-01B5-497A-828B-CF3801F37495')?.valor1 || '',
-    // };
 
     this.probandoConexion.set(true);
     this.srvEmpresa.testConnection(testData).subscribe({
@@ -618,106 +494,6 @@ export class AgregarEmpresa implements OnInit {
     }
   }
 
-
-
-
-  // ------------------------------------------------------------
-  // ✅ NUEVO: Monitoreo SSE de la tarea
-  // ------------------------------------------------------------
-  private monitorearTarea(taskId: string): void {
-    const sseUrl = this.srvEmpresa.getTaskUpdatesUrl(taskId);
-    const eventSource = new EventSource(sseUrl);
-
-    eventSource.addEventListener('progress', (e: MessageEvent) => {
-      const data = JSON.parse(e.data);
-      console.log('Progreso:', data.progress, data.status);
-      // Opcional: actualizar barra de progreso
-    });
-
-    eventSource.addEventListener('completed', (e: MessageEvent) => {
-      eventSource.close();
-      const data = JSON.parse(e.data);
-      const resultado = data.result; // TestConnectionRespDTO
-      console.log("monitoreo ::: ", resultado)
-      this.probandoConexion.set(false);
-
-      if (resultado?.respuesta && resultado?.codigo === 200) {
-        this.conexionExitosa.set(true);
-        // this.messageService.add({
-        //   severity: 'success',
-        //   summary: 'Éxito',
-        //   detail: 'Conexión HID probada exitosamente'
-        // });
-        Swal.fire({
-          icon: 'success',
-          title: '¡Éxito!',
-          text: 'Conexión HID probada exitosamente',
-          confirmButtonText: 'Aceptar',
-          allowOutsideClick: false,
-          allowEscapeKey: false,
-          showCloseButton: false,
-          customClass: {
-            popup: 'swal-theme',
-          }
-        });
-      } else {
-        this.conexionExitosa.set(false);
-        this.messageService.add({
-          severity: 'warn',
-          summary: 'Falló',
-          detail: resultado?.mensaje || 'Error en la conexión'
-        });
-      }
-    });
-
-    eventSource.addEventListener('error', (e: MessageEvent) => {
-      console.log('[SSE] Evento error recibido:', e.data);
-      eventSource.close();
-      this.probandoConexion.set(false);
-      const msg = e.data || 'Error en la tarea';
-      // this.messageService.add({ severity: 'error', summary: 'Error', detail: msg });
-      Swal.fire({
-        icon: 'warning',
-        title: '¡Advertencia!',
-        text: msg,
-        confirmButtonText: 'Aceptar',
-        allowOutsideClick: false,
-        allowEscapeKey: false,
-        showCloseButton: false,
-        customClass: {
-          popup: 'swal-theme',
-        }
-      });
-      // eventSource.close();
-      // this.probandoConexion.set(false);
-      // let msg = 'Error en la tarea';
-      // try {
-      //   const data = JSON.parse(e.data);
-      //   msg = data.message || msg;
-      // } catch {}
-      // this.messageService.add({ severity: 'error', summary: 'Error', detail: msg });
-    });
-
-    eventSource.onerror = () => {
-      eventSource.close();
-      this.probandoConexion.set(false);
-      // this.messageService.add({
-      //   severity: 'error',
-      //   summary: 'Error',
-      //   detail: 'Se perdió la conexión de monitoreo'
-      // });
-      Swal.fire({
-        icon: 'error',
-        title: '¡Error!',
-        text: 'Se perdió la conexión de monitoreo',
-        confirmButtonText: 'Aceptar',
-        allowOutsideClick: false,
-        allowEscapeKey: false,
-        showCloseButton: false
-      });
-    };
-  }
-
   // ------------------------------------------------------------
   // Guardar (mantiene lógica original, emite true al guardar)
   // ------------------------------------------------------------
@@ -749,7 +525,7 @@ export class AgregarEmpresa implements OnInit {
       telefonoEmpresa: formValue.telefonoEmpresa,
       telefonoMovil: formValue.telefonoMovil,
       correoElectronico: formValue.correoElectronico,
-      paisId: formValue.paisId || null,          // null en lugar de Guid vacío
+      paisId: formValue.paisId || null,
       estadoId: formValue.estadoId || null,
       ciudadId: formValue.ciudadId || null,
       usaCredencialesHID: this.isHid() ? 1 : 2,
