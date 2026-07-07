@@ -543,8 +543,8 @@ export class AgregarEmpresa implements OnInit {
       estado: c.estado
     }));
 
-    const settingEncryptedHID = JSON.stringify(this.configHID);
-    const settingEncryptedWallet = JSON.stringify(this.configWallet);
+    const settingEncryptedHID = this.configHID;
+    const settingEncryptedWallet = this.configWallet;
 
     const payload = {
       id: this.empresaData?.id || null,

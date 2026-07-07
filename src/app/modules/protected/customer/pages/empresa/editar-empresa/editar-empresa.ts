@@ -326,15 +326,15 @@ export class EditarEmpresa implements OnInit {
       telefonoEmpresa: formValue.telefonoEmpresa,
       telefonoMovil: formValue.telefonoMovil,
       correoElectronico: formValue.correoElectronico,
-      paisId: formValue.paisId || null,          // null en lugar de Guid vacío
+      paisId: formValue.paisId || null,
       estadoId: formValue.estadoId || null,
       ciudadId: formValue.ciudadId || null,
       usaCredencialesHID: this.isHid() ? 1 : 2,
       usaCredencialesWallet: this.isWallet() ? 1 : 2
     };
 
-    const settingEncryptedHID = JSON.stringify(this.configHID);
-    const settingEncryptedWallet = JSON.stringify(this.configWallet);
+    const settingEncryptedHID = this.configHID;
+    const settingEncryptedWallet = this.configWallet;
 
     const payload = {
       id: this.id || null,

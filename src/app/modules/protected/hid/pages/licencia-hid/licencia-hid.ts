@@ -13,7 +13,7 @@ import { TableDynamic } from '../../../../../shared/components/table-dynamic/tab
 import { InputNumberModule } from 'primeng/inputnumber';
 import { InputTextModule } from 'primeng/inputtext';
 
-import { IUsuarioResponse } from '../../../authentication/interfaces/usuario.interface';
+import { IUsuarioAutenticado, IUsuarioResponse } from '../../../authentication/interfaces/usuario.interface';
 
 import { ModalService } from '../../../../../shared/services/modal.service';
 import { StorageService } from '../../../../auth/services/storage.service';
@@ -22,6 +22,7 @@ import { PermisoService } from '../../../authentication/services/permiso.service
 
 import { AutocEstado } from '../../../../../shared/components/autoc-estado/autoc-estado';
 import { DetalleLicenciaHid } from './detalle-licencia-hid/detalle-licencia-hid';
+import { filter, take } from 'rxjs';
 
 @Component({
   selector: 'app-licencia-hid',
@@ -48,8 +49,10 @@ export class LicenciaHid {
   private srvModal = inject(ModalService);
   private srvPermiso = inject(PermisoService);
 
-  user: IUsuarioResponse | undefined;
-  userId: string = '';
+  // user: IUsuarioResponse | undefined;
+  // userId: string = '';
+
+  userData!: IUsuarioAutenticado;
 
   paginaActual: number = 1;
   totalPaginas: number = 0;
@@ -82,13 +85,24 @@ export class LicenciaHid {
   }
 
   ngOnInit(): void {
-    this.buscar(true);
+
     this.prepararTablaResultados();
 
-    if (this.srvStorage.getUserDetailData() !== undefined && this.srvStorage.getUserDetailData() !== null) {
-      this.user = this.srvStorage.getUserDetailData()!;
-      this.userId = this.user.id!;
-    }
+    // if (this.srvStorage.getUserDetailData() !== undefined && this.srvStorage.getUserDetailData() !== null) {
+    //   this.user = this.srvStorage.getUserDetailData()!;
+    //   this.userId = this.user.id!;
+    // }
+
+    this.srvStorage.userData$
+      .pipe(
+        filter((data: any) => !!data?.perfilId),
+        take(1)
+      )
+      .subscribe((data: IUsuarioAutenticado) => {
+        this.userData = data;
+            this.buscar(true);
+        console.log("Ssd ", this.userData);
+      });
   }
 
   prepararTablaResultados() {
@@ -136,6 +150,7 @@ export class LicenciaHid {
       EstadoLicencia: EstadoLicencia,
       EstadoPeriodo: EstadoPeriodo,
       MensajeEstado: MensajeEstado,
+      // UsuarioCreadorId: this.userData.usuarioId,
 
       DatosCompletos: 1,
       PageNumber: this.paginaActual,
@@ -143,11 +158,12 @@ export class LicenciaHid {
     };
 
     this.tablaResultados!.registros = [];
+    console.log("FILTROS ::: ", filtroBusqueda);
     this.srvLicenciaHID.getAll(filtroBusqueda).subscribe((resp: any) => {
       if (resp.respuesta === true) {
         // console.log("DATA ::: ", resp.data);
         let listado: any[] = resp.data.filter(
-          (usuario: any) => usuario.id?.toUpperCase() !== this.userId?.toUpperCase()
+          (usuario: any) => usuario.id?.toUpperCase() !== this.userData.usuarioId?.toUpperCase()
         );
 
         if (!listado || listado.length === 0) {
@@ -255,7 +271,7 @@ export class LicenciaHid {
           campos.push(campoFechaVencimiento);
           campos.push(campoEstado);
 
-          if (registro.id !== this.userId) {
+          if (registro.id !== this.userData.usuarioId) {
             this.tablaResultados?.addRegistro(strId, registro.estado!, campos);
           }
 

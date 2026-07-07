@@ -50,6 +50,9 @@ export class LicenciaHIDService {
         if (filter.EmpresaClienteId !== null && filter.EmpresaClienteId !== undefined && filter.EmpresaClienteId !== '') {
             params = params.set('EmpresaClienteId', filter.EmpresaClienteId);
         }
+        if (filter.UsuarioCreadorId !== null && filter.UsuarioCreadorId !== undefined && filter.UsuarioCreadorId !== '') {
+            params = params.set('UsuarioCreadorId', filter.UsuarioCreadorId);
+        }
         if (filter.PageSize !== null && filter.PageSize !== undefined && filter.PageSize !== "") {
             params = params.set('PageSize', filter.PageSize);
         }

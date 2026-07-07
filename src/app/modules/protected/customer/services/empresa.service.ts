@@ -209,8 +209,8 @@ export class EmpresaService {
     withSettingEncrypted(data: {
         id: string | null;
         empresa: any;
-        settingEncryptedHID: string;
-        settingEncryptedWallet: string;
+        settingEncryptedHID: any[];
+        settingEncryptedWallet: any[];
     }): Observable<ApiResponse<any>> {
         const headers = new HttpHeaders({
             'Content-Type': 'application/json',
@@ -228,8 +228,8 @@ export class EmpresaService {
     update(data: {
         id: string | null;
         empresa: any;
-        settingEncryptedHID: string;
-        settingEncryptedWallet: string;
+        settingEncryptedHID: any[];
+        settingEncryptedWallet: any[];
     }): Observable<any> {
         return this.http.put(`${url}EmpresaCliente/${data.id}`, data, {
             headers: new HttpHeaders(
