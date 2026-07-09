@@ -143,28 +143,6 @@ export class EditarEmpresa implements OnInit {
     this.form.get('usaCredencialesWallet')?.valueChanges.subscribe(val => {
       this.isWallet.set(val);
     });
-
-    this.configuracionService.settingsHIDGrouped().subscribe({
-      next: (n) => {
-        if (n.respuesta === true) {
-          // console.log("HID ::: ", n.data);
-          this.configHID = n.data;
-          this.activeTabHID.set(this.configHID[0].key || "");
-          // console.log("HID ::: ", JSON.stringify(this.configHID));
-        }
-      }
-    });
-
-    this.configuracionService.settingsWalletGrouped().subscribe({
-      next: (n) => {
-        if (n.respuesta === true) {
-          // console.log("WALLET ::: ", n.data);
-          this.configWallet = n.data;
-          this.activeTabWallet.set(this.configWallet[0].key || "");
-          // console.log("WALLET ::: ", JSON.stringify(this.configWallet));
-        }
-      }
-    });
   }
 
   // ─── Carga datos desde la API ────────────────────────────────
@@ -383,16 +361,65 @@ export class EditarEmpresa implements OnInit {
   // ─── Probar conexión HID ─────────────────────────────────────
   probarConexion(): void {
     if (this.form.invalid) {
-      this.form.markAllAsTouched();
-      return;
-    }
-    const configsRaw = this.configuraciones();
-    const testData: TestConnectionDTO = {
-      CustomerId: configsRaw.find(c => c.tipoConfiguracion.toUpperCase() === '742CE98B-684B-4A76-BA0D-CF62621FC3E7')?.valor1 || '',
-      ClientId: configsRaw.find(c => c.tipoConfiguracion.toUpperCase() === 'BB617929-5F49-4FDC-8C28-62435505B600')?.valor1 || '',
-      ClientSecretOrCertificate: configsRaw.find(c => c.tipoConfiguracion.toUpperCase() === '29625587-4A45-495A-B728-203608694C44')?.valor1 || '',
-      IdpAuthenticationUrl: configsRaw.find(c => c.tipoConfiguracion.toUpperCase() === '60ADEBFE-01B5-497A-828B-CF3801F37495')?.valor1 || '',
+          this.form.markAllAsTouched();
+          Swal.fire({
+            icon: 'warning',
+            title: 'Formulario incompleto',
+            text: `Complete todos los campos requeridos.`,
+            confirmButtonText: 'Entendido',
+            allowOutsideClick: false,
+            allowEscapeKey: false,
+            showCloseButton: false,
+            customClass: {
+              popup: 'swal-theme',
+            }
+          });
+          return;
+        }
+
+        console.log("REQUEST ::: ", this.configHID);
+    console.log("REQUEST ::: ", JSON.stringify(this.configHID));
+
+    const obtenerValor = (tipo: string): string => {
+      for (const grupo of this.configHID) {
+        const item = grupo.items.find(i => i.tipoConfiguracion === tipo);
+        if (item) return item.valor1;
+      }
+      return '';
     };
+
+    const testData = {
+          CustomerId: obtenerValor('742ce98b-684b-4a76-ba0d-cf62621fc3e7'),
+          ClientId: obtenerValor('bb617929-5f49-4fdc-8c28-62435505b600'),
+          ClientSecretOrCertificate: obtenerValor('29625587-4a45-495a-b728-203608694c44'),
+          IdpAuthenticationUrl: obtenerValor('60adebfe-01b5-497a-828b-cf3801f37495')
+        };
+    
+        const camposRequeridos: { campo: keyof typeof testData; nombreMostrar: string }[] = [
+          { campo: 'CustomerId', nombreMostrar: 'Customer ID' },
+          { campo: 'ClientId', nombreMostrar: 'Client ID' },
+          { campo: 'ClientSecretOrCertificate', nombreMostrar: 'Client secret / Client certificate' }
+        ];
+    
+        for (const { campo, nombreMostrar } of camposRequeridos) {
+          const valor = testData[campo]?.trim();
+          if (!valor || valor === '') {
+            Swal.fire({
+              icon: 'warning',
+              title: 'Campo requerido',
+              text: `El campo "${nombreMostrar}" es obligatorio para probar la conexión.`,
+              confirmButtonText: 'Entendido',
+              allowOutsideClick: false,
+              allowEscapeKey: false,
+              showCloseButton: false,
+              customClass: {
+                popup: 'swal-theme',
+              }
+            });
+            return;
+          }
+        }
+        console.log('REQUEST BODY:', testData);
 
     this.probandoConexion.set(true);
     this.srvEmpresa.testConnection(testData).subscribe({

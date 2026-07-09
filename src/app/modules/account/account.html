@@ -198,20 +198,20 @@
                 </div>
                 <div class="overflow-x-auto">
                     <table class="min-w-full divide-y divide-gray-200">
-                        <thead class="bg-gray-50">
+                        <thead class="bg-transparent">
                             <tr>
                                 <th
-                                    class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                    class="px-4 py-3 text-left text-xs font-medium text-gray-600 dark:text-gray-300 uppercase tracking-wider">
                                     Módulo</th>
                                 <th
-                                    class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                    class="px-4 py-3 text-left text-xs font-medium text-gray-600 dark:text-gray-300 uppercase tracking-wider">
                                     Sección</th>
                                 <th
-                                    class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                    class="px-4 py-3 text-left text-xs font-medium text-gray-600 dark:text-gray-300 uppercase tracking-wider">
                                     Permiso</th>
                             </tr>
                         </thead>
-                        <tbody class="bg-white divide-y divide-gray-200">
+                        <tbody class="bg-transparent divide-y divide-gray-200 dark:divide-gray-700">
                             <tr *ngFor="let permiso of accountData.permisos">
                                 <td class="px-4 py-2 text-sm text-foreground">{{ permiso.modulo }}</td>
                                 <td class="px-4 py-2 text-sm text-foreground">{{ permiso.seccion }}</td>
