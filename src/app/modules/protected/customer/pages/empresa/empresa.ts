@@ -48,6 +48,8 @@ export class Empresa {
   idSection: string = "99CD2FB3-584A-4B3B-B876-4E96F5F16A1F";
   permission: IPermisoDetalle | undefined;
 
+  private readonly TIPO_USUARIO_EMPRESA = '2228D6FB-CBDD-4672-9A06-A6E054157E6D';
+
   private srvStorage = inject(StorageService);
   private srvEmpresa = inject(EmpresaService);
   private srvForm = inject(FormBuilder);
@@ -80,9 +82,6 @@ export class Empresa {
   });
 
   ngOnInit(): void {
-    this.buscar(true);
-    this.prepararTablaResultados();
-
     this.srvStorage.userData$
       .pipe(
         filter((data: any) => !!data?.perfilId),
@@ -90,6 +89,8 @@ export class Empresa {
       )
       .subscribe((data: IUsuarioAutenticado) => {
         this.userData = data;
+        this.buscar(true);
+        this.prepararTablaResultados();
       });
   }
 
@@ -117,13 +118,22 @@ export class Empresa {
       this.paginaActual = 1;
     }
 
+    const esTipoUsuarioEmpresa: boolean =
+      this.userData !== null &&
+      this.userData !== undefined &&
+      this.userData.tipoUsuarioId !== null &&
+      this.userData.tipoUsuarioId !== undefined &&
+      this.userData.tipoUsuarioId !== '' &&
+      this.userData.tipoUsuarioId.toUpperCase() === this.TIPO_USUARIO_EMPRESA;
+
     let filtroBusqueda: any = {
       RazonSocial: RazonSocial,
       RFC: RFC,
       CorreoElectronico: CorreoElectronico,
       Estado: Estado,
       DatosCompletos: 1,
-      PageNumber: this.paginaActual
+      PageNumber: this.paginaActual,
+      Id: esTipoUsuarioEmpresa ? this.userData.empresaId : ''
     };
 
     this.tablaResultados!.registros = [];
@@ -190,8 +200,6 @@ export class Empresa {
           campos.push(campoEstado);
 
           this.tablaResultados?.addRegistro(strId, vst.estado!, campos);
-
-
         });
       }
     });

@@ -86,8 +86,10 @@ export class IUsuarioAutenticado {
     email?: string;
     empresaId?: string;
     perfilId?: string;
+    perfilName?: string;
     usuarioId?: string;
     tipoUsuarioId?: string;
+    tipoUsuarioName?: string;
 }
 
 export interface IUsuarioResponse {

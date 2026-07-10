@@ -16,12 +16,13 @@ import { DetalleDispositivoHid } from './detalle-dispositivo-hid/detalle-disposi
 
 import { IDataTable, IDataTableRegistroCampo, IDTRCampoPropiedad } from '../../../../../shared/interfaces/table-dynamic.interface';
 import { IPermisoDetalle } from '../../../authentication/interfaces/permiso.interface';
-import { IUsuarioResponse } from '../../../authentication/interfaces/usuario.interface';
+import { IUsuarioAutenticado, IUsuarioResponse } from '../../../authentication/interfaces/usuario.interface';
 
 import { ModalService } from '../../../../../shared/services/modal.service';
 import { PermisoService } from '../../../authentication/services/permiso.service';
 import { StorageService } from '../../../../auth/services/storage.service';
 import { DispositivoHIDService } from '../../services/dispositivo-hid.service';
+import { filter, take } from 'rxjs';
 
 @Component({
   selector: 'app-dispositivo-hid',
@@ -43,14 +44,13 @@ export class DispositivoHid {
   idSection: string = "807619F8-FA90-4824-94C7-9738F30B26CD";
   permission: IPermisoDetalle | undefined;
 
+  private readonly TIPO_USUARIO_EMPRESA = '2228D6FB-CBDD-4672-9A06-A6E054157E6D';
+
   private srvModal = inject(ModalService);
   private srvForm = inject(FormBuilder);
   private srvStorage = inject(StorageService);
   private srvDispositivoHID = inject(DispositivoHIDService);
   private srvPermiso = inject(PermisoService);
-
-  user: IUsuarioResponse | undefined;
-  userId: string = '';
 
   paginaActual: number = 1;
   totalPaginas: number = 0;
@@ -60,6 +60,8 @@ export class DispositivoHid {
   sinDatos: boolean = false;
   mostrarTabla: boolean = false;
   tablaResultados: IDataTable = new DataTable();
+
+  userData!: IUsuarioAutenticado;
 
   buscarFG: FormGroup = this.srvForm.group({
     UsuarioId: [''],
@@ -79,13 +81,16 @@ export class DispositivoHid {
   }
 
   ngOnInit(): void {
-    this.buscar(true);
-    this.prepararTablaResultados();
-
-    if (this.srvStorage.getUserDetailData() !== undefined && this.srvStorage.getUserDetailData() !== null) {
-      this.user = this.srvStorage.getUserDetailData()!;
-      this.userId = this.user.id!;
-    }
+    this.srvStorage.userData$
+      .pipe(
+        filter((data: any) => !!data?.perfilId),
+        take(1)
+      )
+      .subscribe((data: IUsuarioAutenticado) => {
+        this.userData = data;
+        this.buscar(true);
+        this.prepararTablaResultados();
+      });
   }
 
   prepararTablaResultados() {
@@ -131,6 +136,14 @@ export class DispositivoHid {
       this.paginaActual = 1;
     }
 
+    const esTipoUsuarioEmpresa: boolean =
+      this.userData !== null &&
+      this.userData !== undefined &&
+      this.userData.tipoUsuarioId !== null &&
+      this.userData.tipoUsuarioId !== undefined &&
+      this.userData.tipoUsuarioId !== '' &&
+      this.userData.tipoUsuarioId.toUpperCase() === this.TIPO_USUARIO_EMPRESA;
+
     let filtroBusqueda: any = {
       UsuarioId: UsuarioId,
       SistemaOperativo: SistemaOperativo,
@@ -144,9 +157,8 @@ export class DispositivoHid {
       InvitacionExpirationDate: InvitacionExpirationDate,
       InvitacionActividad: InvitacionActividad,
       InvitacionDetalle: InvitacionDetalle,
-      EmpresaClienteId: EmpresaClienteId,
       UsuarioNombre: UsuarioNombre,
-
+      EmpresaClienteId: esTipoUsuarioEmpresa ? this.userData.empresaId : '',
       DatosCompletos: 1,
       PageNumber: this.paginaActual,
       Estado: Estado
@@ -157,7 +169,7 @@ export class DispositivoHid {
       if (resp.respuesta === true) {
         // console.log("DATA ::: ", resp.data);
         let listado: any[] = resp.data.filter(
-          (usuario: any) => usuario.id?.toUpperCase() !== this.userId?.toUpperCase()
+          (usuario: any) => usuario.id?.toUpperCase() !== this.userData.usuarioId?.toUpperCase()
         );
 
         if (!listado || listado.length === 0) {
@@ -282,7 +294,7 @@ export class DispositivoHid {
           campos.push(campoFechaCreacion);
           campos.push(campoFechaVencimiento);
 
-          if (registro.id !== this.userId) {
+          if (registro.id !== this.userData.usuarioId) {
             this.tablaResultados?.addRegistro(strId, registro.estado!, campos);
           }
         });

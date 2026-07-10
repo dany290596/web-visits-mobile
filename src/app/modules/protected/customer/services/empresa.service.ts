@@ -42,6 +42,10 @@ export class EmpresaService {
 
     getAll(filter: IEmpresaFilter): Observable<any> {
         let params = new HttpParams();
+
+        if (filter.Id !== null && filter.Id !== undefined && filter.Id !== "") {
+            params = params.set('Id', filter.Id);
+        }
         if (filter.RazonSocial !== null && filter.RazonSocial !== undefined && filter.RazonSocial !== "") {
             params = params.set('RazonSocial', filter.RazonSocial);
         }

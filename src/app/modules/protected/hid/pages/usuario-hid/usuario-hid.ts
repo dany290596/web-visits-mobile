@@ -49,6 +49,8 @@ export class UsuarioHid {
   idSection: string = "F1F1F873-6FBD-401A-8197-06AFD7185A6D";
   permission: IPermisoDetalle | undefined;
 
+  private readonly TIPO_USUARIO_EMPRESA = '2228D6FB-CBDD-4672-9A06-A6E054157E6D';
+
   private srvModal = inject(ModalService);
   private srvForm = inject(FormBuilder);
   private srvStorage = inject(StorageService);
@@ -96,8 +98,6 @@ export class UsuarioHid {
   }
 
   ngOnInit(): void {
-    this.buscar(true);
-    this.prepararTablaResultados();
 
     this.srvStorage.userData$
       .pipe(
@@ -106,6 +106,8 @@ export class UsuarioHid {
       )
       .subscribe((data: IUsuarioAutenticado) => {
         this.userData = data;
+        this.buscar(true);
+        this.prepararTablaResultados();
       });
   }
 
@@ -150,6 +152,14 @@ export class UsuarioHid {
       this.paginaActual = 1;
     }
 
+    const esTipoUsuarioEmpresa: boolean =
+      this.userData !== null &&
+      this.userData !== undefined &&
+      this.userData.tipoUsuarioId !== null &&
+      this.userData.tipoUsuarioId !== undefined &&
+      this.userData.tipoUsuarioId !== '' &&
+      this.userData.tipoUsuarioId.toUpperCase() === this.TIPO_USUARIO_EMPRESA;
+
     let filtroBusqueda: any = {
       TipoCredencialId: TipoCredencialId,
       LicenciaId: LicenciaId,
@@ -165,8 +175,7 @@ export class UsuarioHid {
       InvitacionActividad: InvitacionActividad,
       InvitacionDetalle: InvitacionDetalle,
       Status: Status,
-      EmpresaClienteId: EmpresaClienteId,
-
+      EmpresaClienteId: esTipoUsuarioEmpresa ? this.userData.empresaId : '',
       DatosCompletos: 1,
       PageNumber: this.paginaActual,
       Estado: Estado

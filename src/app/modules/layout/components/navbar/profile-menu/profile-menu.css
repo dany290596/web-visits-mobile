@@ -1,0 +1,5 @@
+:host ::ng-deep .user-chip.p-chip {
+    background: var(--p-primary-color) !important;
+    color: var(--p-primary-contrast-color) !important;
+    border: 1px solid var(--p-primary-color) !important;
+}

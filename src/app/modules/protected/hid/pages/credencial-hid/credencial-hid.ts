@@ -48,6 +48,8 @@ export class CredencialHid {
   idSection: string = "3DD088CD-7183-416D-98AF-2DBE47DA2544";
   permission: IPermisoDetalle | undefined;
 
+  private readonly TIPO_USUARIO_EMPRESA = '2228D6FB-CBDD-4672-9A06-A6E054157E6D';
+
   private srvModal = inject(ModalService);
   private srvForm = inject(FormBuilder);
   private srvStorage = inject(StorageService);
@@ -84,9 +86,6 @@ export class CredencialHid {
   }
 
   ngOnInit(): void {
-    this.buscar(true);
-    this.prepararTablaResultados();
-
     this.srvStorage.userData$
       .pipe(
         filter((data: any) => !!data?.perfilId),
@@ -94,6 +93,8 @@ export class CredencialHid {
       )
       .subscribe((data: IUsuarioAutenticado) => {
         this.userData = data;
+        this.buscar(true);
+        this.prepararTablaResultados();
       });
   }
 
@@ -140,6 +141,14 @@ export class CredencialHid {
       this.paginaActual = 1;
     }
 
+    const esTipoUsuarioEmpresa: boolean =
+      this.userData !== null &&
+      this.userData !== undefined &&
+      this.userData.tipoUsuarioId !== null &&
+      this.userData.tipoUsuarioId !== undefined &&
+      this.userData.tipoUsuarioId !== '' &&
+      this.userData.tipoUsuarioId.toUpperCase() === this.TIPO_USUARIO_EMPRESA;
+
     let filtroBusqueda: any = {
       LicenciaId: LicenciaId,
       Nombre: Nombre,
@@ -155,8 +164,7 @@ export class CredencialHid {
       InvitacionActividad: InvitacionActividad,
       InvitacionDetalle: InvitacionDetalle,
       Status: Status,
-      EmpresaClienteId: EmpresaClienteId,
-
+      EmpresaClienteId: esTipoUsuarioEmpresa ? this.userData.empresaId : '',
       CredencialValor: CredencialValor,
       DispositivoId: DispositivoId,
       Usuarioid: UsuarioId,

@@ -38,6 +38,7 @@ export class AuthService {
                         this.srvUsuario.getById(response.data.usuarioId).subscribe({
                             next: (user: any) => {
                                 if (user.respuesta === true && user.data !== null && user.data !== undefined) {
+                                    // console.log("USUARIO ::: ", user.data);
                                     this.storageService.setUserDetail(user.data);
                                 }
                             },

@@ -9,10 +9,13 @@ import { StorageService } from '../../../../auth/services/storage.service';
 import { IUsuarioAutenticado } from '../../../../protected/authentication/interfaces/usuario.interface';
 
 import { Router } from '@angular/router';
+import { filter, take } from 'rxjs';
+
+import { ChipModule } from 'primeng/chip';
 
 @Component({
   selector: 'app-profile-menu',
-  imports: [ClickOutsideDirective, NgClass, AngularSvgIconModule],
+  imports: [ClickOutsideDirective, NgClass, AngularSvgIconModule, ChipModule],
   animations: [
     trigger('openClose', [
       state(
@@ -40,6 +43,7 @@ import { Router } from '@angular/router';
 })
 export class ProfileMenu implements OnInit {
   user: IUsuarioAutenticado | undefined;
+  userData: any | undefined;
   userId: string = '';
 
   private srvStorage = inject(StorageService);
@@ -104,10 +108,14 @@ export class ProfileMenu implements OnInit {
   constructor(public themeService: ThemeService) { }
 
   ngOnInit(): void {
-    this.srvStorage.userData$.pipe(
-    ).subscribe((menu: any) => {
-      this.user = menu;
-    });
+    this.srvStorage.userData$
+      .pipe(
+        filter((data: any) => !!data?.perfilId),
+        take(1)
+      )
+      .subscribe((data: IUsuarioAutenticado) => {
+        this.user = data;
+      });
   }
 
   public toggleMenu(): void {

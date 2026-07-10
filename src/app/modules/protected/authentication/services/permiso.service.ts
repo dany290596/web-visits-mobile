@@ -92,7 +92,7 @@ export class PermisoService {
         // Mapeo claro según el nivel de permiso
         const permisos: Record<number, IPermisoDetalle> = {
             1: { nivel, nombre, ver: true, crear: false, editar: false, eliminar: false },
-            2: { nivel, nombre, ver: true, crear: true, editar: false, eliminar: false },
+            2: { nivel, nombre, ver: true, crear: true, editar: true, eliminar: false },
             3: { nivel, nombre, ver: true, crear: true, editar: true, eliminar: true }
         };
 

@@ -24,7 +24,9 @@ export class UsuarioHidTipoCredencialService {
         if (filter.TipoCredencialId !== null && filter.TipoCredencialId !== undefined && filter.TipoCredencialId !== "") {
             params = params.set('TipoCredencialId', filter.TipoCredencialId);
         }
-
+        if (filter.EmpresaClienteId !== null && filter.EmpresaClienteId !== undefined && filter.EmpresaClienteId !== "") {
+            params = params.set('EmpresaClienteId', filter.EmpresaClienteId);
+        }
         if (filter.Nombre !== null && filter.Nombre !== undefined && filter.Nombre !== "") {
             params = params.set('Nombre', filter.Nombre);
         }

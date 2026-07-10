@@ -43,6 +43,8 @@ export class LicenciaHid {
   idSection: string = "00592364-A1F1-4518-AF56-3F1C936CA80D";
   permission: IPermisoDetalle | undefined;
 
+  private readonly TIPO_USUARIO_EMPRESA = '2228D6FB-CBDD-4672-9A06-A6E054157E6D';
+
   private srvForm = inject(FormBuilder);
   private srvStorage = inject(StorageService);
   private srvLicenciaHID = inject(LicenciaHIDService);
@@ -85,14 +87,6 @@ export class LicenciaHid {
   }
 
   ngOnInit(): void {
-
-    this.prepararTablaResultados();
-
-    // if (this.srvStorage.getUserDetailData() !== undefined && this.srvStorage.getUserDetailData() !== null) {
-    //   this.user = this.srvStorage.getUserDetailData()!;
-    //   this.userId = this.user.id!;
-    // }
-
     this.srvStorage.userData$
       .pipe(
         filter((data: any) => !!data?.perfilId),
@@ -100,8 +94,8 @@ export class LicenciaHid {
       )
       .subscribe((data: IUsuarioAutenticado) => {
         this.userData = data;
-            this.buscar(true);
-        console.log("Ssd ", this.userData);
+        this.prepararTablaResultados();
+        this.buscar(true);
       });
   }
 
@@ -139,10 +133,17 @@ export class LicenciaHid {
       this.paginaActual = 1;
     }
 
+    const esTipoUsuarioEmpresa: boolean =
+      this.userData !== null &&
+      this.userData !== undefined &&
+      this.userData.tipoUsuarioId !== null &&
+      this.userData.tipoUsuarioId !== undefined &&
+      this.userData.tipoUsuarioId !== '' &&
+      this.userData.tipoUsuarioId.toUpperCase() === this.TIPO_USUARIO_EMPRESA;
+
     let filtroBusqueda: any = {
       NumeroParte: NumeroParte,
       Nombre: Nombre,
-      EmpresaClienteId: EmpresaClienteId,
       CantidadDisponible: CantidadDisponible,
       CantidadConsumida: CantidadConsumida,
       FechaInicio: FechaInicio,
@@ -150,15 +151,14 @@ export class LicenciaHid {
       EstadoLicencia: EstadoLicencia,
       EstadoPeriodo: EstadoPeriodo,
       MensajeEstado: MensajeEstado,
-      // UsuarioCreadorId: this.userData.usuarioId,
-
+      EmpresaClienteId: esTipoUsuarioEmpresa ? this.userData.empresaId : '',
       DatosCompletos: 1,
       PageNumber: this.paginaActual,
       Estado: Estado
     };
 
     this.tablaResultados!.registros = [];
-    console.log("FILTROS ::: ", filtroBusqueda);
+    // console.log("FILTROS ::: ", filtroBusqueda);
     this.srvLicenciaHID.getAll(filtroBusqueda).subscribe((resp: any) => {
       if (resp.respuesta === true) {
         // console.log("DATA ::: ", resp.data);
