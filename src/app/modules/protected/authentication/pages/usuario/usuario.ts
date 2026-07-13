@@ -23,10 +23,13 @@ import { AutocPerfil } from '../../components/autoc/autoc-perfil/autoc-perfil';
 import { AutocTipoUsuario } from '../../components/autoc/autoc-tipo-usuario/autoc-tipo-usuario';
 
 import { IPermisoDetalle } from '../../interfaces/permiso.interface';
+import { IUsuarioAutenticado } from '../../interfaces/usuario.interface';
 
 import { PermisoService } from '../../services/permiso.service';
 import { UsuarioService } from '../../services/usuario.service';
 import { ModalService } from '../../../../../shared/services/modal.service';
+import { StorageService } from '../../../../auth/services/storage.service';
+import { filter, take } from 'rxjs';
 
 @Component({
   selector: 'app-usuario',
@@ -49,6 +52,9 @@ export class Usuario {
   idSection: string = "0AEBCF3F-E8BA-4579-8194-BAF8B18FB1E7";
   permission: IPermisoDetalle | undefined;
 
+  private readonly TIPO_USUARIO_EMPRESA = '2228D6FB-CBDD-4672-9A06-A6E054157E6D';
+
+  private srvStorage = inject(StorageService);
   private srvUsuario = inject(UsuarioService);
   private srvForm = inject(FormBuilder);
   private srvModal = inject(ModalService);
@@ -72,6 +78,8 @@ export class Usuario {
   mostrarTabla: boolean = false;
   tablaResultados: IDataTable = new DataTable();
 
+  userData!: IUsuarioAutenticado;
+
   buscarFG: FormGroup = this.srvForm.group({
     nombre: [''],
     apellidoPaterno: [''],
@@ -85,8 +93,16 @@ export class Usuario {
   });
 
   ngOnInit(): void {
-    this.buscar(true);
-    this.prepararTablaResultados();
+    this.srvStorage.userData$
+      .pipe(
+        filter((data: any) => !!data?.perfilId),
+        take(1)
+      )
+      .subscribe((data: IUsuarioAutenticado) => {
+        this.userData = data;
+        this.buscar(true);
+        this.prepararTablaResultados();
+      });
   }
 
   prepararTablaResultados() {
@@ -121,6 +137,14 @@ export class Usuario {
       this.paginaActual = 1;
     }
 
+    const esTipoUsuarioEmpresa: boolean =
+      this.userData !== null &&
+      this.userData !== undefined &&
+      this.userData.tipoUsuarioId !== null &&
+      this.userData.tipoUsuarioId !== undefined &&
+      this.userData.tipoUsuarioId !== '' &&
+      this.userData.tipoUsuarioId.toUpperCase() === this.TIPO_USUARIO_EMPRESA;
+
     let filtroBusqueda: any = {
       Nombre: nombre,
       ApellidoPaterno: apellidoPaterno,
@@ -131,11 +155,12 @@ export class Usuario {
       TipoUsuarioId: tipoUsuarioId,
       IdAsociado: idAsociado,
       Vence: estadoVencimientoId,
+      EmpresaId: esTipoUsuarioEmpresa ? this.userData.empresaId : '',
       DatosCompletos: 1,
       DataComplete: 1,
       PageNumber: this.paginaActual
     };
-
+    // console.log("FONTROS ::: ", filtroBusqueda);
     this.tablaResultados!.registros = [];
     this.srvUsuario.getAll(filtroBusqueda).subscribe((resp: any) => {
       if (resp.respuesta === true) {
