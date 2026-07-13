@@ -89,7 +89,6 @@ export class Inicio {
         this.userData = data;
         this.srvSesion.getVerifyFirstConnection(this.userData.usuarioId!).subscribe((s: any) => {
           if (s.respuesta === true) {
-            console.log("S ", s);
             this.PrimeraConexion = s.data;
           }
         }
@@ -139,10 +138,17 @@ export class Inicio {
       contrasena: this.FormularioContrasena.value.contrasena
     };
     this.srvUsuario.CambiarContrasena(nuevaContrasena).subscribe(async (res: any) => {
-      console.log("RES ", res);
       if (res) {
         this.PrimeraConexion = false;
-        var alert = (await Swal.fire('Exito', 'Se cambió la contraseña del usuario correctamente.', 'success')).isConfirmed;
+        var alert = (await
+          Swal.fire({
+            title: 'Exito',
+            text: 'Se cambió la contraseña del usuario correctamente.',
+            icon: 'success',
+            customClass: {
+              popup: 'swal-theme',
+            }
+          })).isConfirmed;
         if (alert) {
         }
       } else {

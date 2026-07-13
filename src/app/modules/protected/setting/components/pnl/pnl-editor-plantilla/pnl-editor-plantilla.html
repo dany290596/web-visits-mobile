@@ -1,0 +1,6 @@
+<div class="editor-wrapper" [class.disabled]="disabled">
+    <div #editor class="editor-content" contenteditable="true" [attr.data-placeholder]="placeholderCuerpo" (input)="onInput()"
+        (blur)="onBlur()" (keyup)="onFocusOrKeyup()" (mouseup)="onFocusOrKeyup()" (dragover)="onDragOver($event)"
+        (drop)="onDrop($event)">
+    </div>
+</div>

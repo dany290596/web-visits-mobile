@@ -1,0 +1,13 @@
+@if (variablesPlantilla.length) {
+<div class="rounded-md border border-border bg-muted/40 p-3">
+    <p class="text-xs font-semibold text-muted-foreground mb-2">
+        <i class="pi pi-info-circle mr-1"></i> Variables disponibles — arrastra o haz click para insertar
+    </p>
+    <div class="flex flex-wrap gap-2">
+        @for (v of variablesPlantilla; track v.nombre) {
+        <p-chip [label]="v.nombre" [pTooltip]="v.detalle" draggable="true" (dragstart)="onDragStart($event, v.nombre)"
+            (click)="seleccionar(v.nombre)" class="cursor-grab active:cursor-grabbing" />
+        }
+    </div>
+</div>
+}

@@ -1,0 +1,80 @@
+<div>
+    <div class="flex justify-between items-center mb-4">
+        <h2 class="text-lg font-semibold text-foreground">{{nombre}}</h2>
+        <button (click)="cerrar()" class="text-muted-foreground hover:text-foreground transition-colors">
+            <span class="text-xl font-bold">×</span>
+        </button>
+    </div>
+
+    <form autocomplete="off" [formGroup]="form" (ngSubmit)="guardar()" class="space-y-6">
+        <div class="grid grid-cols-12 gap-4">
+
+            <!-- Nombre -->
+            <div class="col-span-12 md:col-span-3 pt-0">
+                <label class="form-label fw-semibold">Nombre <span class="text-red-500">*</span></label>
+                <input pInputText type="text" formControlName="nombre" placeholder="Ej: Notificación de cita autorizada"
+                    class="w-full" autocomplete="off" />
+                <p-message severity="error" *ngIf="isInvalid('nombre', 'required')" class="p-error block">
+                    <i class="pi pi-exclamation-circle"></i> El nombre es requerido.
+                </p-message>
+            </div>
+
+            <!-- Tipo de plantilla -->
+            <div class="col-span-12 md:col-span-3 pt-0">
+                <app-autoc-tipo-plantilla-notificacion
+                    formControlName="tipoPlantillaNotificacionId"></app-autoc-tipo-plantilla-notificacion>
+                <p-message severity="error" *ngIf="isInvalid('tipoPlantillaNotificacionId', 'required')"
+                    class="p-error block">
+                    <i class="pi pi-exclamation-circle"></i> Selecciona un tipo de plantilla.
+                </p-message>
+            </div>
+
+            <!-- Canales de envío -->
+            <div class="col-span-12 md:col-span-6 pt-0">
+                <label class="form-label fw-semibold block mb-2">Canales de envío</label>
+                <div class="flex flex-wrap gap-6">
+                    <div class="flex items-center gap-2">
+                        <p-toggleswitch formControlName="notificarEmail" id="emailSwitch" />
+                        <label class="form-check-label" for="emailSwitch">
+                            <i class="pi pi-envelope mr-1"></i> Enviar por correo
+                        </label>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <p-toggleswitch formControlName="notificarTeams" id="teamsSwitch" />
+                        <label class="form-check-label" for="teamsSwitch">
+                            <i class="pi pi-microsoft mr-1"></i> Enviar por Teams
+                        </label>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Variables disponibles (solo si el tipo las soporta) -->
+            <div class="col-span-12 pt-0">
+                <app-pnl-variables-notificacion-alta-usuario
+                    [tipoPlantillaNotificacionId]="form.value.tipoPlantillaNotificacionId"
+                    (variableSeleccionada)="insertarVariable($event)"></app-pnl-variables-notificacion-alta-usuario>
+            </div>
+
+            <!-- Cuerpo de la plantilla -->
+            <div class="col-span-12 pt-0">
+                <label class="form-label fw-semibold">Cuerpo de la plantilla <span class="text-red-500">*</span></label>
+                <app-pnl-editor-plantilla #editorCuerpo formControlName="cuerpoPlantilla"
+                    [variables]="variablesActuales"></app-pnl-editor-plantilla>
+                <p-message severity="error" *ngIf="isInvalid('cuerpoPlantilla', 'required')" class="p-error block">
+                    <i class="pi pi-exclamation-circle"></i> El cuerpo de la plantilla es requerido.
+                </p-message>
+            </div>
+        </div>
+
+        <!-- Botones finales -->
+        <div class="flex justify-end space-x-3 pt-4 border-t border-border">
+            <button type="button" (click)="cerrar()"
+                class="rounded-md bg-muted px-4 py-2 text-xs font-semibold text-muted-foreground hover:text-foreground">
+                Cancelar
+            </button>
+            <button type="submit" class="rounded-md bg-primary px-4 py-2 text-xs font-semibold text-primary-foreground">
+                Guardar
+            </button>
+        </div>
+    </form>
+</div>

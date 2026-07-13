@@ -542,7 +542,17 @@ export class SignIn implements OnInit {
     this.srvAuth.RecuperarContrasena(datos).subscribe(async (res: any) => {
       if (res) {
         this.CambiarContrasena = false;
-        var alert = (await Swal.fire('Éxito', 'Se cambió la contraseña del usuario correctamente.', 'success')).isConfirmed;
+        var alert = (await
+          Swal.fire({
+            title: 'Éxito',
+            text: 'Se cambió la contraseña del usuario correctamente.',
+            icon: 'success',
+            confirmButtonText: 'Aceptar',
+            allowEnterKey: true,
+            customClass: {
+              popup: 'swal-theme',
+            }
+          })).isConfirmed;
         if (alert) {
         }
         this.PasoCambioContrasena = 1;

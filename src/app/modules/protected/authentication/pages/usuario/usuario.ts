@@ -23,11 +23,9 @@ import { AutocPerfil } from '../../components/autoc/autoc-perfil/autoc-perfil';
 import { AutocTipoUsuario } from '../../components/autoc/autoc-tipo-usuario/autoc-tipo-usuario';
 
 import { IPermisoDetalle } from '../../interfaces/permiso.interface';
-import { IUsuarioResponse } from '../../interfaces/usuario.interface';
 
 import { PermisoService } from '../../services/permiso.service';
 import { UsuarioService } from '../../services/usuario.service';
-import { StorageService } from '../../../../auth/services/storage.service';
 import { ModalService } from '../../../../../shared/services/modal.service';
 
 @Component({
@@ -53,7 +51,6 @@ export class Usuario {
 
   private srvUsuario = inject(UsuarioService);
   private srvForm = inject(FormBuilder);
-  private srvStorage = inject(StorageService);
   private srvModal = inject(ModalService);
   private srvPermiso = inject(PermisoService);
 

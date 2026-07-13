@@ -1,0 +1,37 @@
+.editor-wrapper {
+    border: 1px solid var(--border);
+    border-radius: 0.375rem;
+    background: var(--background);
+}
+
+.editor-content {
+    min-height: 140px;
+    padding: 0.5rem 0.75rem;
+    outline: none;
+    font-size: 0.875rem;
+    line-height: 1.6;
+    white-space: pre-wrap;
+}
+
+.editor-content:empty::before {
+    content: attr(data-placeholder);
+    color: var(--muted-foreground);
+}
+
+.token-variable {
+    display: inline-block;
+    background: color-mix(in srgb, var(--primary) 15%, transparent);
+    color: var(--primary);
+    border: 1px solid color-mix(in srgb, var(--primary) 30%, transparent);
+    border-radius: 9999px;
+    padding: 0 0.5rem;
+    font-size: 0.75rem;
+    font-weight: 600;
+    user-select: none;
+    margin: 0 1px;
+}
+
+.disabled .editor-content {
+    opacity: 0.6;
+    pointer-events: none;
+}

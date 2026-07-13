@@ -30,11 +30,12 @@ export class Layout implements OnInit {
   private srvPermiso = inject(PermisoService);
 
   private readonly iconMapping: Record<string, string> = {
-    'fas fa-cog': 'assets/icons/heroicons/outline/cog.svg',
+    'fas fa-cog': 'assets/icons/heroicons/outline/shield-check.svg',
     'fas fa-users-cog': 'assets/icons/heroicons/outline/users.svg',
     'fas fa-qrcode': 'assets/icons/heroicons/outline/view-grid.svg',
     'fas fa-building': 'assets/icons/heroicons/outline/bookmark.svg',
     'fas fa-user': 'assets/icons/heroicons/outline/user-circle.svg',
+    'assets/icons/heroicons/outline/cog.svg': 'assets/icons/heroicons/outline/cog-6-tooth.svg',
   };
 
   constructor(
@@ -79,6 +80,8 @@ export class Layout implements OnInit {
         groupName = 'Integraciones';
       } else if (modulo.moduloNombre === 'Cliente') {
         groupName = 'Organizaciones';
+      } else if (modulo.moduloNombre === 'Configuraciones') {
+        groupName = 'Configuraciones'
       } else {
         groupName = 'Otros';
       }

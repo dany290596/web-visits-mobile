@@ -38,6 +38,11 @@ const routes: Routes = [
         component: Layout,
         loadChildren: () => import('../protected/customer/customer.routes').then(m => m),
     },
+    {
+        path: 'setting',
+        component: Layout,
+        loadChildren: () => import('../protected/setting/setting.routes').then(m => m),
+    },
     { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
     { path: '**', redirectTo: 'error/404' },
 ];
