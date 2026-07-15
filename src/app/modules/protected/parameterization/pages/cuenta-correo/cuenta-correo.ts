@@ -2,16 +2,19 @@ import { Component, OnDestroy, OnInit, inject } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
-import { Subscription } from 'rxjs';
+import { filter, Subscription, take } from 'rxjs';
 
 import { InputTextModule } from 'primeng/inputtext';
 import { MessageModule } from 'primeng/message';
 import { TabsModule } from 'primeng/tabs';
 import { ToggleSwitchModule } from 'primeng/toggleswitch';
-
 import { MessageService } from 'primeng/api';
+
+import { StorageService } from '../../../../auth/services/storage.service';
 import { CorreoConfiguracionService } from '../../services/correo-configuracion.service';
+
 import { ICorreoConfiguracionRequest } from '../../interfaces/correo-configuracion.interface';
+import { IUsuarioAutenticado } from '../../../authentication/interfaces/usuario.interface';
 
 import Swal from 'sweetalert2';
 
@@ -33,6 +36,8 @@ import Swal from 'sweetalert2';
 })
 export class CuentaCorreo implements OnInit, OnDestroy {
   private srvForm = inject(FormBuilder);
+  private srvStorage = inject(StorageService);
+
   private srvCorreoConfiguracion = inject(CorreoConfiguracionService);
 
   private tls1Subscription: Subscription = new Subscription();
@@ -41,9 +46,12 @@ export class CuentaCorreo implements OnInit, OnDestroy {
   value: number = 0;
 
   empresaId: string = '';
+  cargando: boolean = true;
 
   /** Indica si ya existe una configuración guardada para la empresa (GET con datos) */
   existeConfiguracion: boolean = false;
+
+  userData!: IUsuarioAutenticado;
 
   emailSMTPFG: FormGroup = this.srvForm.group({
     Email: ['', [Validators.required, Validators.email]],
@@ -66,31 +74,34 @@ export class CuentaCorreo implements OnInit, OnDestroy {
   });
 
   ngOnInit(): void {
-    this.empresaId = localStorage.getItem('empresa') ?? '';
+    this.srvStorage.userData$
+      .pipe(
+        filter((data: any) => !!data?.perfilId),
+        take(1)
+      )
+      .subscribe((data: IUsuarioAutenticado) => {
+        this.userData = data;
+        this.empresaId = data.empresaId ?? '';
+        this.cargando = false;
 
-    this.setupTlsValidation();
-    this.updateFormDisabledStates();
-
-    if (!this.empresaId) {
-      Swal.fire({
-        title: '¡Advertencia!',
-        text: 'El Id de la empresa es requerido para continuar.',
-        icon: 'warning',
-        confirmButtonText: 'Aceptar',
-        allowOutsideClick: false,
-        customClass: {
-          popup: 'swal-theme',
-        }
+        this.setupTlsValidation();
+        this.updateFormDisabledStates();
+        this.cargarConfiguracion();
       });
-      return;
-    }
+  }
 
-    this.cargarConfiguracion();
+  get tieneEmpresa(): boolean {
+    return !!this.empresaId && this.empresaId.trim() !== '';
   }
 
   private cargarConfiguracion(): void {
+    if (!this.empresaId) {
+      this.existeConfiguracion = false;
+      return;
+    }
     this.srvCorreoConfiguracion.getByEmpresaId(this.empresaId).subscribe({
       next: (response) => {
+        console.log("RESPONSE ::: ", response);
         if (response.respuesta === true && response.data) {
           this.existeConfiguracion = true;
 
@@ -192,7 +203,6 @@ export class CuentaCorreo implements OnInit, OnDestroy {
     }
 
     const form = this.emailOAuthFG.getRawValue();
-
     const request: ICorreoConfiguracionRequest = {
       empresaId: this.empresaId,
       tipoAutenticacion: 'OAuth',
@@ -282,29 +292,29 @@ export class CuentaCorreo implements OnInit, OnDestroy {
             }
           });
         } else {
-          Swal.fire({
-            title: '¡Advertencia!',
-            text: response.mensaje || 'No se pudieron guardar las configuraciones',
-            icon: 'warning',
-            confirmButtonText: 'Aceptar',
-            confirmButtonColor: '#2563EB',
-            customClass: {
-              popup: 'swal-theme',
-            }
-          });
+          // Swal.fire({
+          //   title: '¡Advertencia!',
+          //   text: response.mensaje || 'No se pudieron guardar las configuraciones',
+          //   icon: 'warning',
+          //   confirmButtonText: 'Aceptar',
+          //   confirmButtonColor: '#2563EB',
+          //   customClass: {
+          //     popup: 'swal-theme',
+          //   }
+          // });
         }
       },
       error: (error) => {
-        Swal.fire({
-          title: '¡Advertencia!',
-          text: 'No se pudieron guardar las configuraciones',
-          icon: 'warning',
-          confirmButtonText: 'Aceptar',
-          confirmButtonColor: '#2563EB',
-          customClass: {
-            popup: 'swal-theme',
-          }
-        });
+        // Swal.fire({
+        //   title: '¡Advertencia!',
+        //   text: 'No se pudieron guardar las configuraciones',
+        //   icon: 'warning',
+        //   confirmButtonText: 'Aceptar',
+        //   confirmButtonColor: '#2563EB',
+        //   customClass: {
+        //     popup: 'swal-theme',
+        //   }
+        // });
       }
     });
   }

@@ -31,23 +31,23 @@ import { ConfiguracionService } from '../../configuration/services/configuration
 // ─────────────────────────────────────────────────────────────────────────────
 // Tipo explícito para evitar referencias circulares
 // ─────────────────────────────────────────────────────────────────────────────
-type ConfigEntry = { id: string; nombre: string };
+type ConfigEntry = { tipoConfiguracion: string; nombre: string };
 type ConfigKey = keyof EmailWalletConfig;
 
 const CONFIGS: Record<ConfigKey, ConfigEntry> = {
-    asunto: { id: 'a1f3c2d4-1a2b-4e5f-9c3d-100000000001', nombre: 'Asunto del correo' },
-    nombreRemitente: { id: 'a1f3c2d4-1a2b-4e5f-9c3d-100000000002', nombre: 'Nombre del remitente (Wallet)' },
-    emailRemitente: { id: 'a1f3c2d4-1a2b-4e5f-9c3d-100000000003', nombre: 'Email del remitente (Wallet)' },
-    telefonoContacto: { id: 'a1f3c2d4-1a2b-4e5f-9c3d-100000000004', nombre: 'Teléfono de contacto (Wallet)' },
-    emailContacto: { id: 'a1f3c2d4-1a2b-4e5f-9c3d-100000000005', nombre: 'Email de contacto (Wallet)' },
-    direccion: { id: 'a1f3c2d4-1a2b-4e5f-9c3d-100000000006', nombre: 'Dirección (Wallet)' },
-    tituloPaso1: { id: 'a1f3c2d4-1a2b-4e5f-9c3d-100000000007', nombre: 'Título Paso 1 (Wallet)' },
-    textoPaso1: { id: 'a1f3c2d4-1a2b-4e5f-9c3d-100000000008', nombre: 'Texto Paso 1 (Wallet)' },
-    tituloPaso2: { id: 'a1f3c2d4-1a2b-4e5f-9c3d-100000000009', nombre: 'Título Paso 2 (Wallet)' },
-    textoPaso2: { id: 'a1f3c2d4-1a2b-4e5f-9c3d-100000000010', nombre: 'Texto Paso 2 (Wallet)' },
-    tituloPaso3: { id: 'a1f3c2d4-1a2b-4e5f-9c3d-100000000011', nombre: 'Título Paso 3 (Wallet)' },
-    textoPaso3: { id: 'a1f3c2d4-1a2b-4e5f-9c3d-100000000012', nombre: 'Texto Paso 3 (Wallet)' },
-    nombreEmpresa: { id: 'a1f3c2d4-1a2b-4e5f-9c3d-100000000013', nombre: 'Nombre de la empresa (Wallet)' },
+    asunto: { tipoConfiguracion: '6f8b2c91-3d4a-4f72-a9d1-7b3c8e1f5a21', nombre: 'Asunto del correo' },
+    nombreRemitente: { tipoConfiguracion: 'c1e74d59-9b28-4a8d-8c63-2d9f7a4e6b10', nombre: 'Nombre del remitente (Wallet)' },
+    emailRemitente: { tipoConfiguracion: '94f3a6d8-71b2-45b4-9e17-f8c2d6a9134e', nombre: 'Email del remitente (Wallet)' },
+    telefonoContacto: { tipoConfiguracion: '2ab97c5e-84d1-4cb6-b3f9-51d8e7a2c640', nombre: 'Teléfono de contacto (Wallet)' },
+    emailContacto: { tipoConfiguracion: 'd6c4b1f9-2a83-46ed-a8f4-9b7c5d1e3042', nombre: 'Email de contacto (Wallet)' },
+    direccion: { tipoConfiguracion: '8e15f2a7-6b39-49c8-bd42-3f7e91c5a684', nombre: 'Dirección (Wallet)' },
+    tituloPaso1: { tipoConfiguracion: 'b34e7d12-fc59-4a86-90d3-6a2b8f4c9175', nombre: 'Título Paso 1 (Wallet)' },
+    textoPaso1: { tipoConfiguracion: 'f7c2d914-8b63-40a5-9d71-2e6a4c8f135b', nombre: 'Texto Paso 1 (Wallet)' },
+    tituloPaso2: { tipoConfiguracion: '1d8e5b73-42cf-4f91-b6a8-7c3d9e2f5041', nombre: 'Título Paso 2 (Wallet)' },
+    textoPaso2: { tipoConfiguracion: '73a1f6c8-95d4-4b2f-8e37-1c9a5d6b248f', nombre: 'Texto Paso 2 (Wallet)' },
+    tituloPaso3: { tipoConfiguracion: '4c9b1d7f-e263-41a8-93f5-8d2e7b6c1509', nombre: 'Título Paso 3 (Wallet)' },
+    textoPaso3: { tipoConfiguracion: 'e5a8c2d1-7f94-4b36-a1d9-5c7e2f8b4306', nombre: 'Texto Paso 3 (Wallet)' },
+    nombreEmpresa: { tipoConfiguracion: '9f2d6b18-c743-44ae-b8d1-3e7c5a9f6240', nombre: 'Nombre de la empresa (Wallet)' },
 };
 
 @Injectable({ providedIn: 'root' })
@@ -56,38 +56,23 @@ export class EmailWalletConfigService {
 
     private readonly http = inject(HttpClient);
     private readonly apiUrl = `${environment.apiUrl}/configuraciones`;
-    private readonly dummyUrl = `${environment.dummyDataUrl}/configuraciones.json`;
 
     // ── Lectura de configuración ───────────────────────────────────────────────
-    // getConfig(): Observable<EmailWalletConfig> {
-    //     if (environment.useDummyData) {
-    //         return this.http
-    //             .get<ConfiguracionDto[]>(this.dummyUrl)
-    //             .pipe(map(lista => this.mapDtoToConfig(lista)));
-    //     }
-
-    //     // API real: GET /api/configuraciones?ids=id1,id2,...
-    //     const ids = Object.values(CONFIG_IDS).join(',');
-    //     return this.http
-    //         .get<ConfiguracionDto[]>(`${this.apiUrl}?ids=${ids}`)
-    //         .pipe(map(lista => this.mapDtoToConfig(lista)));
-    // }
-
-    getConfig(): Observable<EmailWalletConfig> {
+    getConfig(empresaId: string): Observable<EmailWalletConfig> {
         return forkJoin({
-            asunto: this.srvConfig.getById(CONFIGS.asunto.id),
-            nombreRemitente: this.srvConfig.getById(CONFIGS.nombreRemitente.id),
-            emailRemitente: this.srvConfig.getById(CONFIGS.emailRemitente.id),
-            telefonoContacto: this.srvConfig.getById(CONFIGS.telefonoContacto.id),
-            emailContacto: this.srvConfig.getById(CONFIGS.emailContacto.id),
-            direccion: this.srvConfig.getById(CONFIGS.direccion.id),
-            tituloPaso1: this.srvConfig.getById(CONFIGS.tituloPaso1.id),
-            textoPaso1: this.srvConfig.getById(CONFIGS.textoPaso1.id),
-            tituloPaso2: this.srvConfig.getById(CONFIGS.tituloPaso2.id),
-            textoPaso2: this.srvConfig.getById(CONFIGS.textoPaso2.id),
-            tituloPaso3: this.srvConfig.getById(CONFIGS.tituloPaso3.id),
-            textoPaso3: this.srvConfig.getById(CONFIGS.textoPaso3.id),
-            nombreEmpresa: this.srvConfig.getById(CONFIGS.nombreEmpresa.id),
+            asunto: this.srvConfig.GetByTypeSetting(CONFIGS.asunto.tipoConfiguracion, empresaId),
+            nombreRemitente: this.srvConfig.GetByTypeSetting(CONFIGS.nombreRemitente.tipoConfiguracion, empresaId),
+            emailRemitente: this.srvConfig.GetByTypeSetting(CONFIGS.emailRemitente.tipoConfiguracion, empresaId),
+            telefonoContacto: this.srvConfig.GetByTypeSetting(CONFIGS.telefonoContacto.tipoConfiguracion, empresaId),
+            emailContacto: this.srvConfig.GetByTypeSetting(CONFIGS.emailContacto.tipoConfiguracion, empresaId),
+            direccion: this.srvConfig.GetByTypeSetting(CONFIGS.direccion.tipoConfiguracion, empresaId),
+            tituloPaso1: this.srvConfig.GetByTypeSetting(CONFIGS.tituloPaso1.tipoConfiguracion, empresaId),
+            textoPaso1: this.srvConfig.GetByTypeSetting(CONFIGS.textoPaso1.tipoConfiguracion, empresaId),
+            tituloPaso2: this.srvConfig.GetByTypeSetting(CONFIGS.tituloPaso2.tipoConfiguracion, empresaId),
+            textoPaso2: this.srvConfig.GetByTypeSetting(CONFIGS.textoPaso2.tipoConfiguracion, empresaId),
+            tituloPaso3: this.srvConfig.GetByTypeSetting(CONFIGS.tituloPaso3.tipoConfiguracion, empresaId),
+            textoPaso3: this.srvConfig.GetByTypeSetting(CONFIGS.textoPaso3.tipoConfiguracion, empresaId),
+            nombreEmpresa: this.srvConfig.GetByTypeSetting(CONFIGS.nombreEmpresa.tipoConfiguracion, empresaId),
         }).pipe(
             map(responses => ({
                 asunto: responses.asunto?.data?.valor1 ?? '',
@@ -108,56 +93,28 @@ export class EmailWalletConfigService {
     }
 
     // ── Guardar configuración ─────────────────────────────────────────────────
-    // saveConfig(config: EmailWalletConfig): Observable<PatchConfiguracionResponse[]> {
-    //     if (environment.useDummyData) {
-    //         return this.http
-    //             .get<PatchConfiguracionResponse>(`${environment.dummyDataUrl}/patch-configuracion-response.json`)
-    //             .pipe(
-    //                 delay(600),   // simula latencia de red
-    //                 map(res => Array(12).fill(res))  // 12 campos = 12 PATCHes simulados
-    //             );
-    //     }
-
-    //     // API real: un PATCH por cada campo de configuración
-    //     const requests: Observable<PatchConfiguracionResponse>[] = [
-    //         this.patch(CONFIG_IDS.ASUNTO, { valor1: config.asunto }),
-    //         this.patch(CONFIG_IDS.REMITENTE, { valor1: config.nombreRemitente, valor2: config.emailRemitente }),
-    //         this.patch(CONFIG_IDS.TELEFONO_CONTACTO, { valor1: config.telefonoContacto }),
-    //         this.patch(CONFIG_IDS.EMAIL_CONTACTO, { valor1: config.emailContacto }),
-    //         this.patch(CONFIG_IDS.DIRECCION, { valor1: config.direccion }),
-    //         this.patch(CONFIG_IDS.PASO1_TITULO, { valor1: config.tituloPaso1 }),
-    //         this.patch(CONFIG_IDS.PASO1_TEXTO, { valor1: config.textoPaso1 }),
-    //         this.patch(CONFIG_IDS.PASO2_TITULO, { valor1: config.tituloPaso2 }),
-    //         this.patch(CONFIG_IDS.PASO2_TEXTO, { valor1: config.textoPaso2 }),
-    //         this.patch(CONFIG_IDS.PASO3_TITULO, { valor1: config.tituloPaso3 }),
-    //         this.patch(CONFIG_IDS.PASO3_TEXTO, { valor1: config.textoPaso3 }),
-    //         this.patch(CONFIG_IDS.EMPRESA_NOMBRE, { valor1: config.nombreEmpresa }),
-    //     ];
-    //     return forkJoin(requests);
-    // }
-
-    saveConfig(config: EmailWalletConfig, userId: string): Observable<boolean[]> {
+    saveConfig(config: EmailWalletConfig, empresaId: string, userId: string): Observable<boolean[]> {
         return forkJoin([
-            this.srvConfig.update(CONFIGS.asunto.id, this._buildPayload('asunto', config.asunto, userId)),
-            this.srvConfig.update(CONFIGS.nombreRemitente.id, this._buildPayload('nombreRemitente', config.nombreRemitente, userId)),
-            this.srvConfig.update(CONFIGS.emailRemitente.id, this._buildPayload('emailRemitente', config.emailRemitente, userId)),
-            this.srvConfig.update(CONFIGS.telefonoContacto.id, this._buildPayload('telefonoContacto', config.telefonoContacto, userId)),
-            this.srvConfig.update(CONFIGS.emailContacto.id, this._buildPayload('emailContacto', config.emailContacto, userId)),
-            this.srvConfig.update(CONFIGS.direccion.id, this._buildPayload('direccion', config.direccion, userId)),
-            this.srvConfig.update(CONFIGS.tituloPaso1.id, this._buildPayload('tituloPaso1', config.tituloPaso1, userId)),
-            this.srvConfig.update(CONFIGS.textoPaso1.id, this._buildPayload('textoPaso1', config.textoPaso1, userId)),
-            this.srvConfig.update(CONFIGS.tituloPaso2.id, this._buildPayload('tituloPaso2', config.tituloPaso2, userId)),
-            this.srvConfig.update(CONFIGS.textoPaso2.id, this._buildPayload('textoPaso2', config.textoPaso2, userId)),
-            this.srvConfig.update(CONFIGS.tituloPaso3.id, this._buildPayload('tituloPaso3', config.tituloPaso3, userId)),
-            this.srvConfig.update(CONFIGS.textoPaso3.id, this._buildPayload('textoPaso3', config.textoPaso3, userId)),
-            this.srvConfig.update(CONFIGS.nombreEmpresa.id, this._buildPayload('nombreEmpresa', config.nombreEmpresa, userId)),
+            this.srvConfig.updateTypeSetting(this._buildPayload('asunto', config.asunto, empresaId, userId)),
+            this.srvConfig.updateTypeSetting(this._buildPayload('nombreRemitente', config.nombreRemitente, empresaId, userId)),
+            this.srvConfig.updateTypeSetting(this._buildPayload('emailRemitente', config.emailRemitente, empresaId, userId)),
+            this.srvConfig.updateTypeSetting(this._buildPayload('telefonoContacto', config.telefonoContacto, empresaId, userId)),
+            this.srvConfig.updateTypeSetting(this._buildPayload('emailContacto', config.emailContacto, empresaId, userId)),
+            this.srvConfig.updateTypeSetting(this._buildPayload('direccion', config.direccion, empresaId, userId)),
+            this.srvConfig.updateTypeSetting(this._buildPayload('tituloPaso1', config.tituloPaso1, empresaId, userId)),
+            this.srvConfig.updateTypeSetting(this._buildPayload('textoPaso1', config.textoPaso1, empresaId, userId)),
+            this.srvConfig.updateTypeSetting(this._buildPayload('tituloPaso2', config.tituloPaso2, empresaId, userId)),
+            this.srvConfig.updateTypeSetting(this._buildPayload('textoPaso2', config.textoPaso2, empresaId, userId)),
+            this.srvConfig.updateTypeSetting(this._buildPayload('tituloPaso3', config.tituloPaso3, empresaId, userId)),
+            this.srvConfig.updateTypeSetting(this._buildPayload('textoPaso3', config.textoPaso3, empresaId, userId)),
+            this.srvConfig.updateTypeSetting(this._buildPayload('nombreEmpresa', config.nombreEmpresa, empresaId, userId)),
         ]).pipe(
             map(results => results.map((r: any) => r?.respuesta === true))
         );
     }
 
     // ── Payload completo según esquema PUT /api/Configuracion ─────────────────
-    private _buildPayload(key: ConfigKey, valor1: string, userId: string): object {
+    private _buildPayload(key: ConfigKey, valor1: string, empresaId: string, userId: string): object {
         const cfg = CONFIGS[key];
         return {
             nombreParametro: cfg.nombre,
@@ -166,9 +123,9 @@ export class EmailWalletConfigService {
             valor2: null,
             valor3: null,
             editable: 1,
-            lectura: 0,
-            empresaClienteId: localStorage.getItem('empresa') ?? '',
-            tipoConfiguracion: cfg.id,
+            lectura: 1,
+            empresaClienteId: empresaId ?? '',
+            tipoConfiguracion: cfg.tipoConfiguracion,
             usuarioCreadorId: userId,
         };
     }

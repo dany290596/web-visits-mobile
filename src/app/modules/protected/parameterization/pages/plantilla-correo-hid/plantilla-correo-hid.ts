@@ -69,6 +69,7 @@ export class PlantillaCorreoHid implements OnInit {
   private srvEmailTemplate = inject(EmailTemplateService);
 
   userData!: IUsuarioAutenticado;
+  empresaId: string = '';
 
   // ── Estado ─────────────────────────────────────────────────────────────────
   readonly loading = signal(true);
@@ -104,10 +105,11 @@ export class PlantillaCorreoHid implements OnInit {
       )
       .subscribe((data: IUsuarioAutenticado) => {
         this.userData = data;
+        this.empresaId = data.empresaId ?? '';
+        this.buildForm();
+        this.loadConfig(this.empresaId);
       });
 
-    this.buildForm();
-    this.loadConfig();
     // Marca dirty cuando el usuario toca cualquier campo
     this.form.valueChanges.subscribe(() => {
       if (this.form.dirty) this.isDirty.set(true);
@@ -122,6 +124,20 @@ export class PlantillaCorreoHid implements OnInit {
   save(): void {
     if (this.form.invalid) {
       this.form.markAllAsTouched();
+      return;
+    }
+
+    if (!this.empresaId) {
+      Swal.fire({
+        title: '¡Advertencia!',
+        text: 'El Id de la empresa es requerido para continuar.',
+        icon: 'warning',
+        confirmButtonText: 'Aceptar',
+        allowOutsideClick: false,
+        customClass: {
+          popup: 'swal-theme',
+        }
+      });
       return;
     }
 
@@ -234,61 +250,12 @@ export class PlantillaCorreoHid implements OnInit {
         });
       },
     });
-
-    // this.svc.saveConfig(config, this.userData!.usuarioId!).subscribe({
-    //   next: (results) => {
-    //     this.saving.set(false);
-
-    //     // Verificar si algún campo falló
-    //     const algúnError = results.some(ok => !ok);
-
-    //     if (algúnError) {
-    //       this.toast.add({
-    //         severity: 'warn',
-    //         summary: 'Guardado parcial',
-    //         detail: 'Algunos campos no se actualizaron. Verifica e intenta de nuevo.',
-    //         life: 5000,
-    //       });
-    //     } else {
-    //       this.isDirty.set(false);
-    //       this.form.markAsPristine();
-    //       // this.toast.add({
-    //       //   severity: 'success',
-    //       //   summary: 'Guardado',
-    //       //   detail: 'La plantilla se actualizó correctamente.',
-    //       //   life: 3500,
-    //       // });
-
-    //       Swal.fire({
-    //         title: '¡Éxito!',
-    //         text: 'La plantilla se actualizó correctamente.',
-    //         icon: 'success',
-    //         confirmButtonText: 'Aceptar',
-    //         allowOutsideClick: false,
-    //         allowEscapeKey: false,
-    //         customClass: { popup: 'swal-theme' }
-    //       }).then((result) => {
-    //         if (result.isConfirmed) {
-    //         }
-    //       });
-    //     }
-    //   },
-    //   error: () => {
-    //     this.saving.set(false);
-    //     this.toast.add({
-    //       severity: 'error',
-    //       summary: 'Error',
-    //       detail: 'No se pudo guardar. Intenta de nuevo.',
-    //       life: 4000,
-    //     });
-    //   },
-    // });
   }
 
   cancel(): void {
     this.isDirty.set(false);
     this.loading.set(true);
-    this.loadConfig();
+    this.loadConfig(this.empresaId);
   }
 
   // Helpers template
@@ -316,8 +283,8 @@ export class PlantillaCorreoHid implements OnInit {
     });
   }
 
-  private loadConfig(): void {
-    this.svc.getConfig().subscribe({
+  private loadConfig(empresaId: string): void {
+    this.svc.getConfig(empresaId).subscribe({
       next: config => {
         this.form.patchValue(config);
         this.form.markAsPristine();

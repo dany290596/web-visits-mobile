@@ -61,6 +61,7 @@ export class PlantillaCorreoWallet implements OnInit {
   private srvStorage = inject(StorageService);
 
   userData!: IUsuarioAutenticado;
+  empresaId: string = '';
 
   // ── Estado ─────────────────────────────────────────────────────────────────
   readonly loading = signal(true);
@@ -93,10 +94,11 @@ export class PlantillaCorreoWallet implements OnInit {
       )
       .subscribe((data: IUsuarioAutenticado) => {
         this.userData = data;
+        this.empresaId = data.empresaId ?? '';
+        this.buildForm();
+        this.loadConfig(this.empresaId);
       });
 
-    this.buildForm();
-    this.loadConfig();
     // Marca dirty cuando el usuario toca cualquier campo
     this.form.valueChanges.subscribe(() => {
       if (this.form.dirty) this.isDirty.set(true);
@@ -108,52 +110,30 @@ export class PlantillaCorreoWallet implements OnInit {
     this.activeClient.set(client);
   }
 
-  // save(): void {
-  //   console.log("sxxssssssssssssssssss");
-  //   if (this.form.invalid) {
-  //     this.form.markAllAsTouched();
-  //     return;
-  //   }
-
-  //   this.saving.set(true);
-  //   const config = this.form.getRawValue() as EmailWalletConfig;
-  //   console.log("REQUEST ::: ", config);
-  //   console.log("REQUEST ::: ", JSON.stringify(config));
-  //   this.svc.saveConfig(config).subscribe({
-  //     next: () => {
-  //       this.saving.set(false);
-  //       this.isDirty.set(false);
-  //       this.form.markAsPristine();
-  //       this.toast.add({
-  //         severity: 'success',
-  //         summary: 'Guardado',
-  //         detail: this.isDummy
-  //           ? 'Simulación exitosa. (Modo dummy — sin API real)'
-  //           : 'La plantilla se actualizó correctamente.',
-  //         life: 3500,
-  //       });
-  //     },
-  //     error: () => {
-  //       this.saving.set(false);
-  //       this.toast.add({
-  //         severity: 'error',
-  //         summary: 'Error',
-  //         detail: 'No se pudo guardar. Intenta de nuevo.',
-  //         life: 4000,
-  //       });
-  //     },
-  //   });
-  // }
   save(): void {
     if (this.form.invalid) {
       this.form.markAllAsTouched();
       return;
     }
 
+    if (!this.empresaId) {
+      Swal.fire({
+        title: '¡Advertencia!',
+        text: 'El Id de la empresa es requerido para continuar.',
+        icon: 'warning',
+        confirmButtonText: 'Aceptar',
+        allowOutsideClick: false,
+        customClass: {
+          popup: 'swal-theme',
+        }
+      });
+      return;
+    }
+
     this.saving.set(true);
     const config = this.form.getRawValue() as EmailWalletConfig;
 
-    this.svc.saveConfig(config, this.userData!.usuarioId!).subscribe({
+    this.svc.saveConfig(config, this.empresaId, this.userData?.usuarioId!).subscribe({
       next: (results) => {
         this.saving.set(false);
 
@@ -170,12 +150,6 @@ export class PlantillaCorreoWallet implements OnInit {
         } else {
           this.isDirty.set(false);
           this.form.markAsPristine();
-          // this.toast.add({
-          //   severity: 'success',
-          //   summary: 'Guardado',
-          //   detail: 'La plantilla se actualizó correctamente.',
-          //   life: 3500,
-          // });
 
           Swal.fire({
             title: '¡Éxito!',
@@ -209,7 +183,7 @@ export class PlantillaCorreoWallet implements OnInit {
   cancel(): void {
     this.isDirty.set(false);
     this.loading.set(true);
-    this.loadConfig();
+    this.loadConfig(this.empresaId);
   }
 
   // Helpers template
@@ -227,18 +201,18 @@ export class PlantillaCorreoWallet implements OnInit {
       telefonoContacto: ['', Validators.required],
       emailContacto: ['', [Validators.required, Validators.email]],
       direccion: ['', Validators.required],
-      tituloPaso1: ['', Validators.required],
-      textoPaso1: ['', Validators.required],
-      tituloPaso2: ['', Validators.required],
-      textoPaso2: ['', Validators.required],
-      tituloPaso3: ['', Validators.required],
-      textoPaso3: ['', Validators.required],
+      tituloPaso1: [''],
+      textoPaso1: [''],
+      tituloPaso2: [''],
+      textoPaso2: [''],
+      tituloPaso3: [''],
+      textoPaso3: [''],
       nombreEmpresa: ['', Validators.required],
     });
   }
 
-  private loadConfig(): void {
-    this.svc.getConfig().subscribe({
+  private loadConfig(empresaId: string): void {
+    this.svc.getConfig(empresaId).subscribe({
       next: config => {
         this.form.patchValue(config);
         this.form.markAsPristine();
