@@ -133,7 +133,8 @@ export class Empresa {
       Estado: Estado,
       DatosCompletos: 1,
       PageNumber: this.paginaActual,
-      Id: esTipoUsuarioEmpresa ? this.userData.empresaId : ''
+      // Id: esTipoUsuarioEmpresa ? this.userData.empresaId : ''
+      Id: this.userData.empresaId
     };
 
     this.tablaResultados!.registros = [];

@@ -9,7 +9,29 @@
     @if(data !== undefined && data !== null){
     <div class="grid grid-cols-12 gap-4">
         <div class="col-span-12 md:col-span-6 xl:col-span-3 pt-0">
-            {{data.nombre}}
+            Número de pieza: {{data.numeroParte}}
+        </div>
+
+        <div class="col-span-12 md:col-span-6 xl:col-span-3 pt-0">
+            Nombre: {{data.nombre}}
+        </div>
+
+        <div class="col-span-12 md:col-span-6 xl:col-span-3 pt-0">
+            Fecha inicio: {{data.fechaInicio | date:'dd/MM/yyyy HH:mm:ss'}}
+        </div>
+
+        <div class="col-span-12 md:col-span-6 xl:col-span-3 pt-0">
+            Fecha fin: {{data.fechaFin | date:'dd/MM/yyyy HH:mm:ss'}}
+        </div>
+
+        @if(data.empresaCliente !== undefined && data.empresaCliente !== null){
+        <div class="col-span-12 md:col-span-6 xl:col-span-3 pt-0">
+            Empresa: {{data.empresaCliente.rfc}}
+        </div>
+        }
+
+        <div class="col-span-12 md:col-span-6 xl:col-span-3 pt-0">
+            Fecha de creación: {{data.fechaCreacion | date:'dd/MM/yyyy HH:mm:ss'}}
         </div>
 
         <div class="col-span-12 md:col-span-6 xl:col-span-3 pt-0">

@@ -27,9 +27,9 @@ export class DetalleLicenciaHid {
   ngOnInit(): void {
     if (this.id !== undefined && this.id !== null && this.id !== "") {
       this.srvLicenciaHID.getById(this.id).subscribe((s: any) => {
-        if (s.respuesta === true) {
-          console.log(s);
+        if (s.respuesta === true) {          
           this.data = s.data;
+          console.log("DATA ::: ", this.data);
         }
       });
     }

@@ -158,7 +158,8 @@ export class DispositivoHid {
       InvitacionActividad: InvitacionActividad,
       InvitacionDetalle: InvitacionDetalle,
       UsuarioNombre: UsuarioNombre,
-      EmpresaClienteId: esTipoUsuarioEmpresa ? this.userData.empresaId : '',
+      // EmpresaClienteId: esTipoUsuarioEmpresa ? this.userData.empresaId : '',
+      EmpresaClienteId: this.userData.empresaId,
       DatosCompletos: 1,
       PageNumber: this.paginaActual,
       Estado: Estado

@@ -22,6 +22,9 @@ import { IPermisoDetalle } from '../../interfaces/permiso.interface';
 import { PerfilService } from '../../services/perfil.service';
 import { PermisoService } from '../../services/permiso.service';
 import { ModalService } from '../../../../../shared/services/modal.service';
+import { StorageService } from '../../../../auth/services/storage.service';
+import { filter, take } from 'rxjs';
+import { IUsuarioAutenticado } from '../../interfaces/usuario.interface';
 
 @Component({
   selector: 'app-perfil',
@@ -42,6 +45,9 @@ export class Perfil implements OnInit {
   idSection: string = "9929D72C-60F4-4AEE-A6C2-86E115266513";
   permission: IPermisoDetalle | undefined;
 
+  private readonly TIPO_USUARIO_EMPRESA = '2228D6FB-CBDD-4672-9A06-A6E054157E6D';
+
+  private srvStorage = inject(StorageService);
   private srvPerfil = inject(PerfilService);
   private srvForm = inject(FormBuilder);
   private srvModal = inject(ModalService);
@@ -63,14 +69,24 @@ export class Perfil implements OnInit {
   mostrarTabla: boolean = false;
   tablaResultados: IDataTable = new DataTable();
 
+  userData!: IUsuarioAutenticado;
+
   buscarFG: FormGroup = this.srvForm.group({
     nombre: [''],
     estado: [''],
   });
 
   ngOnInit(): void {
-    this.buscar(true);
-    this.prepararTablaResultados();
+    this.srvStorage.userData$
+      .pipe(
+        filter((data: any) => !!data?.perfilId),
+        take(1)
+      )
+      .subscribe((data: IUsuarioAutenticado) => {
+        this.userData = data;
+        this.buscar(true);
+        this.prepararTablaResultados();
+      });
   }
 
   prepararTablaResultados() {
@@ -92,6 +108,14 @@ export class Perfil implements OnInit {
     if (pagina) {
       this.paginaActual = 1;
     }
+
+    const esTipoUsuarioEmpresa: boolean =
+      this.userData !== null &&
+      this.userData !== undefined &&
+      this.userData.tipoUsuarioId !== null &&
+      this.userData.tipoUsuarioId !== undefined &&
+      this.userData.tipoUsuarioId !== '' &&
+      this.userData.tipoUsuarioId.toUpperCase() === this.TIPO_USUARIO_EMPRESA;
 
     let filtroBusqueda: any = {
       Nombre: nombre,
@@ -186,16 +210,16 @@ export class Perfil implements OnInit {
           }
         });
       } else {
-        Swal.fire({
-          title: '¡Advertencia!',
-          text: 'No fue posible inactivar el perfil. Intenta nuevamente.',
-          icon: 'warning',
-          confirmButtonText: 'Aceptar',
-          allowOutsideClick: false,
-          customClass: {
-            popup: 'swal-theme',
-          }
-        });
+        // Swal.fire({
+        //   title: '¡Advertencia!',
+        //   text: 'No fue posible inactivar el perfil. Intenta nuevamente.',
+        //   icon: 'warning',
+        //   confirmButtonText: 'Aceptar',
+        //   allowOutsideClick: false,
+        //   customClass: {
+        //     popup: 'swal-theme',
+        //   }
+        // });
       }
     });
   }
@@ -221,16 +245,16 @@ export class Perfil implements OnInit {
           }
         });
       } else {
-        Swal.fire({
-          title: '¡Advertencia!',
-          text: 'No fue posible reactivar el perfil. Intenta nuevamente.',
-          icon: 'warning',
-          confirmButtonText: 'Aceptar',
-          allowOutsideClick: false,
-          customClass: {
-            popup: 'swal-theme',
-          }
-        });
+        // Swal.fire({
+        //   title: '¡Advertencia!',
+        //   text: 'No fue posible reactivar el perfil. Intenta nuevamente.',
+        //   icon: 'warning',
+        //   confirmButtonText: 'Aceptar',
+        //   allowOutsideClick: false,
+        //   customClass: {
+        //     popup: 'swal-theme',
+        //   }
+        // });
       }
     });
   }
@@ -244,7 +268,7 @@ export class Perfil implements OnInit {
 
     if (ref && ref.instance) {
       ref.instance.guardadoExitoso.subscribe((s: any) => {
-        console.log("DATA ::: ", s);
+        // console.log("DATA ::: ", s);
         this.buscar(true); // refresca la tabla
       });
     }
@@ -290,7 +314,7 @@ export class Perfil implements OnInit {
 
     if (ref && ref.instance) {
       ref.instance.guardadoExitoso.subscribe((s: any) => {
-        console.log("DATA ::: ", s);
+        // console.log("DATA ::: ", s);
         this.buscar(true); // refresca la tabla
       });
     }

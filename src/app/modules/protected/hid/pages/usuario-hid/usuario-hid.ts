@@ -175,7 +175,8 @@ export class UsuarioHid {
       InvitacionActividad: InvitacionActividad,
       InvitacionDetalle: InvitacionDetalle,
       Status: Status,
-      EmpresaClienteId: esTipoUsuarioEmpresa ? this.userData.empresaId : '',
+      // EmpresaClienteId: esTipoUsuarioEmpresa ? this.userData.empresaId : '',
+      EmpresaClienteId: this.userData.empresaId,
       DatosCompletos: 1,
       PageNumber: this.paginaActual,
       Estado: Estado

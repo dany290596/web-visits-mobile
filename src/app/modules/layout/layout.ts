@@ -22,6 +22,13 @@ import { filter, switchMap } from 'rxjs';
   styleUrl: './layout.css',
 })
 export class Layout implements OnInit {
+  private readonly SECTIONS_TO_REMOVE = [
+    '98ba1bd1-47c3-4533-88a0-b52992cc16fd',
+    // aquí puedes agregar más IDs cuando necesites
+    // 'otro-id-1',
+    // 'otro-id-2',
+  ];
+
   private mainContent: HTMLElement | null = null;
 
   private srvMenu = inject(MenuService);
@@ -61,9 +68,11 @@ export class Layout implements OnInit {
       })
     ).subscribe(menu => {
       if (menu.respuesta) {
-        this.srvPermiso.setModulos(menu.data);
-        const menuItems = this.buildMenuFromApi(menu.data);
-        // console.log("MENU ITEMS ::: ", JSON.stringify(menu.data));
+        const dataLimpia = this.removeSections(menu.data, this.SECTIONS_TO_REMOVE) as unknown as any[];
+        this.srvPermiso.setModulos(dataLimpia);
+        const menuItems = this.buildMenuFromApi(dataLimpia);
+
+        // console.log("MENU ITEMS ::: ", JSON.stringify(dataLimpia));
         this.srvMenu._pagesMenu.set(menuItems);
       }
     });
@@ -156,5 +165,17 @@ export class Layout implements OnInit {
     // Si la clase existe en el mapeo, devuelve la ruta del SVG
     // Si no, devuelve un ícono por defecto (ej. cube.svg)
     return this.iconMapping[faClass] || 'assets/icons/heroicons/outline/cube.svg';
+  }
+
+  /**
+ * Elimina del array de módulos todas las secciones cuyos IDs estén en el arreglo idsToRemove.
+ */
+  private removeSections(modulos: IMenu[], idsToRemove: string[]): IMenu[] {
+    // Usamos un Set para búsqueda rápida
+    const idsSet = new Set(idsToRemove);
+    return modulos.map(modulo => ({
+      ...modulo,
+      secciones: modulo.secciones.filter(sec => !idsSet.has(sec.seccionId))
+    }));
   }
 }

@@ -115,6 +115,7 @@ export class Usuario {
     this.tablaResultados.addTitulo('Tipo usuario', true, true, true, true, true, 3, 3, 2);
     this.tablaResultados.addTitulo('Fecha de creación', true, true, true, true, true, 1, 1, 1);
     this.tablaResultados.addTitulo('Fecha de vencimiento', false, true, true, true, true, 1, 1, 1);
+    this.tablaResultados.addTitulo('Empresa', true, true, true, true, true, 2, 2, 2);
     this.tablaResultados.addTitulo('Estado', true, true, true, true, true, 1, 1, 1);
     this.tablaResultados.registros = [];
   }
@@ -155,7 +156,8 @@ export class Usuario {
       TipoUsuarioId: tipoUsuarioId,
       IdAsociado: idAsociado,
       Vence: estadoVencimientoId,
-      EmpresaId: esTipoUsuarioEmpresa ? this.userData.empresaId : '',
+      // EmpresaId: esTipoUsuarioEmpresa ? this.userData.empresaId : '',
+      EmpresaId: this.userData.empresaId || '',
       DatosCompletos: 1,
       DataComplete: 1,
       PageNumber: this.paginaActual
@@ -205,6 +207,10 @@ export class Usuario {
                 strTipoUsuario = vst.tipoUsuario.nombre;
               }
               let strEstado: string = vst.estado === 1 ? 'Activo' : vst.estado === 2 ? 'Inactivo' : '';
+              let strEmpresa: string = "";
+              if (vst.empresaCliente !== undefined && vst.empresaCliente !== "" && vst.empresaCliente !== null) {
+                strEmpresa = vst.empresaCliente.razonSocial;
+              }
               let listEstado: IDTRCampoPropiedad[] = [
                 { condicion: 'Activo', aplicar: DataTableRegistroCampo.COLOR_BADGE_PRIMARY },
                 { condicion: 'Inactivo', aplicar: DataTableRegistroCampo.COLOR_BADGE_DANGER }
@@ -216,6 +222,7 @@ export class Usuario {
               let campoTipoUsuario: IDataTableRegistroCampo = new DataTableRegistroCampo();
               let campoFechaCreacion: IDataTableRegistroCampo = new DataTableRegistroCampo();
               let campoFechaVencimiento: IDataTableRegistroCampo = new DataTableRegistroCampo();
+              let campoEmpresa: IDataTableRegistroCampo = new DataTableRegistroCampo();
               let campoEstado: IDataTableRegistroCampo = new DataTableRegistroCampo();
 
               if (vst.fechaCreacion) {
@@ -252,7 +259,7 @@ export class Usuario {
                 DataTableRegistroCampo.CAMPO_TEXTO,
                 false, true, true, true, true, 1, 1, 1
               );
-
+              campoEmpresa.setValores(strEmpresa, DataTableRegistroCampo.CAMPO_TEXTO, true, true, true, true, true, 3, 3, 2);
               campoEstado.setValores(strEstado, DataTableRegistroCampo.CAMPO_BADGE, true, true, false, false, true, 0, 0, 1, listEstado);
 
               // // campos que aparecerán en detalle
@@ -262,6 +269,7 @@ export class Usuario {
               campos.push(campoTipoUsuario);
               campos.push(campoFechaCreacion);
               campos.push(campoFechaVencimiento);
+              campos.push(campoEmpresa);
               campos.push(campoEstado);
 
               if (vst.id !== this.userId) {
@@ -353,7 +361,7 @@ export class Usuario {
 
     if (ref && ref.instance) {
       ref.instance.guardadoExitoso.subscribe((s: any) => {
-        console.log("DATA ::: ", s);
+        // console.log("DATA ::: ", s);
         this.buscar(true); // refresca la tabla
       });
     }
@@ -396,7 +404,7 @@ export class Usuario {
 
     if (ref && ref.instance) {
       ref.instance.guardadoExitoso.subscribe((s: any) => {
-        console.log("DATA ::: ", s);
+        // console.log("DATA ::: ", s);
         this.buscar(true); // refresca la tabla
       });
     }

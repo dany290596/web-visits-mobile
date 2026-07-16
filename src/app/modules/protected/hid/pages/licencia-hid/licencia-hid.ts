@@ -13,7 +13,7 @@ import { TableDynamic } from '../../../../../shared/components/table-dynamic/tab
 import { InputNumberModule } from 'primeng/inputnumber';
 import { InputTextModule } from 'primeng/inputtext';
 
-import { IUsuarioAutenticado, IUsuarioResponse } from '../../../authentication/interfaces/usuario.interface';
+import { IUsuarioAutenticado } from '../../../authentication/interfaces/usuario.interface';
 
 import { ModalService } from '../../../../../shared/services/modal.service';
 import { StorageService } from '../../../../auth/services/storage.service';
@@ -50,9 +50,6 @@ export class LicenciaHid {
   private srvLicenciaHID = inject(LicenciaHIDService);
   private srvModal = inject(ModalService);
   private srvPermiso = inject(PermisoService);
-
-  // user: IUsuarioResponse | undefined;
-  // userId: string = '';
 
   userData!: IUsuarioAutenticado;
 
@@ -109,6 +106,7 @@ export class LicenciaHid {
     this.tablaResultados.addTitulo('Fecha fin', true, true, true, true, true, 3, 3, 2);
     this.tablaResultados.addTitulo('Fecha de creación', true, true, true, true, true, 1, 1, 1);
     this.tablaResultados.addTitulo('Fecha de vencimiento', false, true, true, true, true, 1, 1, 1);
+    this.tablaResultados.addTitulo('Empresa', true, true, true, true, true, 2, 2, 2);
     this.tablaResultados.addTitulo('Estado', true, true, true, true, true, 1, 1, 1);
     this.tablaResultados.registros = [];
   }
@@ -151,7 +149,8 @@ export class LicenciaHid {
       EstadoLicencia: EstadoLicencia,
       EstadoPeriodo: EstadoPeriodo,
       MensajeEstado: MensajeEstado,
-      EmpresaClienteId: esTipoUsuarioEmpresa ? this.userData.empresaId : '',
+      // EmpresaClienteId: esTipoUsuarioEmpresa ? this.userData.empresaId : '',
+      EmpresaClienteId: this.userData.empresaId || '',
       DatosCompletos: 1,
       PageNumber: this.paginaActual,
       Estado: Estado
@@ -161,7 +160,7 @@ export class LicenciaHid {
     // console.log("FILTROS ::: ", filtroBusqueda);
     this.srvLicenciaHID.getAll(filtroBusqueda).subscribe((resp: any) => {
       if (resp.respuesta === true) {
-        // console.log("DATA ::: ", resp.data);
+        // console.log("DATA E ::: ", resp.data);
         let listado: any[] = resp.data.filter(
           (usuario: any) => usuario.id?.toUpperCase() !== this.userData.usuarioId?.toUpperCase()
         );
@@ -185,10 +184,13 @@ export class LicenciaHid {
         this.sinDatos = false;
 
         listado.forEach(registro => {
-
           let strId: string = registro.id ? registro.id : '';
           let strNumeroPieza: string = registro.numeroParte;
           let strNombre: string = registro.nombre;
+          let strEmpresa: string = "";
+          if (registro.empresaCliente !== undefined && registro.empresaCliente !== "" && registro.empresaCliente !== null) {
+            strEmpresa = registro.empresaCliente.razonSocial;
+          }
           let strFechaInicio: string = "";
           if (registro.fechaInicio !== undefined && registro.fechaInicio !== null && registro.fechaInicio !== "") {
             const fecha = new Date(registro.fechaInicio);
@@ -198,7 +200,8 @@ export class LicenciaHid {
             const horas = String(fecha.getHours()).padStart(2, '0');
             const minutos = String(fecha.getMinutes()).padStart(2, '0');
 
-            strFechaInicio = `${dia}/${mes}/${año} ${horas}:${minutos}`;
+            // strFechaInicio = `${dia}/${mes}/${año} ${horas}:${minutos}`;
+            strFechaInicio = `${dia}/${mes}/${año}`;
           }
           let strFechaFin: string = "";
           if (registro.fechaFin !== undefined && registro.fechaFin !== null && registro.fechaFin !== "") {
@@ -209,7 +212,8 @@ export class LicenciaHid {
             const horas = String(fecha.getHours()).padStart(2, '0');
             const minutos = String(fecha.getMinutes()).padStart(2, '0');
 
-            strFechaFin = `${dia}/${mes}/${año} ${horas}:${minutos}`;
+            // strFechaFin = `${dia}/${mes}/${año} ${horas}:${minutos}`;
+            strFechaFin = `${dia}/${mes}/${año}`;
           }
           let strEstado: string = registro.estado === 1 ? 'Activo' : registro.estado === 2 ? 'Inactivo' : '';
           let listEstado: IDTRCampoPropiedad[] = [
@@ -225,7 +229,7 @@ export class LicenciaHid {
 
           let campoFechaCreacion: IDataTableRegistroCampo = new DataTableRegistroCampo();
           let campoFechaVencimiento: IDataTableRegistroCampo = new DataTableRegistroCampo();
-
+          let campoEmpresa: IDataTableRegistroCampo = new DataTableRegistroCampo();
           if (registro.fechaCreacion) {
             const fecha = new Date(registro.fechaCreacion);
             const dia = String(fecha.getDate()).padStart(2, '0');
@@ -261,6 +265,7 @@ export class LicenciaHid {
             DataTableRegistroCampo.CAMPO_TEXTO,
             false, true, true, true, true, 1, 1, 1
           );
+          campoEmpresa.setValores(strEmpresa, DataTableRegistroCampo.CAMPO_TEXTO, true, true, true, true, true, 3, 3, 2);
           campoEstado.setValores(strEstado, DataTableRegistroCampo.CAMPO_BADGE, true, true, false, false, true, 0, 0, 1, listEstado);
 
           campos.push(campoNumeroPieza);
@@ -269,6 +274,7 @@ export class LicenciaHid {
           campos.push(campoFechaFin);
           campos.push(campoFechaCreacion);
           campos.push(campoFechaVencimiento);
+          campos.push(campoEmpresa);
           campos.push(campoEstado);
 
           if (registro.id !== this.userData.usuarioId) {
