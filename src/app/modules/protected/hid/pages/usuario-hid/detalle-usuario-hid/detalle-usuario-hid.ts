@@ -32,7 +32,6 @@ export class DetalleUsuarioHid {
     if (this.id !== undefined && this.id !== null && this.id !== "") {
       this.srvUsuarioHID.getByPhoto(this.id).subscribe((s: any) => {
         if (s.respuesta === true) {
-          console.log(s);
           this.data = s.data;
         }
       });
