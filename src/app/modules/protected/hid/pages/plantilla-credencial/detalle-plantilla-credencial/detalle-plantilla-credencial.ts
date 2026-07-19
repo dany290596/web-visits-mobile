@@ -28,7 +28,7 @@ export class DetallePlantillaCredencial {
     if (this.id !== undefined && this.id !== null && this.id !== "") {
       this.srvPlantillaCredencial.getById(this.id).subscribe((s: any) => {
         if (s.respuesta === true) {
-          console.log(s);
+          // console.log("DETALLE DE LA PLANTILLA ::: ", s.data);
           this.data = s.data;
         }
       });

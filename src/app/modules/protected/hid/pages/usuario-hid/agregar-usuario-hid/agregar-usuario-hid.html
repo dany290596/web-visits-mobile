@@ -30,12 +30,12 @@
 
                     <!-- Área de carga corporativa -->
                     <div *ngIf="!imagenPreview" (click)="forzarCargaPrimeNG(fondoUpload)"
-                        class="flex flex-col items-center justify-center py-8 px-4 text-slate-400 bg-slate-50/80 rounded-xl border-2 border-dashed border-slate-300 hover:border-primary hover:bg-blue-50/30 hover:text-primary transition-all cursor-pointer group">
+                        class="flex flex-col items-center justify-center py-8 px-4 text-slate-400 rounded-xl border-2 border-dashed border-slate-400 hover:border-primary hover:bg-blue-50/30 hover:text-primary transition-all cursor-pointer group">
                         <div
                             class="w-14 h-14 rounded-full bg-slate-100 flex items-center justify-center mb-3 group-hover:bg-blue-100 group-hover:scale-110 transition-transform">
                             <i class="pi pi-cloud-upload text-2xl"></i>
                         </div>
-                        <p class="text-sm font-medium text-slate-600 group-hover:text-primary">Arrastra o selecciona una
+                        <p class="text-sm font-medium group-hover:text-primary">Arrastra o selecciona una
                             imagen</p>
                         <p class="text-xs mt-1">PNG (máx. 5 MB)</p>
                     </div>
@@ -172,9 +172,11 @@
             }
 
             @if(isWalletSelected()){
+            <!--
             <div class="col-span-12 md:col-span-6 xl:col-span-3 pt-0">
                 <app-autoc-plataforma formControlName="plataforma"></app-autoc-plataforma>
             </div>
+            -->
             }
         </div>
 

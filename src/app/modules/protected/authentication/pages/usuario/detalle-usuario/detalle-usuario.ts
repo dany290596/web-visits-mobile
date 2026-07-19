@@ -27,7 +27,7 @@ export class DetalleUsuario {
     if (this.id !== undefined && this.id !== null && this.id !== "") {
       this.srvUsuario.getById(this.id).subscribe((s: any) => {
         if (s.respuesta === true) {
-          console.log(s);
+          // console.log("DETALLE USUARIO ::: ", s);
           this.data = s.data;
         }
       });

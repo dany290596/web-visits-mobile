@@ -75,9 +75,6 @@ export class PlantillaCredencial implements OnInit {
   }
 
   ngOnInit(): void {
-    this.buscar(true);
-    this.prepararTablaResultados();
-
     this.srvStorage.userData$
       .pipe(
         filter((data: any) => !!data?.perfilId),
@@ -85,6 +82,8 @@ export class PlantillaCredencial implements OnInit {
       )
       .subscribe((data: IUsuarioAutenticado) => {
         this.userData = data;
+        this.buscar(true);
+        this.prepararTablaResultados();
       });
   }
 
@@ -92,6 +91,7 @@ export class PlantillaCredencial implements OnInit {
     this.tablaResultados = new DataTable();
     this.tablaResultados.setTieneAcciones(true, true, true, true);
     this.tablaResultados.addTitulo('Nombre', true, true, true, true, true, 4, 3, 2);
+    this.tablaResultados.addTitulo('Empresa', true, true, true, true, true, 2, 2, 2);
     this.tablaResultados.addTitulo('Fecha de creación', true, true, true, true, true, 1, 1, 1);
     this.tablaResultados.addTitulo('Estado', true, true, true, true, true, 1, 1, 1);
     this.tablaResultados.registros = [];
@@ -111,6 +111,8 @@ export class PlantillaCredencial implements OnInit {
     let filtroBusqueda: any = {
       Nombre: nombre,
       Estado: estado,
+
+      EmpresaClienteId: this.userData?.empresaId || "",
       DatosCompletos: 1,
       PageNumber: this.paginaActual
     };
@@ -119,7 +121,7 @@ export class PlantillaCredencial implements OnInit {
     this.srvPlantillaCredencial.getAll(filtroBusqueda).subscribe((resp: any) => {
       this.cargando = false;
       if (resp.respuesta === true) {
-
+        // console.log("RESP ::: ", resp.data);
         this.totalPaginas = resp.meta.totalPages;
         this.totalRegistros = resp.meta.totalCount;
         this.paginaActual = resp.meta.currentPage;
@@ -137,6 +139,10 @@ export class PlantillaCredencial implements OnInit {
             if (dataById.respuesta === true) {
               let strId: string = vst.id ? vst.id : '';
               let strNombre: string = vst.nombre;
+              let strEmpresa: string = "";
+              if (vst.empresaCliente !== undefined && vst.empresaCliente !== "" && vst.empresaCliente !== null) {
+                strEmpresa = vst.empresaCliente.razonSocial;
+              }
               let strEstado: string = vst.estado === 1 ? 'Activo' : vst.estado === 2 ? 'Inactivo' : '';
               let listEstado: IDTRCampoPropiedad[] = [
                 { condicion: 'Activo', aplicar: DataTableRegistroCampo.COLOR_BADGE_PRIMARY },
@@ -146,6 +152,7 @@ export class PlantillaCredencial implements OnInit {
 
               let campos: IDataTableRegistroCampo[] = [];
               let campoNombre: IDataTableRegistroCampo = new DataTableRegistroCampo();
+              let campoEmpresa: IDataTableRegistroCampo = new DataTableRegistroCampo();
               let campoFechaCreacion: IDataTableRegistroCampo = new DataTableRegistroCampo();
               let campoEstado: IDataTableRegistroCampo = new DataTableRegistroCampo();
 
@@ -163,12 +170,14 @@ export class PlantillaCredencial implements OnInit {
 
               // campos que aparecerán en línea
               campoNombre.setValores(strNombre, DataTableRegistroCampo.CAMPO_TEXTO, true, true, true, true, true, 4, 3, 2);
+              campoEmpresa.setValores(strEmpresa, DataTableRegistroCampo.CAMPO_TEXTO, true, true, true, true, true, 3, 3, 2);
               campoFechaCreacion.setValores(vst.fechaCreacion, DataTableRegistroCampo.CAMPO_TEXTO, true, true, true, true, true, 1, 1, 1);
 
               campoEstado.setValores(strEstado, DataTableRegistroCampo.CAMPO_BADGE, true, true, false, false, true, 0, 0, 1, listEstado);
 
               // campos que aparecerán en línea
               campos.push(campoNombre);
+              campos.push(campoEmpresa);
               campos.push(campoFechaCreacion);
               campos.push(campoEstado);
 

@@ -109,18 +109,28 @@ export class AgregarUsuarioHid implements OnInit {
       const plataforma = this.form.get('plataforma');
       const isWallet = this.isWalletSelected();
 
-      if (plantilla && plataforma) {
+      // if (plantilla && plataforma) {
+      //   if (isWallet) {
+      //     plantilla.setValidators(Validators.required);
+      //     plataforma.setValidators(Validators.required);
+      //   } else {
+      //     plantilla.clearValidators();
+      //     plataforma.clearValidators();
+      //     plantilla.setValue(null);
+      //     plataforma.setValue(null);
+      //   }
+      //   plantilla.updateValueAndValidity();
+      //   plataforma.updateValueAndValidity();
+      // }
+
+      if (plantilla) {
         if (isWallet) {
           plantilla.setValidators(Validators.required);
-          plataforma.setValidators(Validators.required);
         } else {
           plantilla.clearValidators();
-          plataforma.clearValidators();
           plantilla.setValue(null);
-          plataforma.setValue(null);
         }
         plantilla.updateValueAndValidity();
-        plataforma.updateValueAndValidity();
       }
     });
   }
@@ -265,7 +275,8 @@ export class AgregarUsuarioHid implements OnInit {
     request.extensionImagen = formValue.extensionImagen;
 
     request.plantillaCredencialId = formValue.plantillaCredencialId;
-    request.plataforma = formValue.plataforma;
+    // request.plataforma = formValue.plataforma;
+    request.plataforma = null;
 
     request.usuarioCreadorId = this.userId;
 

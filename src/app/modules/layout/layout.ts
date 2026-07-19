@@ -24,7 +24,7 @@ import { filter, switchMap } from 'rxjs';
 export class Layout implements OnInit {
   private readonly SECTIONS_TO_REMOVE = [
     '98ba1bd1-47c3-4533-88a0-b52992cc16fd',
-    // aquí puedes agregar más IDs cuando necesites
+    // '88e9733e-1d92-4b7a-8368-2380b3ec463c'
     // 'otro-id-1',
     // 'otro-id-2',
   ];
@@ -73,6 +73,7 @@ export class Layout implements OnInit {
         const menuItems = this.buildMenuFromApi(dataLimpia);
 
         // console.log("MENU ITEMS ::: ", JSON.stringify(dataLimpia));
+        // console.log("MENU ITEMS ::: ", dataLimpia);
         this.srvMenu._pagesMenu.set(menuItems);
       }
     });

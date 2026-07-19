@@ -57,10 +57,12 @@
 
     <ng-template pTemplate="body" let-registro let-i="rowIndex">
         <tr *ngIf="registro.visualizar" [ngClass]="{'bg-surface-50': i % 2 === 0}">
-            <td *ngFor="let campo of registro.camposEnLinea" class="align-middle py-3 px-4">
-                <div [ngSwitch]="campo.tipoCampo" class="flex justify-content-start">
+            <td *ngFor="let campo of registro.camposEnLinea; let idx = index;" class="align-middle py-3 px-4"
+                [ngClass]="{'white-space-nowrap overflow-hidden text-overflow-ellipsis': tabla.titulosEnTitulos[idx].texto === 'Cuerpo'}">
+                <div [ngSwitch]="campo.tipoCampo" class="justify-content-start">
                     <!-- Texto normal -->
-                    <div *ngSwitchCase="1" class="text-truncate text-900" style="max-width: 250px;">
+                    <div *ngSwitchCase="1" class="white-space-nowrap text-900"
+                        style="max-width:250px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">
                         {{ campo.texto || '-' }}
                     </div>
                     <!-- Imagen con Avatar -->
@@ -76,7 +78,8 @@
                     </div>
                     <!-- Array de textos -->
                     <div *ngSwitchCase="4">
-                        <div *ngFor="let strTexto of campo.arrTexto" class="text-truncate text-900 mb-1">
+                        <div *ngFor="let strTexto of campo.arrTexto"
+                            class="max-width:250px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">
                             {{ strTexto || '-' }}
                         </div>
                     </div>

@@ -95,7 +95,7 @@ export class EditarPlantillaCredencial {
 
           const plantilla = data.data;
 
-          console.log("PLANTILLA ::: ", plantilla);
+          // console.log("PLANTILLA ::: ", plantilla);
 
           // --- Previsualizaciones ---
           this.imagenFondoPreview = plantilla.imagenFondoBase64 || null;
