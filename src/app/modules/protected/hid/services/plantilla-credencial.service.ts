@@ -86,6 +86,24 @@ export class PlantillaCredencialService {
         );
     }
 
+    getByCompany(id: string) {
+        return this.http.get(`${url}PlantillaCredencial/ByCompany?companyId=${id}`, {
+            headers: new HttpHeaders(
+                {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${localStorage.getItem('token')}`,
+                    'Empresa': `${localStorage.getItem('empresa')}`
+                })
+        }).pipe(
+            catchError((e: any) =>
+                of(e)
+            ),
+            switchMap((response: any) => {
+                return of(response);
+            })
+        );
+    }
+
     create(request: IPlantillaCredencialRequest): Observable<any> {
         return this.http.post(`${url}PlantillaCredencial`, request, {
             headers: new HttpHeaders(

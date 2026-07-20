@@ -101,7 +101,7 @@ export class CuentaCorreo implements OnInit, OnDestroy {
     }
     this.srvCorreoConfiguracion.getByEmpresaId(this.empresaId).subscribe({
       next: (response) => {
-        console.log("RESPONSE ::: ", response);
+        // console.log("RESPONSE ::: ", response);
         if (response.respuesta === true && response.data) {
           this.existeConfiguracion = true;
 
@@ -272,6 +272,7 @@ export class CuentaCorreo implements OnInit, OnDestroy {
   }
 
   private guardarConfiguracion(request: ICorreoConfiguracionRequest): void {
+    // console.log("REQUEST ::: ", request);
     const peticion = this.existeConfiguracion
       ? this.srvCorreoConfiguracion.update(request)
       : this.srvCorreoConfiguracion.create(request);
