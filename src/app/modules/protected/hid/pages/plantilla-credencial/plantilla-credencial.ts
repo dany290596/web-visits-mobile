@@ -649,12 +649,12 @@ export class PlantillaCredencial implements OnInit {
 
     request.appleId = formValue.appleId;
 
-    console.log("REQUEST ::: ", request);
+    // console.log("REQUEST ::: ", request);
 
     this.srvPlantillaCredencial.update(request, this.template.id).subscribe((data: any) => {
       if (data.respuesta === true) {
 
-        this.miFormulario.reset();
+        // this.miFormulario.reset();
 
         Swal.fire({
           title: '¡Éxito!',

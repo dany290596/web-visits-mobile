@@ -9,7 +9,7 @@
 <div class="mb-4 flex justify-between">
 
     <div class="inline-block">
-        <h3 class="font-semibold text-foreground">Plantilla de correo Wallet
+        <h3 class="font-semibold text-foreground text-base">Plantilla de correo Wallet
             <span><!-- Badge modo dummy — visible solo en desarrollo -->
                 @if (isDummy) {
                 <p-tag value="Wallet" severity="warn" icon="pi pi-database" styleClass="ewt-dummy-badge"
@@ -25,7 +25,7 @@
         </h3>
 
         <div class="space-x-1 text-xs font-medium text-muted-foreground">
-            <a [routerLink]="['/layout/dashboard/inicio']" class="hover:text-primary"> Personaliza los textos
+            <a [routerLink]="['/layout/dashboard/inicio']" class="hover:text-primary text-base"> Personaliza los textos
                 del correo.</a>
             <!-- <span> - Inicio</span> -->
         </div>

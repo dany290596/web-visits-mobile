@@ -1,9 +1,9 @@
 <!-- Enhanced Header con diseño corporativo -->
 <div class="p-3 border-bottom-1 surface-border">
-    <div class="flex flex-column md:flex-row justify-content-between align-items-start md:align-items-center gap-2">
+    <div class="flex flex-column md:flex-row justify-content-between align-items-start md:items-center gap-2">
         <!-- Record Count -->
-        <div class="flex align-items-center gap-2">
-            <p-tag [value]="tabla.registros.length.toString()" severity="info" class="font-semibold px-3"></p-tag>
+        <div class="flex items-center gap-2">
+            <p-tag [value]="tabla.registros.length.toString()" styleClass="!bg-primary !text-primary-foreground font-semibold px-3 !text-base"></p-tag>
             <span class="text-900 font-medium">
                 <span *ngIf="tabla.registros.length > 1">registros encontrados</span>
                 <span *ngIf="tabla.registros.length == 1">registro encontrado</span>
@@ -12,7 +12,7 @@
         </div>
 
         <!-- Acciones adicionales si las necesitas -->
-        <div class="flex align-items-center gap-2">
+        <div class="flex items-center gap-2">
             <!-- Puedes agregar botones de acción global aquí -->
         </div>
     </div>
@@ -26,11 +26,12 @@
     <ng-template pTemplate="header">
         <tr>
             <th *ngFor="let titulo of tabla.titulosEnTitulos"
-                class="text-left align-middle py-3 px-4 bg-surface-100 text-600 font-semibold">
+                class="text-left align-middle py-3 px-4 bg-surface-100 text-600 text-sm font-semibold">
                 {{ titulo.texto }}
             </th>
             <th *ngIf="tabla.ColumnaAcciones"
-                class="text-center align-middle py-3 px-4 bg-surface-100 text-600 font-semibold" style="width: 150px;">
+                class="text-center align-middle py-3 px-4 bg-surface-100 text-600 text-sm font-semibold"
+                style="width: 150px;">
                 Acciones
             </th>
         </tr>
@@ -41,7 +42,7 @@
         <tr [ngClass]="{'bg-surface-50': i % 2 === 0}">
             <!-- Datos en columnas con estilo corporativo -->
             <td *ngFor="let campo of registro.camposEnLinea" class="align-middle py-3 px-4">
-                <div class="text-truncate text-900" style="max-width: 250px;" [pTooltip]="campo.texto"
+                <div class="text-truncate text-sm text-900" style="max-width: 250px;" [pTooltip]="campo.texto"
                     tooltipPosition="bottom">
                     {{ campo.texto || '-' }}
                 </div>
@@ -99,7 +100,7 @@
         <tr>
             <td [attr.colspan]="tabla.titulosEnTitulos.length + (tabla.ColumnaAcciones ? 1 : 0)"
                 class="text-center p-6">
-                <div class="flex flex-column align-items-center justify-content-center gap-3 py-6">
+                <div class="flex flex-column items-center justify-content-center gap-3 py-6">
                     <i class="pi pi-inbox text-300" style="font-size: 4rem"></i>
                     <div class="text-center">
                         <h5 class="text-600 font-semibold mb-2">No hay datos disponibles</h5>

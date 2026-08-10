@@ -1,7 +1,6 @@
-import { Injectable, OnDestroy, signal } from '@angular/core';
+import { effect, Injectable, OnDestroy, signal } from '@angular/core';
 import { NavigationEnd, Router } from '@angular/router';
 import { Subscription } from 'rxjs';
-import { Menu } from '../../../core/constants/menu';
 import { MenuItem, SubMenuItem } from '../../../core/models/menu.model';
 
 @Injectable({
@@ -16,7 +15,6 @@ export class MenuService implements OnDestroy {
     constructor(
         private router: Router
     ) {
-
         /** Set dynamic menu */
         // this._pagesMenu.set(Menu.pages);
 
@@ -26,7 +24,8 @@ export class MenuService implements OnDestroy {
                 this._pagesMenu().forEach((menu) => {
                     let activeGroup = false;
                     menu.items.forEach((subMenu) => {
-                        const active = this.isActive(subMenu.route);
+                        const hasActiveChild = !!subMenu.children?.some((child) => this.isActive(child.route));
+                        const active = this.isActive(subMenu.route) || hasActiveChild;
                         subMenu.expanded = active;
                         subMenu.active = active;
                         if (active) activeGroup = true;
@@ -62,6 +61,11 @@ export class MenuService implements OnDestroy {
         this._showSidebar.set(!this._showSidebar());
     }
 
+    public setMenu(items: MenuItem[]): void {
+        this._pagesMenu.set(items);
+        this.refreshActiveState();
+    }
+
     public toggleMenu(menu: SubMenuItem) {
         this.showSideBar = true;
 
@@ -93,6 +97,7 @@ export class MenuService implements OnDestroy {
     }
 
     public isActive(instruction: any): boolean {
+        if (!instruction) return false;
         return this.router.isActive(this.router.createUrlTree([instruction]), {
             paths: 'subset',
             queryParams: 'subset',
@@ -103,5 +108,22 @@ export class MenuService implements OnDestroy {
 
     ngOnDestroy(): void {
         this._subscription.unsubscribe();
+    }
+
+    private refreshActiveState(): void {
+        this._pagesMenu().forEach((menu) => {
+            let activeGroup = false;
+            menu.items.forEach((subMenu) => {
+                const hasActiveChild = !!subMenu.children?.some((child) => this.isActive(child.route));
+                const active = this.isActive(subMenu.route) || hasActiveChild;
+                subMenu.expanded = active;
+                subMenu.active = active;
+                if (active) activeGroup = true;
+                if (subMenu.children) {
+                    this.expand(subMenu.children);
+                }
+            });
+            menu.active = activeGroup;
+        });
     }
 }

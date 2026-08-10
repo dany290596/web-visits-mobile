@@ -75,30 +75,37 @@ export class ProfileMenu implements OnInit {
     {
       name: 'base',
       code: '#e11d48',
+      label: 'Rosa',
     },
     {
       name: 'yellow',
       code: '#f59e0b',
+      label: 'Amarillo',
     },
     {
       name: 'green',
       code: '#22c55e',
+      label: 'Verde',
     },
     {
       name: 'blue',
       code: '#3b82f6',
+      label: 'Azul',
     },
     {
       name: 'orange',
       code: '#ea580c',
+      label: 'Naranja',
     },
     {
       name: 'red',
       code: '#cc0022',
+      label: 'Rojo',
     },
     {
       name: 'violet',
       code: '#6d28d9',
+      label: 'Violeta',
     },
   ];
 

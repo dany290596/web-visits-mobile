@@ -74,7 +74,8 @@ export class Layout implements OnInit {
 
         // console.log("MENU ITEMS ::: ", JSON.stringify(dataLimpia));
         // console.log("MENU ITEMS ::: ", dataLimpia);
-        this.srvMenu._pagesMenu.set(menuItems);
+        // this.srvMenu._pagesMenu.set(menuItems);
+        this.srvMenu.setMenu(menuItems);
       }
     });
   }
