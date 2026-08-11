@@ -14,6 +14,7 @@
             </div>
         </div>
 
+        <!-- CORRECTED: Page Selector using p-select (PrimeNG v20) -->
         <div class="col-span-12 md:col-span-6 xl:col-span-9 flex justify-end">
             <div class="flex items-center gap-2">
                 <span class="text-600 text-sm font-medium">
@@ -34,6 +35,7 @@
     <p class="text-500 font-medium mt-3">Cargando registros...</p>
 </div>
 
+<!-- Enhanced Table with Native Paginator -->
 <p-table [value]="registros" stripedRows [scrollable]="true" selectionMode="single" [rowHover]="true"
     [showCurrentPageReport]="true" dataKey="registroId" [paginator]="false" [rows]="maxFilasPagina"
     [totalRecords]="totalRegistros" [first]="minimo" (onPage)="onPageChange($event)"
@@ -56,7 +58,9 @@
     </ng-template>
 
     <ng-template pTemplate="body" let-registro let-i="rowIndex">
-        <tr *ngIf="registro.visualizar" [ngClass]="{'bg-surface-50': i % 2 === 0}">
+        <tr *ngIf="registro.visualizar"
+            [ngClass]="{'bg-surface-50': i % 2 === 0, 'cursor-pointer': tabla.AccionDetalle}"
+            (click)="tabla.AccionDetalle && toggleDetalle(registro)">
             <td *ngFor="let campo of registro.camposEnLinea; let idx = index;" class="align-middle py-3 px-4"
                 [ngClass]="{'white-space-nowrap overflow-hidden text-overflow-ellipsis': tabla.titulosEnTitulos[idx] && tabla.titulosEnTitulos[idx].texto === 'Cuerpo'}">
                 <div *ngIf="campo; else campoVacio" [ngSwitch]="campo.tipoCampo" class="justify-start">
@@ -73,6 +77,8 @@
                     <div *ngSwitchCase="3" class="flex justify-start">
                         <p-tag [value]="campo.texto" [severity]="campo.getBadgeColor()" styleClass="!text-sm"
                             [style]="{ 'font-weight': '400' }" [rounded]="true"></p-tag>
+                        <!-- <p-badge [value]="campo.texto" badgeSize="xlarge" [severity]="campo.getBadgeColor()"
+                            styleClass="font-semibold"></p-badge> -->
                     </div>
                     <!-- Array de textos -->
                     <div *ngSwitchCase="4" class="text-sm">
@@ -88,39 +94,79 @@
             </td>
 
             <!-- Enhanced Actions Column -->
-            <td *ngIf="tabla.ColumnaAcciones" class="text-center align-middle py-3 px-4">
+            <td *ngIf="tabla.ColumnaAcciones" class="text-center align-middle py-3 px-4"
+                (click)="$event.stopPropagation()">
                 <div class="flex justify-center gap-1">
-                    <button *ngIf="tabla.AccionVer || tabla.AccionEditar || tabla.AccionEliminar || tabla.AccionDetalle"
-                        pButton icon="pi pi-ellipsis-v" (click)="abrirMenuAcciones($event, registro)"
-                        tooltipPosition="bottom" pTooltip="Acciones" severity="secondary" [rounded]="true"
-                        [outlined]="true"></button>
+                    <button *ngIf="tabla.AccionVer || tabla.AccionEditar || tabla.AccionEliminar" pButton
+                        icon="pi pi-ellipsis-v" (click)="abrirMenuAcciones($event, registro)" tooltipPosition="bottom"
+                        pTooltip="Acciones" severity="secondary" [rounded]="true" [outlined]="true"></button>
                 </div>
             </td>
         </tr>
 
+        <!-- Expandable Detail Row -->
+        <!--
+        <tr *ngIf="registro.visualizar && registro.expandirRegistro" class="bg-surface-50">
+            <td [attr.colspan]="tabla.titulosEnTitulos.length + (tabla.ColumnaAcciones ? 1 : 0)" class="p-0">
+                <div class="p-4 border-top-1 surface-border">
+                    <div class="grid">
+                        <div *ngFor="let titulo of tabla.titulosEnDetalle; let j = index"
+                            class="col-12 md:col-6 lg:col-4 mb-3">
+                            <div class="flex flex-col">
+                                <span class="text-600 text-sm font-medium mb-1">{{ titulo.texto }}</span>
+                                <div [ngSwitch]="registro.camposEnDetalle[j].tipoCampo">
+                                    <span *ngSwitchCase="1" class="text-900 font-medium">
+                                        {{ registro.camposEnDetalle[j].texto || 'N/A' }}
+                                    </span>
+                                    <span *ngSwitchCase="3">
+                                        <p-tag [value]="registro.camposEnDetalle[j].texto"
+                                            [severity]="registro.camposEnDetalle[j].getBadgeColor()"
+                                            styleClass="font-semibold"></p-tag>
+                                    </span>
+                                    <div *ngSwitchCase="4">
+                                        <div *ngFor="let strTexto of registro.camposEnDetalle[j].arrTexto"
+                                            class="text-900 font-medium mb-1">
+                                            {{ strTexto || 'N/A' }}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </td>
+        </tr>
+        -->
         <!-- Expandable Detail Row – Diseño corporativo profesional -->
         <tr *ngIf="registro.visualizar && registro.expandirRegistro" class="bg-gray-50 border-t-2 border-gray-200">
             <td [attr.colspan]="tabla.titulosEnTitulos.length + (tabla.ColumnaAcciones ? 1 : 0)" class="p-0">
                 <div class="flex">
+                    <!-- Barra lateral decorativa -->
                     <div class="w-1 bg-primary flex-shrink-0"></div>
 
+                    <!-- Contenido del detalle -->
                     <div class="flex-1 p-5">
                         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
 
                             <div *ngFor="let titulo of tabla.titulosEnDetalle; let j = index">
+                                <!-- Tarjeta por campo -->
                                 <div class="border border-primary rounded-lg p-3 shadow-sm h-full flex flex-col">
+                                    <!-- Etiqueta -->
                                     <span class="text-xs tracking-wider font-semibold mb-2">
                                         {{ titulo.texto }}
                                     </span>
 
+                                    <!-- Valor -->
                                     <div *ngIf="registro.camposEnDetalle[j]; else sinDato"
                                         [ngSwitch]="registro.camposEnDetalle[j].tipoCampo"
                                         class="text-sm font-semibold mt-auto">
 
+                                        <!-- Texto normal -->
                                         <span *ngSwitchCase="1">
                                             {{ registro.camposEnDetalle[j].texto || '—' }}
                                         </span>
 
+                                        <!-- Badge -->
                                         <span *ngSwitchCase="3" class="inline-flex">
                                             <p-tag [value]="registro.camposEnDetalle[j].texto"
                                                 [severity]="registro.camposEnDetalle[j].getBadgeColor()"
@@ -128,12 +174,14 @@
                                             </p-tag>
                                         </span>
 
+                                        <!-- Array de textos -->
                                         <div *ngSwitchCase="4" class="flex flex-col gap-1">
                                             <span *ngFor="let strTexto of registro.camposEnDetalle[j].arrTexto">
                                                 {{ strTexto || '—' }}
                                             </span>
                                         </div>
 
+                                        <!-- Imagen / Otros -->
                                         <span *ngSwitchDefault>
                                             {{ registro.camposEnDetalle[j].texto || '—' }}
                                         </span>

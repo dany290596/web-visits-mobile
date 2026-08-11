@@ -1,7 +1,7 @@
 import { Component, inject } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { CommonModule } from '@angular/common';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { ReactiveFormsModule } from '@angular/forms';
 
 import { MessageService } from 'primeng/api';
 
@@ -31,7 +31,6 @@ export class Account {
     this.srvAccount.getAccountInfo().subscribe((resp: any) => {
       if (resp.respuesta === true) {
         this.accountData = resp.data;
-        console.log('DATA ::: ', JSON.stringify(resp.data));
       }
     });
   }

@@ -74,16 +74,13 @@ export class TableDynamicSimple {
     this.onEditar.emit(index);
   }
 
+  /**
+   * Construye el menu de acciones para la fila y abre el popup.
+   * Usa las MISMAS condiciones que antes estaban en el *ngIf de cada boton,
+   * y llama a los MISMOS metodos (cambiarExpandirRegistro, editar, eliminar).
+   */
   abrirMenuAcciones(event: Event, registro: any, index: number): void {
     const items: MenuItem[] = [];
-
-    if (this.tabla.AccionDetalle) {
-      items.push({
-        label: registro.expandirRegistro ? 'Ocultar detalles' : 'Mostrar detalles',
-        icon: registro.expandirRegistro ? 'pi pi-chevron-up' : 'pi pi-chevron-down',
-        command: () => this.cambiarExpandirRegistro(index),
-      });
-    }
 
     if (this.tabla.AccionVer) {
       items.push({

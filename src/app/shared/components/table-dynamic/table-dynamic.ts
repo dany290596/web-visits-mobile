@@ -228,12 +228,18 @@ export class TableDynamic {
     this.onReactivar.emit(id);
   }
 
+  /**
+   * Construye el menu de acciones para el registro y abre el popup.
+   * Usa las MISMAS condiciones que antes estaban en el *ngIf de cada boton,
+   * y llama a los MISMOS metodos (ver, detalle, inactivar, reactivar, toggleDetalle)
+   * sin modificar su comportamiento ni los eventos que emiten.
+   */
   abrirMenuAcciones(event: Event, registro: IDataTableRegistro): void {
     const items: MenuItem[] = [];
 
     if (this._tabla.AccionVer && (registro.mostrarDetalle !== false) && this._permission?.ver === true) {
       items.push({
-        label: 'Ver detalles',
+        label: 'Detalle',
         icon: 'pi pi-eye',
         command: () => this.ver(registro.registroId),
       });
@@ -260,14 +266,6 @@ export class TableDynamic {
         label: 'Reactivar',
         icon: 'pi pi-refresh',
         command: () => this.reactivar(registro.registroId),
-      });
-    }
-
-    if (this._tabla.AccionDetalle) {
-      items.push({
-        label: registro.expandirRegistro ? 'Ocultar detalles' : 'Mostrar detalles',
-        icon: registro.expandirRegistro ? 'pi pi-chevron-up' : 'pi pi-chevron-down',
-        command: () => this.toggleDetalle(registro),
       });
     }
 

@@ -1,6 +1,7 @@
 <!-- Enhanced Header con diseño corporativo -->
 <div class="p-3 border-bottom-1 surface-border">
     <div class="flex flex-col md:flex-row justify-content-between align-items-start md:items-center gap-2">
+        <!-- Record Count -->
         <div class="flex items-center gap-2">
             <p-tag [value]="tabla.registros.length.toString()"
                 styleClass="!bg-primary !text-primary-foreground font-semibold px-3 !text-base"></p-tag>
@@ -11,11 +12,14 @@
             </span>
         </div>
 
+        <!-- Acciones adicionales si las necesitas -->
         <div class="flex items-center gap-2">
+            <!-- Puedes agregar botones de acción global aquí -->
         </div>
     </div>
 </div>
 
+<!-- Tabla PrimeNG sin paginador (como en tu código original) -->
 <p-table [value]="tabla.registros" dataKey="registroId" [responsiveLayout]="'scroll'"
     [tableStyle]="{ 'min-width': '100%' }" styleClass="p-datatable-sm p-datatable-striped"
     *ngIf="tabla != null && tabla.registros != null && tabla.registros.length > 0">
@@ -35,7 +39,10 @@
     </ng-template>
 
     <ng-template pTemplate="body" let-registro let-i="rowIndex">
-        <tr [ngClass]="{'bg-surface-50': i % 2 === 0}">
+        <!-- Fila principal con diseño mejorado -->
+        <tr [ngClass]="{'bg-surface-50': i % 2 === 0, 'cursor-pointer': tabla.AccionDetalle}"
+            (click)="tabla.AccionDetalle && cambiarExpandirRegistro(i)">
+            <!-- Datos en columnas con estilo corporativo -->
             <td *ngFor="let campo of registro.camposEnLinea" class="align-middle py-3 px-4">
                 <div class="text-truncate text-900 text-sm" style="max-width: 250px;" [pTooltip]="campo.texto"
                     tooltipPosition="bottom">
@@ -43,16 +50,19 @@
                 </div>
             </td>
 
-            <td *ngIf="tabla.ColumnaAcciones" class="text-center align-middle py-3 px-4">
+            <!-- Columna de acciones con diseño corporativo -->
+            <td *ngIf="tabla.ColumnaAcciones" class="text-center align-middle py-3 px-4"
+                (click)="$event.stopPropagation()">
                 <div class="flex justify-center gap-1">
-                    <button *ngIf="tabla.AccionDetalle || tabla.AccionVer || tabla.AccionEliminar" pButton
-                        icon="pi pi-ellipsis-v" class="p-button-sm p-button-rounded p-button-text"
+                    <button *ngIf="tabla.AccionVer || tabla.AccionEliminar" pButton icon="pi pi-ellipsis-v"
+                        class="p-button-sm p-button-rounded p-button-text"
                         (click)="abrirMenuAcciones($event, registro, i)" pTooltip="Acciones"
                         tooltipPosition="bottom"></button>
                 </div>
             </td>
         </tr>
 
+        <!-- Fila de detalles expandibles con diseño corporativo -->
         <tr *ngIf="registro.expandirRegistro" class="bg-surface-50">
             <td [attr.colspan]="tabla.titulosEnTitulos.length + (tabla.ColumnaAcciones ? 1 : 0)" class="p-0">
                 <div class="p-4 border-top-1 surface-border">
@@ -75,6 +85,7 @@
         </tr>
     </ng-template>
 
+    <!-- Empty State Template con diseño corporativo -->
     <ng-template pTemplate="emptymessage">
         <tr>
             <td [attr.colspan]="tabla.titulosEnTitulos.length + (tabla.ColumnaAcciones ? 1 : 0)"
@@ -94,6 +105,7 @@
 <!-- Menu de acciones (popup compartido para todas las filas) -->
 <p-menu #accionesMenu [popup]="true" [model]="accionesMenuItems" appendTo="body"></p-menu>
 
+<!-- Loading State -->
 <div *ngIf="tabla != null && (!tabla.registros || tabla.registros.length === 0)" class="text-center p-8">
     <p-progressSpinner strokeWidth="4" animationDuration=".5s"></p-progressSpinner>
     <p class="text-500 font-medium mt-3">Cargando registros...</p>
