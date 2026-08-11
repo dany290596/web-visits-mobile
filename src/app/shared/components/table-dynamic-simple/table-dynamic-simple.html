@@ -3,8 +3,7 @@
     <div class="flex flex-col md:flex-row justify-content-between align-items-start md:items-center gap-2">
         <!-- Record Count -->
         <div class="flex items-center gap-2">
-            <p-tag [value]="tabla.registros.length.toString()"
-                styleClass="!bg-primary !text-primary-foreground font-semibold px-3 !text-base"></p-tag>
+            <p-tag [value]="tabla.registros.length.toString()" styleClass="!bg-primary !text-primary-foreground font-semibold px-3 !text-base"></p-tag>
             <span class="text-900 text-base font-semibold">
                 <span *ngIf="tabla.registros.length > 1">registros encontrados</span>
                 <span *ngIf="tabla.registros.length == 1">registro encontrado</span>
@@ -20,7 +19,7 @@
 </div>
 
 <!-- Tabla PrimeNG sin paginador (como en tu código original) -->
-<p-table [value]="tabla.registros" dataKey="registroId" [responsiveLayout]="'scroll'"
+<p-table [value]="tabla.registros" dataKey="registroId" [scrollable]="true"
     [tableStyle]="{ 'min-width': '100%' }" styleClass="p-datatable-sm p-datatable-striped"
     *ngIf="tabla != null && tabla.registros != null && tabla.registros.length > 0">
 
@@ -30,9 +29,8 @@
                 class="text-left align-middle py-3 px-4 bg-surface-100 text-600 text-sm font-semibold">
                 {{ titulo.texto }}
             </th>
-            <th *ngIf="tabla.ColumnaAcciones"
-                class="text-center align-middle py-3 px-4 bg-surface-100 text-600 text-sm font-semibold"
-                style="width: 150px;">
+            <th *ngIf="tabla.ColumnaAcciones" pFrozenColumn [alignFrozen]="'right'"
+                class="text-center align-middle py-3 px-4 bg-surface-100 text-600 text-sm font-semibold" style="width: 150px;">
                 Acciones
             </th>
         </tr>
@@ -51,11 +49,12 @@
             </td>
 
             <!-- Columna de acciones con diseño corporativo -->
-            <td *ngIf="tabla.ColumnaAcciones" class="text-center align-middle py-3 px-4"
+            <td *ngIf="tabla.ColumnaAcciones" pFrozenColumn [alignFrozen]="'right'"
+                class="text-center align-middle py-3 px-4"
                 (click)="$event.stopPropagation()">
                 <div class="flex justify-center gap-1">
-                    <button *ngIf="tabla.AccionVer || tabla.AccionEliminar" pButton icon="pi pi-ellipsis-v"
-                        class="p-button-sm p-button-rounded p-button-text"
+                    <button *ngIf="tabla.AccionVer || tabla.AccionEliminar" pButton
+                        icon="pi pi-ellipsis-v" class="p-button-sm p-button-rounded p-button-text"
                         (click)="abrirMenuAcciones($event, registro, i)" pTooltip="Acciones"
                         tooltipPosition="bottom"></button>
                 </div>

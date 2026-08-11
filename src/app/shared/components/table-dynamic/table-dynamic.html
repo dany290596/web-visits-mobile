@@ -49,8 +49,8 @@
                 class="text-left align-middle py-3 px-4 bg-surface-100 text-600 text-sm font-semibold">
                 {{ titulo.enTitulos ? titulo.texto : '' }}
             </th>
-            <th *ngIf="tabla.ColumnaAcciones"
-                class="text-center align-middle py-3 px-4 bg-surface-100 text-600 text-sm font-semibold"
+            <th *ngIf="tabla.ColumnaAcciones" pFrozenColumn [alignFrozen]="'right'" class="col-acciones-fija
+                text-center align-middle py-3 px-4 bg-surface-100 text-600 text-sm font-semibold"
                 style="width: 180px;">
                 Acciones
             </th>
@@ -94,8 +94,8 @@
             </td>
 
             <!-- Enhanced Actions Column -->
-            <td *ngIf="tabla.ColumnaAcciones" class="text-center align-middle py-3 px-4"
-                (click)="$event.stopPropagation()">
+            <td *ngIf="tabla.ColumnaAcciones" pFrozenColumn [alignFrozen]="'right'"
+                class="col-acciones-fija text-center align-middle py-3 px-4" (click)="$event.stopPropagation()">
                 <div class="flex justify-center gap-1">
                     <button *ngIf="tabla.AccionVer || tabla.AccionEditar || tabla.AccionEliminar" pButton
                         icon="pi pi-ellipsis-v" (click)="abrirMenuAcciones($event, registro)" tooltipPosition="bottom"
