@@ -1,4 +1,4 @@
-import { Component, Input, Output, EventEmitter, inject, effect } from '@angular/core';
+import { Component, Input, Output, EventEmitter, inject, effect, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 
@@ -20,6 +20,8 @@ import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { TagModule } from 'primeng/tag';
 import { AvatarModule } from 'primeng/avatar';
 import { ChipModule } from 'primeng/chip';
+import { Menu, MenuModule } from 'primeng/menu';
+import { MenuItem } from 'primeng/api';
 
 import { IDataTable, IDataTableRegistro } from '../../interfaces/table-dynamic.interface';
 import { IPermisoDetalle } from '../../../modules/protected/authentication/interfaces/permiso.interface';
@@ -45,7 +47,8 @@ import { IPermisoDetalle } from '../../../modules/protected/authentication/inter
     TagModule,
     AvatarModule,
     ChipModule,
-    FormsModule
+    FormsModule,
+    MenuModule
   ],
   templateUrl: './table-dynamic.html',
   styleUrl: './table-dynamic.css',
@@ -83,6 +86,9 @@ export class TableDynamic {
   @Output() onDet: EventEmitter<string> = new EventEmitter();
   @Output() onInactivar: EventEmitter<string> = new EventEmitter();
   @Output() onReactivar: EventEmitter<string> = new EventEmitter();
+
+  @ViewChild('accionesMenu') accionesMenu?: Menu;
+  accionesMenuItems: MenuItem[] = [];
 
   Aumentar: boolean = true;
 
@@ -220,6 +226,53 @@ export class TableDynamic {
 
   reactivar(id: string) {
     this.onReactivar.emit(id);
+  }
+
+  abrirMenuAcciones(event: Event, registro: IDataTableRegistro): void {
+    const items: MenuItem[] = [];
+
+    if (this._tabla.AccionVer && (registro.mostrarDetalle !== false) && this._permission?.ver === true) {
+      items.push({
+        label: 'Ver detalles',
+        icon: 'pi pi-eye',
+        command: () => this.ver(registro.registroId),
+      });
+    }
+
+    if (this._tabla.AccionEditar && (registro.mostrarEditar !== false) && registro.estado == 1 && this._permission?.editar === true) {
+      items.push({
+        label: 'Editar',
+        icon: 'pi pi-pencil',
+        command: () => this.detalle(registro.registroId),
+      });
+    }
+
+    if (this._tabla.AccionEliminar && (registro.mostrarInactivar !== false) && registro.estado == 1 && this._permission?.eliminar === true) {
+      items.push({
+        label: 'Desactivar',
+        icon: 'pi pi-times',
+        command: () => this.inactivar(registro.registroId),
+      });
+    }
+
+    if (this._tabla.AccionEliminar && (registro.mostrarReactivar !== false) && registro.estado == 2 && this._permission?.eliminar === true) {
+      items.push({
+        label: 'Reactivar',
+        icon: 'pi pi-refresh',
+        command: () => this.reactivar(registro.registroId),
+      });
+    }
+
+    if (this._tabla.AccionDetalle) {
+      items.push({
+        label: registro.expandirRegistro ? 'Ocultar detalles' : 'Mostrar detalles',
+        icon: registro.expandirRegistro ? 'pi pi-chevron-up' : 'pi pi-chevron-down',
+        command: () => this.toggleDetalle(registro),
+      });
+    }
+
+    this.accionesMenuItems = items;
+    this.accionesMenu?.toggle(event);
   }
 
   onPageChange(event: any): void {
