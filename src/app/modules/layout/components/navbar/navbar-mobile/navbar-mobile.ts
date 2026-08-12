@@ -2,10 +2,15 @@ import { Component, OnInit } from '@angular/core';
 import { MenuService } from '../../../services/menu.service';
 import { AngularSvgIconModule } from 'angular-svg-icon';
 import { NgClass } from '@angular/common';
+import { NavbarMobileMenu } from './navbar-mobile-menu/navbar-mobile-menu';
 
 @Component({
   selector: 'app-navbar-mobile',
-  imports: [NgClass, AngularSvgIconModule],
+  imports: [
+    NgClass,
+    AngularSvgIconModule,
+    NavbarMobileMenu
+  ],
   templateUrl: './navbar-mobile.html',
   styleUrl: './navbar-mobile.css',
 })
