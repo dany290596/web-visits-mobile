@@ -34,8 +34,8 @@ body {
 .login-card {
     width: 100%;
     max-width: 1200px;
-    height: 600px;
-    /* ALTURA ABSOLUTAMENTE FIJA */
+    min-height: 600px;
+    /* Altura mínima, pero crece si el contenido lo necesita */
     display: flex;
     background: var(--highlight-bg);
     border-radius: 10px;
@@ -965,17 +965,18 @@ body {
     margin-bottom: 0;
 }
 
-/* CORREGIR EL OVERFLOW QUE PUEDE ESTAR OCULTANDO LOS BUBBLES */
-.login-card {
-    overflow: visible !important;
-}
-
+/* Con min-height la tarjeta crece con el contenido, así que ya no
+   necesitamos forzar overflow: visible en el card (eso era lo que
+   hacía que el formulario se "saliera" del contenedor). Dejamos
+   overflow visible solo en el form y su contenedor, para que los
+   globos de error (que sí usan position:absolute) se puedan ver
+   sin romper el borde redondeado de la tarjeta. */
 .login-form {
-    overflow: visible !important;
+    overflow: visible;
 }
 
 .form-container {
-    overflow: visible !important;
+    overflow: visible;
 }
 
 /* RESPONSIVE */
@@ -996,4 +997,3 @@ body {
         margin-bottom: 30px !important;
     }
 }
-

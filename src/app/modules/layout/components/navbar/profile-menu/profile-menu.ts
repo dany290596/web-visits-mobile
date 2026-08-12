@@ -57,12 +57,12 @@ export class ProfileMenu implements OnInit {
       icon: './assets/icons/heroicons/outline/user-circle.svg',
       link: '/layout/account',
     },
-    {
-      id: 'ff0bc3ae-84e8-4d64-89dc-65fbf703ffe5',
-      title: 'Ajustes',
-      icon: './assets/icons/heroicons/outline/cog-6-tooth.svg',
-      // link: '/settings',
-    },
+    // {
+    //   id: 'ff0bc3ae-84e8-4d64-89dc-65fbf703ffe5',
+    //   title: 'Ajustes',
+    //   icon: './assets/icons/heroicons/outline/cog-6-tooth.svg',
+    //   // link: '/settings',
+    // },
     {
       id: 'f4f8b0d6-b3a5-4cd9-b61d-e1306db5cd03',
       title: 'Cerrar sesión',
