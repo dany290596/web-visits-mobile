@@ -5022,3 +5022,100 @@ p-datepicker,
   width: 100%;
   display: block;
 }
+
+/* ==========================================================================
+   39. MENÚ DE ACCIONES DE FILA — misma fuente que los módulos del menú lateral
+   (Instrument Sans 14px / 400, igual que la sección 35).
+   ========================================================================== */
+
+body .p-menu .p-menuitem-link,
+body .p-menu .p-menuitem-content,
+body .p-menu .p-menuitem-label,
+body .p-menu .p-menuitem-text,
+body .p-menu .p-menuitem a,
+body .p-menu .p-menuitem-link span:not([class*='pi-']):not(.p-menuitem-icon),
+body .p-menu span:not([class*='pi-']):not(.p-menu-item-icon):not(.p-menuitem-icon) {
+  font-family: var(--wv-sans) !important;
+  font-size: 14px !important;
+  font-weight: 400 !important;
+  letter-spacing: 0 !important;
+  color: var(--ink) !important;
+}
+
+body .p-menu .p-menuitem-link,
+body .p-menu .p-menuitem-content {
+  gap: 10px;
+  padding: 9px 11px !important;
+  border-radius: 8px !important;
+}
+
+body .p-menu .p-menuitem-content:hover,
+body .p-menu .p-menuitem-link:hover,
+body .p-menu .p-menuitem-content:hover .p-menuitem-label,
+body .p-menu .p-menuitem-link:hover span {
+  background: var(--ac-s) !important;
+  color: var(--ac) !important;
+}
+
+body .p-menu .p-menuitem-icon,
+body .p-menu .p-menuitem-link .pi {
+  font-size: 14px !important;
+  color: var(--txt-4) !important;
+}
+
+body .p-menu .p-menuitem-link:hover .p-menuitem-icon,
+body .p-menu .p-menuitem-link:hover .pi {
+  color: var(--ac) !important;
+}
+
+/* PrimeNG v20 renombró las clases del menú: p-menu-item-link / -label / -icon
+   (con guion tras "menu"). Las reglas anteriores usaban los nombres de v17. */
+body .p-menu .p-menu-item-link,
+body .p-menu .p-menu-item-label,
+body .p-menu .p-menu-item-content,
+body .p-menu .p-menu-item-link span:not([class*='pi-']):not(.p-menu-item-icon) {
+  font-family: var(--wv-sans) !important;
+  font-size: 14px !important;
+  font-weight: 400 !important;
+  letter-spacing: 0 !important;
+  color: var(--ink) !important;
+}
+
+body .p-menu .p-menu-item-link {
+  gap: 10px;
+  padding: 9px 11px !important;
+}
+
+body .p-menu .p-menu-item-content {
+  border-radius: 8px !important;
+}
+
+body .p-menu .p-menu-item-content:hover,
+body .p-menu .p-menu-item-content:hover .p-menu-item-label,
+body .p-menu .p-menu-item-link:hover {
+  background: var(--ac-s) !important;
+  color: var(--ac) !important;
+}
+
+body .p-menu .p-menu-item-icon,
+body .p-menu .p-menu-item-link .pi {
+  font-size: 14px !important;
+  color: var(--txt-4) !important;
+}
+
+body .p-menu .p-menu-item-content:hover .p-menu-item-icon,
+body .p-menu .p-menu-item-content:hover .pi {
+  color: var(--ac) !important;
+}
+
+/* los iconos del menú conservan PrimeIcons: la regla de tipografía se los llevaba */
+body .p-menu .pi,
+body .p-menu [class*=' pi-'],
+body .p-menu [class^='pi-'],
+body .p-menu .p-menu-item-icon,
+body .p-menu .p-menuitem-icon {
+  font-family: 'primeicons' !important;
+  font-size: 14px !important;
+  font-weight: 400 !important;
+  color: var(--txt-4) !important;
+}
