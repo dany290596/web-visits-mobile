@@ -16,7 +16,7 @@
 
         <!-- CORRECTED: Page Selector using p-select (PrimeNG v20) -->
         <div class="col-span-12 md:col-span-6 xl:col-span-9 flex justify-end">
-            <div class="flex items-center gap-2">
+            <div class="flex items-center gap-2" *ngIf="totalRegistros > 0">
                 <span class="text-600 text-sm font-medium">
                     Página
                 </span>
@@ -41,7 +41,7 @@
     [totalRecords]="totalRegistros" [first]="minimo" (onPage)="onPageChange($event)"
     [tableStyle]="{ 'min-width': '100%' }" styleClass="p-datatable-sm p-datatable-striped"
     currentPageReportTemplate="Mostrando {first} a {last} de {totalRecords} registros"
-    *ngIf="!cargando && tabla != null && registros != null">
+    *ngIf="!cargando && tabla != null && registros != null && registros.length > 0">
 
     <ng-template pTemplate="header">
         <tr>
@@ -208,11 +208,10 @@
                 <div class="grid grid-cols-12 gap-4">
                     <div class="col-span-12 flex-col rounded-lg bg-background px-4 sm:flex-row">
 
-                        <div class="text-center">
-                            <i class="pi pi-inbox text-300" style="font-size: 4rem"></i>
-                            <h5 class="text-600 font-semibold mb-2">No hay datos disponibles</h5>
-                            <p class="text-500 text-sm">No se encontraron registros que coincidan con los
-                                criterios</p>
+                        <div class="text-center tabla-vacia">
+                            <span class="tabla-vacia__icono"><i class="pi pi-search"></i></span>
+                            <h5 class="tabla-vacia__titulo">No se encontraron resultados</h5>
+                            <p class="tabla-vacia__texto">Ajusta los criterios de búsqueda e intenta de nuevo</p>
                         </div>
                     </div>
                 </div>
@@ -229,4 +228,13 @@
 <div *ngIf="tabla != null && (!registros || registros.length === 0) && totalRegistros > 0" class="text-center p-8">
     <p-progressSpinner strokeWidth="4" animationDuration=".5s"></p-progressSpinner>
     <p class="text-500 font-medium mt-3">Cargando registros...</p>
+</div>
+
+<!-- Estado vacío. Va FUERA del p-table porque la tabla solo se dibuja cuando hay
+     registros: si estuviera dentro, saldrían sus encabezados de columna. -->
+<div class="text-center tabla-vacia"
+    *ngIf="!cargando && tabla != null && (!registros || registros.length === 0) && totalRegistros === 0">
+    <span class="tabla-vacia__icono"><i class="pi pi-search"></i></span>
+    <h5 class="tabla-vacia__titulo">No se encontraron resultados</h5>
+    <p class="tabla-vacia__texto">Ajusta los criterios de búsqueda e intenta de nuevo</p>
 </div>

@@ -4744,3 +4744,38 @@ app-sidebar-submenu a {
   width: 100% !important;
   box-sizing: border-box;
 }
+
+/* estado vacío de la tabla, como en el portal de referencia */
+.tabla-vacia {
+  padding: 26px 16px;
+}
+
+.tabla-vacia__icono {
+  width: 64px;
+  height: 64px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--ac) 10%, #fff);
+  margin-bottom: 18px;
+}
+
+.tabla-vacia__icono .pi {
+  font-size: 24px !important;
+  color: var(--ac) !important;
+}
+
+.tabla-vacia__titulo {
+  margin: 0 0 4px !important;
+  font-size: 15px !important;
+  font-weight: 500 !important;
+  color: var(--ink) !important;
+}
+
+.tabla-vacia__texto {
+  margin: 0 !important;
+  font-size: 14px !important;
+  font-weight: 400 !important;
+  color: var(--txt-3) !important;
+}
