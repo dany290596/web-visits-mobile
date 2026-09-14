@@ -4779,3 +4779,245 @@ app-sidebar-submenu a {
   font-weight: 400 !important;
   color: var(--txt-3) !important;
 }
+
+/* ==========================================================================
+   37. AUTOCOMPLETADOS Y COMBOS — el chevron va DENTRO del campo
+   --------------------------------------------------------------------------
+   El botón del desplegable salía como una caja aparte, separada del campo y
+   fuera de la columna. Aquí el control es una sola pieza: campo a la izquierda
+   con el borde redondeado solo de ese lado, y botón pegado a la derecha
+   compartiendo alto y borde. Mismo criterio que el portal de referencia.
+   ========================================================================== */
+
+#main-content .p-autocomplete,
+.p-dialog .p-autocomplete,
+body>div.fixed.inset-0.z-50 .p-autocomplete {
+  display: flex !important;
+  align-items: stretch;
+  width: 100%;
+  height: auto;
+  border: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  border-radius: 12px !important;
+}
+
+#main-content .p-autocomplete .p-autocomplete-input,
+#main-content .p-autocomplete .p-inputtext,
+.p-dialog .p-autocomplete .p-autocomplete-input,
+.p-dialog .p-autocomplete .p-inputtext,
+body>div.fixed.inset-0.z-50 .p-autocomplete .p-inputtext {
+  flex: 1 1 auto;
+  min-width: 0;
+  width: auto !important;
+  height: 44px !important;
+  min-height: 44px !important;
+  padding: 0 14px !important;
+  border: 1.5px solid var(--line) !important;
+  border-right: 0 !important;
+  border-radius: 12px 0 0 12px !important;
+  background: var(--field) !important;
+  box-shadow: none !important;
+  outline: 0 !important;
+}
+
+#main-content .p-autocomplete .p-autocomplete-dropdown,
+.p-dialog .p-autocomplete .p-autocomplete-dropdown,
+body>div.fixed.inset-0.z-50 .p-autocomplete .p-autocomplete-dropdown {
+  flex: 0 0 44px;
+  width: 44px !important;
+  height: 44px !important;
+  min-height: 44px !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  border: 1.5px solid var(--line) !important;
+  border-radius: 0 12px 12px 0 !important;
+  background: var(--field) !important;
+  color: var(--txt-4) !important;
+  box-shadow: none !important;
+  outline: 0 !important;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+#main-content .p-autocomplete .p-autocomplete-dropdown:hover,
+.p-dialog .p-autocomplete .p-autocomplete-dropdown:hover {
+  background: var(--ac-s) !important;
+  color: var(--ac) !important;
+}
+
+#main-content .p-autocomplete:focus-within .p-autocomplete-input,
+#main-content .p-autocomplete:focus-within .p-inputtext,
+#main-content .p-autocomplete:focus-within .p-autocomplete-dropdown,
+.p-dialog .p-autocomplete:focus-within .p-autocomplete-input,
+.p-dialog .p-autocomplete:focus-within .p-inputtext,
+.p-dialog .p-autocomplete:focus-within .p-autocomplete-dropdown {
+  border-color: var(--ac) !important;
+  background: #fff !important;
+}
+
+/* el envoltorio del componente ocupa la columna completa */
+app-autoc-estado,
+[class*='app-autoc-'],
+[class*='app-mselect-'],
+app-autoc-estado>*,
+.p-autocomplete-input-multiple {
+  width: 100%;
+}
+
+/* --- 37.1 combos (p-select) y multiselección -------------------------- */
+
+#main-content .p-select,
+.p-dialog .p-select,
+body>div.fixed.inset-0.z-50 .p-select,
+#main-content .p-multiselect,
+.p-dialog .p-multiselect {
+  display: flex !important;
+  align-items: center;
+  width: 100%;
+  height: 44px;
+  min-height: 44px !important;
+  padding: 0 8px 0 14px !important;
+  border: 1.5px solid var(--line) !important;
+  border-radius: 12px !important;
+  background: var(--field) !important;
+  box-shadow: none !important;
+}
+
+#main-content .p-select:focus-within,
+.p-dialog .p-select:focus-within,
+#main-content .p-multiselect:focus-within {
+  border-color: var(--ac) !important;
+  background: #fff !important;
+}
+
+#main-content .p-select .p-select-label,
+.p-dialog .p-select .p-select-label,
+#main-content .p-multiselect .p-multiselect-label {
+  flex: 1 1 auto;
+  min-width: 0;
+  padding: 0 !important;
+  font-size: 14px !important;
+  line-height: 42px;
+}
+
+#main-content .p-select .p-select-dropdown,
+.p-dialog .p-select .p-select-dropdown,
+#main-content .p-multiselect .p-multiselect-dropdown {
+  flex: 0 0 28px;
+  width: 28px !important;
+  height: 100% !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  border: 0 !important;
+  background: transparent !important;
+  color: var(--txt-4) !important;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+#main-content .p-select .p-select-dropdown svg,
+.p-dialog .p-select .p-select-dropdown svg {
+  width: 14px;
+  height: 14px;
+}
+
+/* el selector de página de la tabla mantiene su tamaño propio */
+app-table-dynamic>.p-1 .p-select {
+  width: 84px !important;
+  min-width: 84px !important;
+  height: 44px;
+}
+
+/* ==========================================================================
+   38. FECHAS — el icono del calendario va DENTRO del campo
+   --------------------------------------------------------------------------
+   Mismo criterio que la sección 37: el botón salía suelto, separado del campo.
+   Ahora es una sola pieza de 44px con el borde compartido.
+   ========================================================================== */
+
+#main-content .p-datepicker,
+.p-dialog .p-datepicker,
+body>div.fixed.inset-0.z-50 .p-datepicker {
+  display: flex !important;
+  align-items: stretch;
+  width: 100%;
+  height: auto;
+  border: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  border-radius: 12px !important;
+}
+
+#main-content .p-datepicker .p-datepicker-input,
+#main-content .p-datepicker input.p-inputtext,
+.p-dialog .p-datepicker .p-datepicker-input,
+.p-dialog .p-datepicker input.p-inputtext,
+body>div.fixed.inset-0.z-50 .p-datepicker input.p-inputtext {
+  flex: 1 1 auto;
+  min-width: 0;
+  width: auto !important;
+  height: 44px !important;
+  min-height: 44px !important;
+  padding: 0 14px !important;
+  border: 1.5px solid var(--line) !important;
+  border-right: 0 !important;
+  border-radius: 12px 0 0 12px !important;
+  background: var(--field) !important;
+  box-shadow: none !important;
+  outline: 0 !important;
+  cursor: pointer;
+}
+
+#main-content .p-datepicker .p-datepicker-dropdown,
+.p-dialog .p-datepicker .p-datepicker-dropdown,
+body>div.fixed.inset-0.z-50 .p-datepicker .p-datepicker-dropdown {
+  flex: 0 0 44px;
+  width: 44px !important;
+  height: 44px !important;
+  min-height: 44px !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  border: 1.5px solid var(--line) !important;
+  border-radius: 0 12px 12px 0 !important;
+  background: var(--field) !important;
+  color: var(--txt-4) !important;
+  box-shadow: none !important;
+  outline: 0 !important;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+#main-content .p-datepicker .p-datepicker-dropdown:hover,
+.p-dialog .p-datepicker .p-datepicker-dropdown:hover {
+  background: var(--ac-s) !important;
+  color: var(--ac) !important;
+}
+
+#main-content .p-datepicker .p-datepicker-dropdown .pi,
+.p-dialog .p-datepicker .p-datepicker-dropdown .pi,
+#main-content .p-datepicker .p-datepicker-dropdown svg,
+.p-dialog .p-datepicker .p-datepicker-dropdown svg {
+  font-size: 15px !important;
+  width: 15px;
+  height: 15px;
+}
+
+#main-content .p-datepicker:focus-within .p-datepicker-input,
+#main-content .p-datepicker:focus-within .p-datepicker-dropdown,
+.p-dialog .p-datepicker:focus-within .p-datepicker-input,
+.p-dialog .p-datepicker:focus-within .p-datepicker-dropdown {
+  border-color: var(--ac) !important;
+  background: #fff !important;
+}
+
+/* el envoltorio ocupa toda la columna */
+p-datepicker,
+.p-datepicker-fluid {
+  width: 100%;
+  display: block;
+}
