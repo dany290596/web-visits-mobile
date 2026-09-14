@@ -367,7 +367,13 @@ export class PlantillaCredencial implements OnInit {
 
   showLimpiar(): void {
     this.buscarFG.reset();
-    this.buscar(true);
+
+    this.tablaResultados!.registros = [];
+    this.totalRegistros = 0;
+    this.totalPaginas = 0;
+    this.paginaActual = 1;
+    this.mostrarTabla = false;
+    this.sinDatos = false;
   }
 
   showAgregar(): void {

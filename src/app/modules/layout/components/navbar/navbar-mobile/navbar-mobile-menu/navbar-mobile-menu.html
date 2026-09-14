@@ -24,7 +24,7 @@
                 <ng-template #parentMenu let-item="item">
                     <div routerLink="{{ item.route }}"
                         class="text-muted-foreground hover:text-primary flex h-[36px] cursor-pointer items-center justify-start rounded-sm">
-                        <a routerLinkActive="text-primary"
+                        <a routerLinkActive="text-primary" [routerLinkActiveOptions]="{ exact: true }"
                             class="truncate text-xs font-semibold tracking-wide focus:outline-hidden">
                             {{ item.label }}
                         </a>
@@ -52,7 +52,9 @@
                 }
             </div>
             <!-- Submenu items -->
+            @if (item.children?.length) {
             <app-navbar-mobile-submenu [submenu]="item"></app-navbar-mobile-submenu>
+            }
         </li>
         }
     </ul>

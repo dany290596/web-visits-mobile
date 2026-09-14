@@ -1940,8 +1940,11 @@ app-sidebar>nav[class*='w-[70px]'] small {
   display: none !important;
 }
 
+/* El último módulo ("Mi cuenta") quedaba oculto tras el pie del sidebar: el
+   nav no reservaba espacio al final de su scroll. */
 .wv-nav {
-  padding-bottom: 16px !important;
+  padding-bottom: 28px !important;
+  scroll-padding-bottom: 28px;
 }
 
 @media (max-width: 1023px) {
@@ -4351,4 +4354,393 @@ app-table-dynamic .text-900.text-base.font-semibold {
   app-table-dynamic>.p-1>.grid.grid-cols-12>div:last-child {
     justify-content: flex-start;
   }
+}
+
+/* ==========================================================================
+   32. MENÚ LATERAL: MISMA FUENTE EN TODOS LOS MÓDULOS
+   --------------------------------------------------------------------------
+   "Inicio" y "Mi cuenta" son los únicos módulos sin submenú: sidebar-menu.html
+   los pinta con la plantilla #parentMenu, donde la etiqueta es un <a> con
+   routerLink real. Los demás usan #childMenu, con un <a> sin enlace. Mis
+   reglas de enlaces (color y tamaño de <a>) alcanzaban solo a los primeros, y
+   por eso se veían más grandes y en azul.
+
+   Aquí se igualan las dos plantillas.
+   ========================================================================== */
+
+app-sidebar-menu ul>li a,
+app-sidebar-menu ul>li a:link,
+app-sidebar-menu ul>li a:visited,
+app-sidebar-menu ul>li>div a,
+app-sidebar-menu ul>li div[routerlink] a,
+app-navbar-mobile-menu ul>li a {
+  font-family: var(--wv-sans) !important;
+  font-size: 13.5px !important;
+  font-weight: 500 !important;
+  line-height: 1.2 !important;
+  letter-spacing: 0 !important;
+  text-transform: none !important;
+  text-decoration: none !important;
+  color: var(--txt-3) !important;
+}
+
+/* el módulo activo, igual para ambas plantillas */
+app-sidebar-menu ul>li a.text-primary,
+app-sidebar-menu ul>li div[routerlink] a.text-primary,
+app-navbar-mobile-menu ul>li a.text-primary {
+  color: var(--ac) !important;
+  font-weight: 600 !important;
+}
+
+app-sidebar-menu ul>li a:hover {
+  color: var(--ac) !important;
+}
+
+/* la caja del enlace no cambia de alto según la plantilla */
+app-sidebar-menu ul>li div[routerlink],
+app-sidebar-menu ul>li>div>div.flex.h-9 {
+  height: 36px !important;
+}
+
+/* los rótulos de grupo, en el mismo tamaño en todos los bloques */
+app-sidebar-menu small,
+app-navbar-mobile-menu small {
+  font-family: var(--wv-sans) !important;
+  font-size: 12.5px !important;
+  font-weight: 500 !important;
+  letter-spacing: 0 !important;
+  text-transform: none !important;
+}
+
+/* ==========================================================================
+   33. MENÚ LATERAL — mismo aspecto que el diseño aprobado
+   --------------------------------------------------------------------------
+   El menú real (sidebar-menu.html) no usa las clases .wv-mod / .wv-tile del
+   diseño, sino la estructura de Tailwind del proyecto. Por eso los iconos
+   salían sueltos, sin su recuadro, y las filas sin caja.
+   ========================================================================== */
+
+/* --- 33.1 rótulos de grupo --------------------------------------------- */
+
+app-sidebar-menu small,
+app-navbar-mobile-menu small {
+  color: var(--txt-4) !important;
+  padding-left: 4px;
+}
+
+app-sidebar-menu .mx-1.flex.items-center.justify-between {
+  padding: 14px 0 6px !important;
+}
+
+/* --- 33.2 fila del módulo ---------------------------------------------- */
+
+app-sidebar-menu ul>li>div.group {
+  min-height: 46px;
+  padding: 0 10px !important;
+  margin-bottom: 4px;
+  border-radius: 12px !important;
+  gap: 12px !important;
+  transition: background .16s;
+}
+
+app-sidebar-menu ul>li>div.group:hover {
+  background: color-mix(in srgb, var(--ac) 6%, transparent);
+}
+
+app-sidebar-menu ul>li>div.group.menu-active-bg {
+  background: color-mix(in srgb, var(--ac) 10%, transparent) !important;
+}
+
+/* --- 33.3 el icono, dentro de su recuadro ------------------------------ */
+
+app-sidebar-menu ul>li>div.group>div:first-child {
+  width: 34px;
+  height: 34px;
+  flex: 0 0 34px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 11px;
+  background: color-mix(in srgb, var(--ac) 9%, #fff);
+  color: var(--ac) !important;
+  transition: background .16s, color .16s;
+}
+
+app-sidebar-menu ul>li>div.group>div:first-child svg {
+  width: 17px !important;
+  height: 17px !important;
+}
+
+app-sidebar-menu ul>li>div.group.menu-active-bg>div:first-child {
+  background: var(--ac);
+  color: #fff !important;
+}
+
+/* --- 33.4 etiqueta del módulo ------------------------------------------ */
+
+app-sidebar-menu ul>li>div.group a {
+  font-size: 14px !important;
+}
+
+app-sidebar-menu ul>li>div.group.menu-active-bg a {
+  color: var(--ink) !important;
+  font-weight: 600 !important;
+}
+
+/* --- 33.5 botón +/− ----------------------------------------------------- */
+
+app-sidebar-menu ul>li>div.group>button {
+  margin-left: auto;
+  width: 26px;
+  height: 26px;
+  flex: 0 0 26px;
+  border-radius: 8px;
+  color: var(--txt-4) !important;
+}
+
+app-sidebar-menu ul>li>div.group>button svg {
+  width: 13px !important;
+  height: 13px !important;
+}
+
+/* --- 33.6 bloque de secciones ------------------------------------------ */
+
+app-sidebar-submenu>div {
+  padding-left: 0 !important;
+}
+
+app-sidebar-submenu ul {
+  border: 0 !important;
+  margin: 0 0 8px 0 !important;
+  padding: 6px !important;
+  background: #fff;
+  border-radius: 12px;
+}
+
+app-sidebar-submenu a {
+  padding: 9px 12px !important;
+  border-radius: 9px !important;
+  font-size: 13.5px !important;
+  font-weight: 500 !important;
+}
+
+app-sidebar-submenu a:hover {
+  background: color-mix(in srgb, var(--ac) 7%, transparent) !important;
+}
+
+app-sidebar-submenu a.submenu-active-bg,
+app-sidebar-submenu a.text-primary {
+  background: color-mix(in srgb, var(--ac) 10%, transparent) !important;
+  color: var(--ac) !important;
+  font-weight: 600 !important;
+}
+
+/* el punto que marca la sección activa sobra con el fondo */
+app-sidebar-submenu .size-1\.5.bg-primary {
+  display: none !important;
+}
+
+/* ==========================================================================
+   34. MENÚ LATERAL — ajuste al ejemplo de referencia
+   --------------------------------------------------------------------------
+   En la referencia no hay grises: rótulos de grupo y etiquetas de módulo van
+   en el mismo tinte oscuro y a 15px. El azul del icono es más vivo y la fila
+   activa lleva un azul muy claro.
+   ========================================================================== */
+
+/* --- 34.1 rótulos de grupo: mismo tono y tamaño que los módulos -------- */
+
+app-sidebar-menu small,
+app-navbar-mobile-menu small {
+  font-size: 15px !important;
+  font-weight: 400 !important;
+  color: var(--ink) !important;
+  opacity: 1 !important;
+}
+
+app-sidebar-menu .mx-1.flex.items-center.justify-between {
+  padding: 18px 0 8px !important;
+}
+
+/* --- 34.2 etiquetas de módulo ------------------------------------------ */
+
+app-sidebar-menu ul>li>div.group a,
+app-navbar-mobile-menu ul>li a {
+  font-size: 15px !important;
+  font-weight: 500 !important;
+  color: var(--ink) !important;
+}
+
+app-sidebar-menu ul>li>div.group.menu-active-bg a {
+  font-weight: 600 !important;
+}
+
+/* --- 34.3 fila e icono -------------------------------------------------- */
+
+app-sidebar-menu ul>li>div.group {
+  min-height: 50px;
+  margin-bottom: 6px;
+}
+
+app-sidebar-menu ul>li>div.group>div:first-child {
+  width: 36px;
+  height: 36px;
+  flex: 0 0 36px;
+  border-radius: 12px;
+  background: color-mix(in srgb, var(--ac) 12%, #fff);
+}
+
+app-sidebar-menu ul>li>div.group>div:first-child svg {
+  width: 18px !important;
+  height: 18px !important;
+}
+
+app-sidebar-menu ul>li>div.group.menu-active-bg {
+  background: color-mix(in srgb, var(--ac) 9%, #fff) !important;
+}
+
+/* --- 34.4 secciones ----------------------------------------------------- */
+
+app-sidebar-submenu a {
+  font-size: 15px !important;
+  font-weight: 400 !important;
+  color: var(--ink) !important;
+  padding: 11px 14px !important;
+}
+
+app-sidebar-submenu a.submenu-active-bg,
+app-sidebar-submenu a.text-primary {
+  color: var(--ac) !important;
+  font-weight: 600 !important;
+}
+
+/* --- 34.5 pie ----------------------------------------------------------- */
+
+.wv-sidebar-foot,
+.wv-foot-text {
+  font-size: 15px !important;
+  color: var(--ink) !important;
+}
+
+/* ==========================================================================
+   35. MENÚ LATERAL — un solo tamaño y un solo grosor
+   --------------------------------------------------------------------------
+   La referencia usa 14px / peso 400 como base de interfaz. Aquí había 15px y
+   pesos mezclados (600 en las etiquetas de módulo por 'font-semibold' de la
+   plantilla, 500 en otras), y por eso unas se veían más gruesas que otras.
+   ========================================================================== */
+
+app-sidebar-menu small,
+app-navbar-mobile-menu small,
+app-sidebar-menu ul>li>div.group a,
+app-sidebar-menu ul>li a,
+app-navbar-mobile-menu ul>li a,
+app-sidebar-submenu a,
+app-navbar-mobile-submenu a,
+.wv-sidebar-foot,
+.wv-foot-text {
+  font-size: 14px !important;
+  font-weight: 400 !important;
+  letter-spacing: 0 !important;
+  color: var(--ink) !important;
+}
+
+/* el módulo y la sección activos: solo un punto más de peso y el color */
+app-sidebar-menu ul>li>div.group.menu-active-bg a,
+app-sidebar-submenu a.submenu-active-bg,
+app-sidebar-submenu a.text-primary,
+app-navbar-mobile-menu ul>li a.text-primary {
+  font-weight: 500 !important;
+}
+
+app-sidebar-submenu a.submenu-active-bg,
+app-sidebar-submenu a.text-primary {
+  color: var(--ac) !important;
+}
+
+/* la versión del pie conserva el azul */
+.wv-version {
+  font-size: 14px !important;
+  font-weight: 500 !important;
+  color: var(--ac) !important;
+}
+
+/* ==========================================================================
+   36. MENÚ LATERAL — espaciado como el ejemplo
+   --------------------------------------------------------------------------
+   Sobraba aire: filas de 50px con 6px de separación y rótulos con 18px arriba
+   dejaban huecos grandes entre módulo y módulo. En la referencia las filas van
+   pegadas dentro del grupo y el aire está solo entre grupos.
+   ========================================================================== */
+
+app-sidebar-menu .mx-1.flex.items-center.justify-between {
+  padding: 10px 0 2px !important;
+}
+
+app-sidebar-menu>div:first-child .mx-1.flex.items-center.justify-between {
+  padding-top: 4px !important;
+}
+
+app-sidebar-menu ul>li>div.group {
+  min-height: 42px;
+  margin-bottom: 1px;
+}
+
+app-sidebar-menu ul>li>div.group>div:first-child {
+  width: 34px;
+  height: 34px;
+  flex: 0 0 34px;
+  border-radius: 11px;
+}
+
+app-sidebar-menu ul>li>div.group>div:first-child svg {
+  width: 17px !important;
+  height: 17px !important;
+}
+
+app-sidebar-submenu>div {
+  padding-top: 0 !important;
+}
+
+app-sidebar-submenu ul {
+  margin: 0 0 6px 0 !important;
+  padding: 4px !important;
+}
+
+app-sidebar-submenu a {
+  padding: 9px 12px !important;
+}
+
+.wv-nav {
+  padding: 0 12px 24px !important;
+}
+
+/* la tarjeta de secciones dejaba un hueco blanco bajo el último enlace:
+   venía del padding-bottom del contenedor con la transición de altura */
+app-sidebar-submenu>div {
+  padding-bottom: 0 !important;
+}
+
+app-sidebar-submenu ul {
+  padding: 4px !important;
+  margin-bottom: 4px !important;
+}
+
+app-sidebar-submenu ul>li:last-child {
+  margin-bottom: 0 !important;
+}
+
+/* el resaltado de la sección activa no llegaba al borde derecho de la tarjeta:
+   el enlace no ocupaba todo el ancho disponible */
+app-sidebar-submenu ul>li {
+  width: 100%;
+}
+
+app-sidebar-submenu ul>li>div {
+  width: 100%;
+}
+
+app-sidebar-submenu a {
+  width: 100% !important;
+  box-sizing: border-box;
 }
