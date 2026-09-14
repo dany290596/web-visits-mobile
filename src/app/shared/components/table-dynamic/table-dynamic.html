@@ -39,7 +39,7 @@
 <p-table [value]="registros" stripedRows [scrollable]="true" selectionMode="single" [rowHover]="true"
     [showCurrentPageReport]="true" dataKey="registroId" [paginator]="false" [rows]="maxFilasPagina"
     [totalRecords]="totalRegistros" [first]="minimo" (onPage)="onPageChange($event)"
-    [tableStyle]="{ 'min-width': '100%' }" styleClass="p-datatable-sm p-datatable-striped"
+    [tableStyle]="{ 'min-width': '100%' }" styleClass="p-datatable-sm p-datatable-striped px-4"
     currentPageReportTemplate="Mostrando {first} a {last} de {totalRecords} registros"
     *ngIf="!cargando && tabla != null && registros != null && registros.length > 0">
 

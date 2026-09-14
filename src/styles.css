@@ -2630,7 +2630,8 @@ app-profile-menu .grid.grid-cols-2>div.bg-card {
 
 app-table-dynamic>.p-1 {
   border-bottom: none !important;
-  padding: 4px 0 18px !important;
+  /* 34px = los mismos que el texto de la tabla (16 del contenedor + 18 de celda) */
+  padding: 4px 30px 18px !important;
 }
 
 app-table-dynamic>.p-1>.grid.grid-cols-12 {
@@ -2989,7 +2990,7 @@ html.dark app-table-dynamic .p-select {
 
 @media (max-width: 900px) {
   app-table-dynamic>.p-1 {
-    padding: 4px 0 14px !important;
+    padding: 4px 30px 14px !important;
   }
 
   app-table-dynamic>.p-1 .flex.justify-end {
