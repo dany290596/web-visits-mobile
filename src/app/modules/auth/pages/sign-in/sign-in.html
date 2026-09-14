@@ -19,9 +19,11 @@
             <div class="form-container">
                 <!-- Login Form -->
                 <div *ngIf="licencia" class="form-wrapper animate__animated animate__fadeIn">
-                    <div class="form-header">
+                    <div class="form-header" style="text-align:left">
+                        <img src="menu_wv.png" alt="WebVisitsMobile Logo"
+                            style="height:42px;width:auto;display:block;padding:0;align-self:flex-start;margin:0 auto 18px -50px">
                         <h1>Iniciar sesión</h1>
-                        <p>Ingrese su credencial para acceder al sistema</p>
+                        <p>Ingrese sus credenciales para acceder al sistema</p>
                     </div>
 
                     <form autocomplete="off" [formGroup]="miFormulario" (ngSubmit)="login()">

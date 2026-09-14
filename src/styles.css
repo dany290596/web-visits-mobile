@@ -5119,3 +5119,758 @@ body .p-menu .p-menuitem-icon {
   font-weight: 400 !important;
   color: var(--txt-4) !important;
 }
+
+/* ==========================================================================
+   40. MODO OSCURO — corrección
+   --------------------------------------------------------------------------
+   Varias reglas anteriores fijaban "background: #fff !important" en filas de
+   tabla, tarjeta de secciones del menú y campos. En oscuro eso dejaba bloques
+   blancos con el texto ilegible. Esta sección va al final y los reemplaza.
+   ========================================================================== */
+
+html.dark {
+  --canvas: #0B0F1A;
+  --panel: #121826;
+  --sb: #0F1522;
+  --line: #232B3D;
+  --field: #161E2E;
+  --muted: #1A2130;
+  --ink: #E7ECF3;
+  --txt-2: #C3CBDA;
+  --txt-3: #9AA6BC;
+  --txt-4: #7C8AA0;
+  --ac-s: #17233A;
+}
+
+html.dark body {
+  background: var(--canvas);
+  color: var(--ink);
+}
+
+/* --- 40.1 tarjetas y paneles ------------------------------------------- */
+
+html.dark .wv-panel,
+html.dark .wv-topbar,
+html.dark .wv-footer,
+html.dark .bg-background,
+html.dark .rounded-lg.bg-background,
+html.dark .col-span-12.bg-background {
+  background: var(--panel) !important;
+  border-color: var(--line) !important;
+  color: var(--ink);
+}
+
+html.dark .wv-sidebar {
+  background: var(--sb) !important;
+}
+
+/* --- 40.2 tablas -------------------------------------------------------- */
+
+html.dark app-table-dynamic .p-datatable,
+html.dark app-table-dynamic .p-datatable-table {
+  background: var(--panel) !important;
+  border-color: var(--line) !important;
+}
+
+html.dark app-table-dynamic .p-datatable-thead>tr>th {
+  background: #0F1522 !important;
+  border-color: var(--line) !important;
+  color: var(--txt-4) !important;
+}
+
+html.dark app-table-dynamic .p-datatable-tbody>tr,
+html.dark app-table-dynamic .p-datatable-tbody>tr.bg-surface-50,
+html.dark app-table-dynamic .p-datatable-tbody>tr>td,
+html.dark app-table-dynamic .col-acciones-fija,
+html.dark .p-datatable .p-datatable-tbody>tr,
+html.dark .p-datatable .p-datatable-tbody>tr.bg-surface-50 {
+  background: var(--panel) !important;
+  border-color: var(--line) !important;
+  color: var(--ink) !important;
+}
+
+html.dark app-table-dynamic .p-datatable-tbody>tr:hover,
+html.dark app-table-dynamic .p-datatable-tbody>tr:hover .col-acciones-fija,
+html.dark .p-datatable .p-datatable-tbody>tr:hover {
+  background: #182135 !important;
+}
+
+html.dark app-table-dynamic .p-datatable-tbody>tr.bg-gray-50 {
+  background: #0F1522 !important;
+}
+
+html.dark app-table-dynamic .p-datatable-tbody .border.border-primary {
+  background: var(--panel) !important;
+  border-color: var(--line) !important;
+}
+
+html.dark app-table-dynamic .p-datatable-tbody .p-button.p-button-rounded {
+  background: var(--muted) !important;
+  border-color: transparent !important;
+  color: var(--txt-3) !important;
+}
+
+/* --- 40.3 campos, combos, fechas --------------------------------------- */
+
+html.dark #main-content input:not([type='checkbox']):not([type='radio']),
+html.dark #main-content textarea,
+html.dark #main-content select,
+html.dark .p-dialog input,
+html.dark .p-dialog textarea,
+html.dark #main-content .p-inputtext,
+html.dark #main-content .p-select,
+html.dark #main-content .p-multiselect,
+html.dark #main-content .p-autocomplete .p-autocomplete-input,
+html.dark #main-content .p-autocomplete .p-autocomplete-dropdown,
+html.dark #main-content .p-datepicker .p-datepicker-input,
+html.dark #main-content .p-datepicker .p-datepicker-dropdown {
+  background: var(--field) !important;
+  border-color: var(--line) !important;
+  color: var(--ink) !important;
+}
+
+html.dark #main-content input::placeholder,
+html.dark #main-content textarea::placeholder,
+html.dark #main-content .p-select .p-select-label.p-placeholder {
+  color: var(--txt-4) !important;
+}
+
+html.dark #main-content .p-autocomplete:focus-within .p-autocomplete-input,
+html.dark #main-content .p-autocomplete:focus-within .p-autocomplete-dropdown,
+html.dark #main-content .p-datepicker:focus-within .p-datepicker-input,
+html.dark #main-content .p-datepicker:focus-within .p-datepicker-dropdown,
+html.dark #main-content input:focus,
+html.dark #main-content .p-select:focus-within {
+  background: #1B2436 !important;
+  border-color: var(--ac) !important;
+}
+
+/* --- 40.4 menú lateral y sus secciones --------------------------------- */
+
+html.dark app-sidebar-submenu ul {
+  background: rgba(255, 255, 255, .04) !important;
+}
+
+html.dark app-sidebar-menu ul>li>div.group>div:first-child {
+  background: rgba(255, 255, 255, .06) !important;
+}
+
+html.dark app-sidebar-menu ul>li>div.group.menu-active-bg>div:first-child {
+  background: var(--ac) !important;
+}
+
+/* --- 40.5 desplegables, menús y modales -------------------------------- */
+
+html.dark .p-menu,
+html.dark .p-select-overlay,
+html.dark .p-autocomplete-overlay,
+html.dark .p-multiselect-overlay,
+html.dark .p-datepicker-panel,
+html.dark app-profile-menu>.relative>div,
+html.dark body>div.fixed.inset-0.z-50>.bg-background,
+html.dark .swal2-popup {
+  background: var(--panel) !important;
+  border-color: var(--line) !important;
+  color: var(--ink) !important;
+}
+
+html.dark .p-menu .p-menu-item-label,
+html.dark .p-menu .p-menuitem-label,
+html.dark .swal2-title {
+  color: var(--ink) !important;
+}
+
+html.dark .p-select-option,
+html.dark .p-autocomplete-option {
+  color: var(--ink) !important;
+}
+
+html.dark .p-select-option:hover,
+html.dark .p-autocomplete-option:hover {
+  background: #1B2436 !important;
+}
+
+/* --- 40.6 estado vacío -------------------------------------------------- */
+
+html.dark .tabla-vacia__icono {
+  background: rgba(255, 255, 255, .06) !important;
+}
+
+html.dark .tabla-vacia__titulo {
+  color: var(--ink) !important;
+}
+
+html.dark .tabla-vacia__texto {
+  color: var(--txt-3) !important;
+}
+
+/* --- 40.7 botones secundarios ------------------------------------------ */
+
+html.dark button.rounded-md.bg-muted,
+html.dark .wv-btn--ghost {
+  background: var(--muted) !important;
+  color: var(--txt-2) !important;
+}
+
+html.dark button.rounded-md.bg-muted:hover {
+  background: #222C40 !important;
+  color: var(--ink) !important;
+}
+
+/* --- 40.8 menú lateral en oscuro: módulo y sección activos ------------- */
+
+html.dark app-sidebar-menu ul>li>div.group.menu-active-bg {
+  background: rgba(255, 255, 255, .07) !important;
+}
+
+html.dark app-sidebar-menu ul>li>div.group.menu-active-bg a,
+html.dark app-sidebar-menu ul>li>div.group a,
+html.dark app-sidebar-menu small,
+html.dark app-navbar-mobile-menu small {
+  color: var(--ink) !important;
+}
+
+html.dark app-sidebar-menu ul>li>div.group:hover {
+  background: rgba(255, 255, 255, .05) !important;
+}
+
+/* tarjeta de secciones */
+html.dark app-sidebar-submenu>div,
+html.dark app-sidebar-submenu ul,
+html.dark app-navbar-mobile-submenu ul {
+  background: rgba(255, 255, 255, .05) !important;
+  border-color: var(--line) !important;
+}
+
+html.dark app-sidebar-submenu a,
+html.dark app-navbar-mobile-submenu a {
+  color: var(--txt-2) !important;
+}
+
+html.dark app-sidebar-submenu a:hover {
+  background: rgba(255, 255, 255, .06) !important;
+  color: var(--ink) !important;
+}
+
+html.dark app-sidebar-submenu a.submenu-active-bg,
+html.dark app-sidebar-submenu a.text-primary {
+  background: rgba(56, 132, 255, .18) !important;
+  color: #7FB2FF !important;
+}
+
+/* pie del menú */
+html.dark .wv-sidebar-foot {
+  background: rgba(255, 255, 255, .05) !important;
+}
+
+html.dark .wv-sidebar-foot,
+html.dark .wv-foot-text {
+  color: var(--txt-2) !important;
+}
+
+/* --- 40.9 barras de desplazamiento -------------------------------------- */
+
+html.dark ::-webkit-scrollbar-thumb {
+  background: #2A3548 !important;
+}
+
+html.dark ::-webkit-scrollbar-track {
+  background: transparent !important;
+}
+
+html.dark * {
+  scrollbar-color: #2A3548 transparent;
+}
+
+/* --- 40.10 cabecera de página y migas ---------------------------------- */
+
+html.dark .wv-title,
+html.dark #main-content h3 {
+  color: var(--ink) !important;
+}
+
+html.dark .wv-crumb,
+html.dark .wv-crumb a {
+  color: var(--txt-3) !important;
+}
+
+/* --- 40.11 panel de perfil en oscuro: chips de tema -------------------- */
+
+html.dark app-profile-menu .grid.grid-cols-2>div {
+  background: var(--field) !important;
+  border-color: var(--line) !important;
+  color: var(--txt-2) !important;
+}
+
+html.dark app-profile-menu .grid.grid-cols-2>div:hover {
+  background: #1B2436 !important;
+  color: var(--ink) !important;
+}
+
+html.dark app-profile-menu .grid.grid-cols-2>div.bg-card {
+  background: rgba(56, 132, 255, .18) !important;
+  border-color: var(--ac) !important;
+  color: #7FB2FF !important;
+}
+
+html.dark app-profile-menu .grid.grid-cols-2 p,
+html.dark app-profile-menu>.relative>div>.mx-4>span {
+  color: inherit !important;
+}
+
+html.dark app-profile-menu>.relative>div>.mx-4>span {
+  color: var(--txt-4) !important;
+}
+
+/* ficha y opciones del panel */
+html.dark app-profile-menu p,
+html.dark app-profile-menu ul li {
+  color: var(--txt-2) !important;
+}
+
+html.dark app-profile-menu ul li:hover {
+  background: rgba(255, 255, 255, .06) !important;
+  color: var(--ink) !important;
+}
+
+html.dark app-profile-menu .border-b,
+html.dark app-profile-menu hr {
+  border-color: var(--line) !important;
+}
+
+html.dark app-profile-menu .p-chip {
+  background: rgba(56, 132, 255, .18) !important;
+  color: #7FB2FF !important;
+}
+
+html.dark app-profile-menu svg {
+  color: var(--txt-3);
+}
+
+/* --- 40.12 drawer móvil en oscuro -------------------------------------- */
+/* Las etiquetas heredaban el gris del tema claro y quedaban ilegibles. */
+
+html.dark app-navbar-mobile,
+html.dark app-navbar-mobile .bg-card,
+html.dark app-navbar-mobile>div>div {
+  background: var(--sb) !important;
+  border-color: var(--line) !important;
+}
+
+html.dark app-navbar-mobile b,
+html.dark app-navbar-mobile-menu small,
+html.dark app-navbar-mobile-menu ul>li a,
+html.dark app-navbar-mobile-submenu a,
+html.dark app-navbar-mobile .text-muted-foreground {
+  color: var(--ink) !important;
+}
+
+html.dark app-navbar-mobile-submenu a {
+  color: var(--txt-2) !important;
+}
+
+html.dark app-navbar-mobile-submenu a.text-primary,
+html.dark app-navbar-mobile-menu ul>li a.text-primary {
+  color: #7FB2FF !important;
+}
+
+/* botón +/− y cerrar: fondo oscuro, no blanco */
+html.dark app-navbar-mobile button,
+html.dark app-navbar-mobile-menu ul>li>div>button {
+  background: var(--field) !important;
+  border-color: var(--line) !important;
+  color: var(--txt-3) !important;
+}
+
+html.dark app-navbar-mobile button svg,
+html.dark app-navbar-mobile-menu ul>li>div>button svg {
+  color: var(--txt-3) !important;
+}
+
+/* tile del icono y fila activa */
+html.dark app-navbar-mobile-menu ul>li>div>div:first-child {
+  background: rgba(255, 255, 255, .06) !important;
+}
+
+html.dark app-navbar-mobile-menu ul>li>div:hover {
+  background: rgba(255, 255, 255, .05) !important;
+}
+
+html.dark app-navbar-mobile-submenu ul {
+  background: rgba(255, 255, 255, .05) !important;
+}
+
+html.dark app-navbar-mobile-submenu a.text-primary {
+  background: rgba(56, 132, 255, .18) !important;
+}
+
+/* --- 40.13 botón hamburguesa de la barra superior en oscuro ------------ */
+
+html.dark .wv-topbar button,
+html.dark .wv-icon-btn,
+html.dark .wv-hamburger,
+html.dark app-navbar>div button,
+html.dark .wv-topbar .bg-muted,
+html.dark .wv-topbar [class*='bg-card'] {
+  background: var(--field) !important;
+  border-color: var(--line) !important;
+  color: var(--txt-2) !important;
+}
+
+html.dark .wv-topbar button:hover,
+html.dark app-navbar>div button:hover {
+  background: #1B2436 !important;
+  color: var(--ink) !important;
+}
+
+html.dark .wv-topbar button svg,
+html.dark app-navbar>div button svg {
+  color: var(--txt-2) !important;
+}
+
+/* --- 40.14 login en oscuro --------------------------------------------- */
+
+html.dark .login-container,
+html.dark .login-card,
+html.dark .login-card .login-form,
+html.dark .login-right,
+html.dark app-sign-in .bg-white,
+html.dark app-sign-in>div {
+  background: var(--canvas) !important;
+}
+
+html.dark .login-card h1,
+html.dark .login-card h2,
+html.dark .login-card .login-title {
+  color: var(--ink) !important;
+}
+
+html.dark .login-card .login-subtitle,
+html.dark .login-card label,
+html.dark .login-card .form-label {
+  color: var(--txt-3) !important;
+}
+
+html.dark .login-card label,
+html.dark .login-card .form-label {
+  color: var(--ink) !important;
+}
+
+html.dark .login-card input.p-inputtext,
+html.dark .login-card .p-inputtext,
+html.dark .login-card .p-password-input,
+html.dark .login-card input[type='text'],
+html.dark .login-card input[type='email'],
+html.dark .login-card input[type='password'] {
+  background: transparent !important;
+  border-bottom-color: var(--line) !important;
+  color: var(--ink) !important;
+  -webkit-text-fill-color: var(--ink) !important;
+}
+
+html.dark .login-card input:-webkit-autofill,
+html.dark .login-card input:-webkit-autofill:hover,
+html.dark .login-card input:-webkit-autofill:focus {
+  -webkit-text-fill-color: var(--ink) !important;
+  -webkit-box-shadow: 0 0 0 1000px var(--canvas) inset !important;
+  caret-color: var(--ink);
+}
+
+html.dark .login-card input::placeholder {
+  color: var(--txt-4) !important;
+}
+
+html.dark .login-card .p-inputicon,
+html.dark .login-card .p-input-icon-left>i,
+html.dark .login-card .p-inputgroup-addon {
+  color: var(--txt-3) !important;
+}
+
+html.dark .login-card .p-checkbox .p-checkbox-box {
+  background: var(--field) !important;
+  border-color: var(--line) !important;
+}
+
+html.dark .login-card .p-checkbox .p-checkbox-box.p-highlight,
+html.dark .login-card .p-checkbox-checked .p-checkbox-box {
+  background: var(--ac) !important;
+  border-color: var(--ac) !important;
+}
+
+html.dark .login-card .remember-label,
+html.dark .login-card .p-checkbox+label {
+  color: var(--txt-2) !important;
+}
+
+html.dark .login-card .login-footer,
+html.dark .login-card .login-footer *,
+html.dark .login-card .version-text {
+  color: var(--txt-4) !important;
+}
+
+html.dark .login-card .login-footer {
+  border-top-color: var(--line) !important;
+}
+
+html.dark .login-card a {
+  color: #7FB2FF !important;
+}
+
+/* --- 40.15 login en oscuro (ámbito correcto: app-sign-in) -------------- */
+/* Las reglas de 40.14 usaban .login-card, que la plantilla no tiene. */
+
+html.dark app-sign-in,
+html.dark app-sign-in>div,
+html.dark app-sign-in .login-container,
+html.dark app-sign-in [class*='right'],
+html.dark app-sign-in .bg-white,
+html.dark app-sign-in form {
+  background-color: #121826 !important;
+}
+
+html.dark app-sign-in h1,
+html.dark app-sign-in h2,
+html.dark app-sign-in h3,
+html.dark app-sign-in label,
+html.dark app-sign-in .form-label,
+html.dark app-sign-in strong,
+html.dark app-sign-in b {
+  color: #E7ECF3 !important;
+}
+
+html.dark app-sign-in p,
+html.dark app-sign-in small,
+html.dark app-sign-in span:not(.p-checkbox-icon) {
+  color: #9AA6BC !important;
+}
+
+html.dark app-sign-in input,
+html.dark app-sign-in .p-inputtext,
+html.dark app-sign-in .p-password-input {
+  background: transparent !important;
+  background-color: transparent !important;
+  border: 0 !important;
+  border-bottom: 1.5px solid #2A3548 !important;
+  border-radius: 0 !important;
+  color: #E7ECF3 !important;
+  -webkit-text-fill-color: #E7ECF3 !important;
+  box-shadow: none !important;
+}
+
+html.dark app-sign-in input:focus,
+html.dark app-sign-in .p-inputtext:focus {
+  border-bottom-color: var(--ac) !important;
+}
+
+/* el relleno automático del navegador pintaba el campo de blanco */
+html.dark app-sign-in input:-webkit-autofill,
+html.dark app-sign-in input:-webkit-autofill:hover,
+html.dark app-sign-in input:-webkit-autofill:focus,
+html.dark app-sign-in input:-webkit-autofill:active {
+  -webkit-text-fill-color: #E7ECF3 !important;
+  -webkit-box-shadow: 0 0 0 1000px #121826 inset !important;
+  box-shadow: 0 0 0 1000px #121826 inset !important;
+  caret-color: #E7ECF3 !important;
+  transition: background-color 9999s ease-out 0s;
+}
+
+html.dark app-sign-in input::placeholder {
+  color: #7C8AA0 !important;
+}
+
+html.dark app-sign-in .p-inputicon,
+html.dark app-sign-in .p-input-icon-left>i,
+html.dark app-sign-in i {
+  color: #9AA6BC !important;
+}
+
+html.dark app-sign-in .p-checkbox .p-checkbox-box {
+  background: transparent !important;
+  border: 1.5px solid #2A3548 !important;
+}
+
+html.dark app-sign-in .p-checkbox-checked .p-checkbox-box,
+html.dark app-sign-in .p-checkbox .p-checkbox-box.p-highlight {
+  background: var(--ac) !important;
+  border-color: var(--ac) !important;
+}
+
+html.dark app-sign-in a {
+  color: #7FB2FF !important;
+}
+
+html.dark app-sign-in hr,
+html.dark app-sign-in .border-t {
+  border-color: #2A3548 !important;
+}
+
+/* --- 40.16 login oscuro: cubrir dónde se coloca la clase "dark" -------- */
+/* Las reglas anteriores usaban html.dark; si el selector de modo pone la
+   clase en <body> o en un contenedor, nunca aplicaban. */
+
+html.dark .login-card,
+body.dark .login-card,
+.dark .login-card,
+html.dark .login-form,
+body.dark .login-form,
+.dark .login-form {
+  background: #121826 !important;
+}
+
+html.dark .login-form h1,
+body.dark .login-form h1,
+.dark .login-form h1,
+html.dark .login-form h2,
+body.dark .login-form h2,
+.dark .login-form h2,
+html.dark .login-form h3,
+body.dark .login-form h3,
+.dark .login-form h3,
+html.dark .login-form label,
+body.dark .login-form label,
+.dark .login-form label,
+html.dark .login-form .form-label,
+body.dark .login-form .form-label,
+.dark .login-form .form-label {
+  color: #E7ECF3 !important;
+}
+
+html.dark .login-form p,
+body.dark .login-form p,
+.dark .login-form p,
+html.dark .login-footer,
+body.dark .login-footer,
+.dark .login-footer,
+html.dark .login-footer *,
+body.dark .login-footer *,
+.dark .login-footer * {
+  color: #9AA6BC !important;
+}
+
+html.dark .login-form input,
+body.dark .login-form input,
+.dark .login-form input,
+html.dark .login-form .p-inputtext,
+body.dark .login-form .p-inputtext,
+.dark .login-form .p-inputtext,
+html.dark .login-form .p-password-input,
+body.dark .login-form .p-password-input,
+.dark .login-form .p-password-input {
+  background: transparent !important;
+  background-color: transparent !important;
+  border: 0 !important;
+  border-bottom: 1.5px solid #2A3548 !important;
+  border-radius: 0 !important;
+  color: #E7ECF3 !important;
+  -webkit-text-fill-color: #E7ECF3 !important;
+  box-shadow: none !important;
+}
+
+html.dark .login-form input:-webkit-autofill,
+body.dark .login-form input:-webkit-autofill,
+.dark .login-form input:-webkit-autofill,
+html.dark .login-form input:-webkit-autofill:hover,
+body.dark .login-form input:-webkit-autofill:hover,
+.dark .login-form input:-webkit-autofill:hover,
+html.dark .login-form input:-webkit-autofill:focus,
+body.dark .login-form input:-webkit-autofill:focus,
+.dark .login-form input:-webkit-autofill:focus {
+  -webkit-text-fill-color: #E7ECF3 !important;
+  -webkit-box-shadow: 0 0 0 1000px #121826 inset !important;
+  box-shadow: 0 0 0 1000px #121826 inset !important;
+  caret-color: #E7ECF3 !important;
+}
+
+html.dark .login-form .input-group,
+body.dark .login-form .input-group,
+.dark .login-form .input-group {
+  background: transparent !important;
+  border-color: #2A3548 !important;
+}
+
+html.dark .login-form i,
+body.dark .login-form i,
+.dark .login-form i,
+html.dark .login-form .p-inputicon,
+body.dark .login-form .p-inputicon,
+.dark .login-form .p-inputicon {
+  color: #9AA6BC !important;
+}
+
+html.dark .login-form a,
+body.dark .login-form a,
+.dark .login-form a {
+  color: #7FB2FF !important;
+}
+
+html.dark .login-form hr,
+body.dark .login-form hr,
+.dark .login-form hr,
+html.dark .login-footer,
+body.dark .login-footer,
+.dark .login-footer {
+  border-color: #2A3548 !important;
+}
+
+html.dark .login-form .p-checkbox .p-checkbox-box,
+body.dark .login-form .p-checkbox .p-checkbox-box,
+.dark .login-form .p-checkbox .p-checkbox-box {
+  background: transparent !important;
+  border: 1.5px solid #2A3548 !important;
+}
+
+/* --- 40.17 panel azul del login: el texto siempre en blanco ----------- */
+/* En oscuro heredaba el tinte oscuro del tema y se perdía sobre el azul. */
+
+html.dark .login-illustration,
+body.dark .login-illustration,
+.dark .login-illustration,
+html.dark .login-illustration *,
+body.dark .login-illustration *,
+.dark .login-illustration * {
+  color: #FFFFFF !important;
+}
+
+html.dark .login-illustration h1,
+body.dark .login-illustration h1,
+.dark .login-illustration h1,
+html.dark .login-illustration h2,
+body.dark .login-illustration h2,
+.dark .login-illustration h2 {
+  color: #FFFFFF !important;
+}
+
+html.dark .login-illustration p,
+body.dark .login-illustration p,
+.dark .login-illustration p,
+html.dark .login-illustration small,
+body.dark .login-illustration small,
+.dark .login-illustration small {
+  color: rgba(255, 255, 255, .82) !important;
+}
+
+/* los campos no deben quedar como bloques blancos: solo línea inferior */
+html.dark .login-form .input-group,
+body.dark .login-form .input-group,
+.dark .login-form .input-group,
+html.dark .login-form .p-inputgroup,
+body.dark .login-form .p-inputgroup,
+.dark .login-form .p-inputgroup,
+html.dark .login-form .p-icon-field,
+body.dark .login-form .p-icon-field,
+.dark .login-form .p-icon-field,
+html.dark .login-form .p-password,
+body.dark .login-form .p-password,
+.dark .login-form .p-password {
+  background: transparent !important;
+  background-color: transparent !important;
+  border: 0 !important;
+  box-shadow: none !important;
+}
+
+html.dark .login-form input,
+body.dark .login-form input,
+.dark .login-form input {
+  background: transparent !important;
+  background-color: transparent !important;
+}
