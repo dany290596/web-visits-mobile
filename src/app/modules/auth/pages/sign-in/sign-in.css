@@ -1,236 +1,261 @@
-/* html,
-body {
-    height: 100%;
-    margin: 0;
-    font-family: 'Roboto', -apple-system, BlinkMacSystemFont, 'Segoe UI', Oxygen, Ubuntu, Cantarell, sans-serif;
-} */
+/* Login — estándar visual AccessWeb. Mismo HTML, solo estilos. */
 
-/* ===== Contenedor Principal ===== */
+@import url('https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@500;600&display=swap');
+
+:host {
+    --ac: #186DDE;
+    --ac-d: #1257B8;
+    --ink: #0E1420;
+    --txt-3: #6B7686;
+    --txt-4: #98A2B3;
+    --line: #E2E8F1;
+    --sans: 'Instrument Sans', system-ui, sans-serif;
+    --mono: 'JetBrains Mono', monospace;
+    display: block;
+}
+
 .login-container {
-    box-sizing: border-box;
+    min-height: 100vh;
     display: flex;
-    justify-content: center;
-    /* Centrado horizontal */
-    align-items: center;
-    /* Centrado vertical */
-    padding: 20px;
-    position: relative;
-    height: 100vh;
-    /* Asegura altura completa del viewport para centrar verticalmente */
+    font-family: var(--sans);
+    color: var(--ink);
+    background: #fff;
 }
 
-
-/* Fondo con efecto de partículas */
-.particles-background {
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    top: 0;
-    left: 0;
-    z-index: 0;
+.gradient-bg {
+    display: none;
 }
 
-/* Tarjeta de Login */
 .login-card {
-    width: 100%;
-    max-width: 1200px;
-    min-height: 600px;
-    /* Altura mínima, pero crece si el contenido lo necesita */
     display: flex;
-    background: var(--highlight-bg);
-    border-radius: 10px;
-    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
-    position: relative;
+    width: 100%;
+    min-height: 100vh;
+    border-radius: 0;
+    box-shadow: none;
     overflow: hidden;
 }
 
-/* Columna de Ilustración */
+/* ---------------------------------------------- Mitad izquierda (arte) */
+
 .login-illustration {
-    flex: 1;
-    color: white;
-    /* background-color: rgba(24, 109, 222, 1); */
-    background: linear-gradient(45deg, var(--secondary-color), #1a65eb);
+    flex: 1.15;
     position: relative;
+    overflow: hidden;
     display: flex;
     flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    padding: 40px;
+    justify-content: space-between;
+    padding: 56px 60px;
+    color: #fff;
+    background: linear-gradient(135deg, #0A2B5E 0%, #0F49A6 55%, #186DDE 100%);
+}
+
+.login-illustration::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    opacity: .2;
+    background-image: radial-gradient(#fff 1px, transparent 1px);
+    background-size: 22px 22px;
+}
+
+.login-illustration::after {
+    content: '';
+    position: absolute;
+    top: -120px;
+    right: -80px;
+    width: 520px;
+    height: 520px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(255, 196, 120, .35), transparent 68%);
 }
 
 .illustration-overlay {
     position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
+    bottom: -190px;
+    left: -140px;
+    width: 520px;
+    height: 520px;
+    border: 1px solid rgba(255, 255, 255, .18);
+    border-radius: 50%;
 }
 
-.logo {
-    width: 600px;
-    margin-bottom: 30px;
+.login-illustration .logo {
     position: relative;
     z-index: 1;
+    width: 52px;
+    height: 52px;
+    padding: 6px;
+    border-radius: 14px;
+    background: #fff;
+    object-fit: contain;
 }
 
 .illustration-text {
     position: relative;
     z-index: 1;
-    text-align: center;
+    max-width: 560px;
 }
 
 .illustration-text h2 {
-    font-size: 32px;
-    margin-bottom: 15px;
-    font-weight: 600;
+    margin: 0 0 18px;
+    font: 600 56px/1.02 var(--sans);
+    letter-spacing: -.045em;
 }
 
 .illustration-text p {
-    font-size: 16px;
-    opacity: 0.9;
+    margin: 0;
+    max-width: 460px;
+    font: 400 16px/1.5 var(--sans);
+    color: rgba(255, 255, 255, .78);
 }
 
-
-/* Columna de Formulario */
+/* ------------------------------------------- Mitad derecha (formulario) */
 
 .login-form {
     flex: 1;
-    padding: 50px;
     display: flex;
     flex-direction: column;
-    /* justify-content: center; */
-    box-sizing: border-box;
+    justify-content: space-between;
+    align-items: center;
+    padding: 56px 40px;
+    background: #fff;
+    overflow-y: auto;
 }
 
 .form-container {
-    max-width: 400px;
     width: 100%;
-    margin: 0 auto;
+    max-width: 420px;
+    margin: auto 0;
 }
 
 .form-header {
-    text-align: center;
-    margin-bottom: 30px;
+    margin-bottom: 40px;
 }
 
 .form-header h1 {
-    font-size: 28px;
-    margin-bottom: 10px;
-    font-weight: 600;
+    margin: 0 0 6px;
+    font: 600 30px var(--sans);
+    letter-spacing: -.03em;
+    color: var(--ink);
 }
 
 .form-header p {
-    font-size: 15px;
+    margin: 0;
+    font: 400 14px/1.4 var(--sans);
+    color: var(--txt-3);
 }
 
-/* Estilos de Formulario */
 .form-group {
-    margin-bottom: 25px;
+    margin-bottom: 28px;
 }
 
 .form-group label {
     display: block;
-    margin-bottom: 8px;
-    font-weight: 500;
-    font-size: 14px;
+    margin-bottom: 9px;
+    font: 600 9.5px var(--mono);
+    letter-spacing: .12em;
+    text-transform: uppercase;
+    color: var(--txt-4);
 }
 
+.error-wrapper {
+    position: relative;
+}
+
+/* input sin caja: solo línea inferior */
 .input-group {
     display: flex;
     align-items: center;
-    border: 1px solid #ddd;
-    overflow: hidden;
-    transition: all 0.3s ease;
-}
-
-.input-group:focus-within {
-    border-color: #5a67d8;
-    box-shadow: 0 0 0 3px rgba(90, 103, 216, 0.2);
+    gap: 10px;
 }
 
 .input-group-text {
-    padding: 12px 15px;
-    border: none;
+    color: var(--txt-4);
+    font-size: 14px;
+    padding-bottom: 10px;
 }
 
-.form-control {
+.input-group .form-control {
     flex: 1;
-    padding: 12px 15px;
+    width: 100%;
+    height: 44px;
+    padding: 0;
     border: none;
-    outline: none;
-    font-size: 15px;
-}
-
-.toggle-password {
-    cursor: pointer;
+    border-bottom: 2px solid var(--line);
+    border-radius: 0;
     background: transparent;
-    border: none;
-    padding: 12px 15px;
+    font: 400 15px var(--sans);
+    color: var(--ink);
+    outline: none;
+    transition: border-color .18s;
 }
 
-.error-message {
-    display: flex;
-    align-items: center;
-    color: #e74c3c;
-    font-size: 13px;
+.input-group .form-control:focus {
+    border-bottom-color: var(--ac);
+    box-shadow: none;
+}
+
+.input-group .form-control.input-error {
+    border-bottom-color: #EF5350;
+}
+
+.error-bubble {
     margin-top: 8px;
+    font: 500 12.5px var(--sans);
+    color: #D93A37;
 }
 
-.error-message i {
-    margin-right: 5px;
-}
-
-/* Opciones del Formulario */
 .form-options {
     display: flex;
-    justify-content: space-between;
     align-items: center;
-    margin: 25px 0;
+    justify-content: space-between;
+    margin-bottom: 34px;
 }
 
 .form-check {
     display: flex;
     align-items: center;
-    gap: 8px;
+    gap: 9px;
 }
 
-.form-check-input {
-    margin-right: 8px;
+.form-check-label {
+    font: 500 13.5px var(--sans);
+    color: #4A5568;
+    cursor: pointer;
 }
 
 .forgot-password {
+    font: 600 13.5px var(--sans);
+    color: var(--ac);
     text-decoration: none;
-    font-size: 14px;
-    transition: color 0.2s;
 }
 
 .forgot-password:hover {
-    text-decoration: underline;
+    color: var(--ac-d);
 }
 
-/* Botones */
-.btn-login {
+.btn-login,
+.btn-activate {
     width: 100%;
-    padding: 15px;
-    /* background: var(--p-blue-600); */
-    color: white;
+    height: 58px;
     border: none;
-    border-radius: 8px;
-    font-size: 16px;
-    font-weight: 500;
+    border-radius: 999px;
+    background: var(--ac) !important;
+    color: #fff;
+    font: 600 15px var(--sans);
     cursor: pointer;
-    transition: all 0.3s ease;
+    transition: background .16s;
 }
 
-.btn-login:hover {}
+.btn-login:hover:not(:disabled),
+.btn-activate:hover:not(:disabled) {
+    background: var(--ac-d) !important;
+}
 
-.btn-login:disabled {
+.btn-login:disabled,
+.btn-activate:disabled {
+    opacity: .55;
     cursor: not-allowed;
-}
-
-/* Formulario de Activación */
-.progress-container {
-    margin: 25px 0;
 }
 
 .button-group {
@@ -239,761 +264,193 @@ body {
     gap: 12px;
 }
 
-.btn-activate {
-    width: 100%;
-    padding: 15px;
-    border: none;
-    border-radius: 8px;
-    font-size: 16px;
-    font-weight: 500;
-    cursor: pointer;
-    transition: all 0.3s ease;
+.progress-container {
+    margin-bottom: 18px;
 }
 
-.btn-activate:hover {}
-
-.btn-activate:disabled {
-    cursor: not-allowed;
+.progress-container p {
+    font: 500 12.5px var(--sans);
+    color: var(--txt-3);
 }
 
-.btn-hardware {
-    width: 100%;
-    padding: 15px;
-    border: none;
-    border-radius: 8px;
-    font-size: 16px;
-    font-weight: 500;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
-}
-
-.btn-hardware:hover {}
-
-.btn-hardware:disabled {
-    opacity: 0.7;
-    cursor: not-allowed;
-}
-
-/* Footer */
 .login-footer {
-    margin-top: 30px;
     text-align: center;
-    font-size: 13px;
+    padding-top: 32px;
 }
 
-.version {
-    margin-top: 5px;
-    font-size: 12px;
-    opacity: 0.7;
-}
-
-/* Responsive */
-@media (max-width: 992px) {
-    .login-card {
-        flex-direction: column;
-    }
-
-    .login-illustration {
-        padding: 30px 20px;
-        min-height: 250px;
-    }
-
-    .login-form {
-        padding: 40px 30px;
-    }
-
-    .illustration-text h2 {
-        font-size: 26px;
-    }
-}
-
-@media (max-width: 576px) {
-    .login-container {
-        padding: 15px;
-    }
-
-    .login-card {
-        border-radius: 15px;
-    }
-
-    .login-form {
-        padding: 30px 20px;
-    }
-
-    .form-header h1 {
-        font-size: 24px;
-    }
-
-    .btn-login,
-    .btn-activate,
-    .btn-hardware {
-        padding: 12px;
-    }
-}
-
-.custom-span {
-    cursor: pointer;
-    /* Cambia el cursor a una mano */
-    transition: color 0.3s ease;
-    /* Suaviza la transición de color */
-}
-
-.custom-span2 {
-    cursor: pointer;
-    /* Cambia el cursor a una mano */
-    transition: color 0.3s ease;
-    /* Suaviza la transición de color */
-}
-
-.caja-texto {
-    /*background-color: var( --surface-b);*/
-}
-
-.form-control {
-    flex: 1;
-    padding: 0.75rem 1rem;
-    border: none;
-    outline: none;
-    font-size: 0.95rem;
-}
-
-.caja-texto::placeholder {
-    /*color: rgba(255, 255, 255, 0.57);*/
-}
-
-.custom-span:hover {
-    color: #042950ee;
-    /* Cambia a un color específico cuando el mouse está encima */
-    color: rgb(2, 2, 160);
-    /* Puedes personalizar este color */
-}
-
-.timer-circle {
-    width: 150px;
-    height: 150px;
-    border-radius: 50%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    font-size: 48px;
-    margin: 20px auto;
-    border: 5px solid #2980b9;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    transition: background-color 0.3s ease;
-}
-
-.timer-circle p {
+.login-footer p {
     margin: 0;
+    font: 400 12.5px var(--sans);
+    color: var(--txt-3);
 }
 
-.custom-span2 {
-    cursor: pointer;
-    /* Cambia el cursor a una mano */
-    transition: color 0.3s ease;
-    /* Suaviza la transición de color */
+.login-footer .version {
+    margin-top: 4px;
+    font: 600 9.5px var(--mono);
+    letter-spacing: .16em;
+    text-transform: uppercase;
+    color: var(--txt-4);
 }
 
+/* ------------------------------------------------------------- Diálogos */
 
-/* Estilos generales del diálogo */
-.hardware-dialog .p-dialog-header {
-    border-top-left-radius: 12px;
-    border-top-right-radius: 12px;
-    padding: 1.25rem;
-}
-
-.hardware-dialog .p-dialog-content {
-    padding: 1.5rem;
-}
-
-/* Estilos para el spinner de carga */
-.loading-container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    min-height: 200px;
-}
-
-.loading-content {
-    text-align: center;
-}
-
-.loading-text {
-    display: block;
-    margin-top: 1rem;
-    font-size: 0.9rem;
-}
-
-/* Estilos para el contenido principal */
-.hardware-content {
-    padding: 0.5rem;
-}
-
-.section-title {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    font-weight: 600;
-    margin-bottom: 1.5rem;
-    padding-bottom: 0.5rem;
-    border-bottom: 1px solid #e2e8f0;
-}
-
-.section-title i {
-    font-size: 1.2rem;
-}
-
-/* Estilos para los grupos de detalles */
-.detail-group {
-    margin-bottom: 1.5rem;
-    padding: 1rem;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-}
-
-.detail-group h5 {
-    margin-top: 0;
-    margin-bottom: 1rem;
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-}
-
-.detail-group h5 i {}
-
-.detail-item {
-    display: flex;
-    margin-bottom: 0.75rem;
-    padding-bottom: 0.75rem;
-    border-bottom: 1px dashed #e2e8f0;
-}
-
-.detail-item:last-child {
-    margin-bottom: 0;
-    padding-bottom: 0;
-    border-bottom: none;
-}
-
-.detail-label {
-    flex: 0 0 40%;
-    font-weight: 500;
-}
-
-.detail-value {
-    flex: 1;
-    word-break: break-all;
-    padding-left: 0.5rem;
-}
-
-
-/* Estilos para el mensaje de error */
-.error-message {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    color: #e53e3e;
-    padding: 1rem;
-    border-radius: 8px;
-    margin: 1rem 0;
-}
-
-.error-message i {
-    font-size: 1.2rem;
-}
-
-/* Estilos para el pie de diálogo */
-.dialog-footer {
-    display: flex;
-    justify-content: flex-end;
-    gap: 0.5rem;
-    padding: 1rem 0;
-}
-
-/* Contenedor principal */
-.recovery-container {
-    max-width: 500px;
-    margin: 0 auto;
-    padding: 2rem;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
-}
-
-/* Encabezado */
-.recovery-header {
-    text-align: center;
-    margin-bottom: 2rem;
-}
-
-.recovery-icon {
-    font-size: 2.5rem;
-    color: #3a7bd5;
-    margin-bottom: 1rem;
-}
-
-.recovery-title {
-    font-weight: 600;
-    margin-bottom: 0.5rem;
-}
-
-.recovery-description {
-    line-height: 1.5;
-    margin: 0;
-}
-
-/* Formulario */
-.recovery-form {
-    margin-top: 1.5rem;
-}
-
-.form-label {
-    display: block;
-    margin-bottom: 0.5rem;
-    font-weight: 500;
-}
-
-.form-input {
-    width: 100%;
-    padding: 0.75rem 0.75rem 0.75rem 2.5rem;
-    border: 1px solid #e2e8f0;
-    transition: all 0.3s ease;
-}
-
-.form-input:focus {
-    border-color: #3a7bd5;
-    box-shadow: 0 0 0 0.2rem rgba(58, 123, 213, 0.2);
-    outline: none;
-}
-
-.p-input-icon-left {
-    position: relative;
-    display: block;
-}
-
-.p-input-icon-left i {
-    position: absolute;
-    top: 50%;
-    left: 1rem;
-    transform: translateY(-50%);
-}
-
-/* Mensaje de error */
-.error-message {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    color: #e53e3e;
-    margin-top: 0.5rem;
-    font-size: 0.875rem;
-}
-
-
-/* Botón */
-.recovery-actions {
-    margin-top: 1.5rem;
-}
-
-.recovery-button {
-    width: 100%;
-    padding: 0.75rem;
-    /* background: linear-gradient(135deg, #3a7bd5 0%, #00d2ff 100%); */
-    border: none;
-    border-radius: 8px;
-    font-weight: 500;
-    transition: all 0.3s ease;
-}
-
-.recovery-button:disabled {
-    cursor: not-allowed;
-}
-
-.recovery-button:not(:disabled):hover {
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(58, 123, 213, 0.2);
-}
-
-/* Estilos generales del diálogo */
-.password-dialog .p-dialog-header {
-    /* background: linear-gradient(135deg, #3a7bd5 0%, #00d2ff 100%); */
-    border-top-left-radius: 12px;
-    border-top-right-radius: 12px;
-    padding: 1.25rem;
-}
-
-.password-dialog .p-dialog-content {
-    padding: 2rem;
-}
-
-/* Contenedor de pasos */
-.step-container {
-    max-width: 500px;
-    margin: 0 auto;
-}
-
-/* Encabezado de pasos */
 .step-header {
-    text-align: center;
-    margin-bottom: 2rem;
+    margin-bottom: 22px;
 }
 
 .step-icon {
-    font-size: 2.5rem;
-    color: #3a7bd5;
-    margin-bottom: 1rem;
+    font-size: 20px;
+    color: var(--ac);
 }
 
 .step-title {
-    font-weight: 600;
-    margin-bottom: 0.5rem;
+    margin: 10px 0 6px;
+    font: 600 19px var(--sans);
+    letter-spacing: -.02em;
+    color: var(--ink);
 }
 
 .step-description {
-    line-height: 1.5;
     margin: 0;
+    font: 400 14px/1.5 var(--sans);
+    color: var(--txt-3);
 }
 
-/* Grupos de formulario */
-.form-group {
-    margin-bottom: 1.5rem;
-}
-
-.form-label {
-    display: block;
-    margin-bottom: 0.5rem;
-    font-weight: 500;
-}
-
-/* Campos de entrada */
-.form-control {
-    width: 100%;
-    padding: 0.75rem 1rem;
-    border: 1px solid #e2e8f0;
-    transition: all 0.3s ease;
-    font-size: 1rem;
-}
-
-.form-control:focus {
-    border-color: #3a7bd5;
-    box-shadow: 0 0 0 0.2rem rgba(58, 123, 213, 0.2);
-    outline: none;
-}
-
-/* Campos con icono */
-.input-with-icon {
-    position: relative;
-}
-
-.input-icon {
-    position: absolute;
-    top: 50%;
-    left: 1rem;
-    transform: translateY(-50%);
-    z-index: 1;
-}
-
-.input-with-icon .form-control {
-    padding-left: 2.5rem;
-}
-
-/* Mensajes de error */
-.error-message {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    color: #e53e3e;
-    padding: 1rem;
-    border-radius: 8px;
-    margin: 1rem 0;
-}
-
-.error-message {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    color: #e53e3e;
-    margin-top: 0.5rem;
-    font-size: 0.875rem;
-}
-
-/* Botones */
 .form-actions {
-    margin-top: 2rem;
     display: flex;
-    justify-content: center;
+    justify-content: flex-end;
+    margin-top: 22px;
 }
 
-.primary-button {
-    border: none;
-    padding: 0.75rem 1.5rem;
-    font-weight: 500;
-    transition: all 0.3s ease;
-    min-width: 200px;
-}
-
-.primary-button:disabled {
-    cursor: not-allowed;
-}
-
-.primary-button:not(:disabled):hover {
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(58, 123, 213, 0.2);
-}
-
-.secondary-button {
-    border: 1px solid #3a7bd5;
-    padding: 0.75rem 1.5rem;
-    font-weight: 500;
-    transition: all 0.3s ease;
-}
-
-.secondary-button:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-}
-
-
-/* Paso 2 específico */
-.verification-footer {
-    margin-top: 2rem;
-    text-align: center;
-}
-
-.alert-success {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.5rem;
-    color: #16a34a;
-    padding: 0.75rem 1.5rem;
-    border-radius: 8px;
-    margin-bottom: 1rem;
+.form-actions .btn-login {
+    width: auto;
+    min-width: 180px;
+    height: 46px;
+    border-radius: 13px;
 }
 
 .timer-container {
-    margin: 1.5rem 0;
+    text-align: center;
+    margin: 18px 0;
 }
 
 .timer-circle {
-    width: 100px;
-    height: 100px;
+    width: 66px;
+    height: 66px;
+    margin: 0 auto 10px;
+    border-radius: 50%;
+    background: #EDF3FE;
     display: flex;
-    justify-content: center;
     align-items: center;
-    font-size: 2rem;
-    font-weight: bold;
-    margin: 0 auto 1rem;
-    border: 3px solid #3a7bd5;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    justify-content: center;
 }
 
-.timer-text {
-    margin-bottom: 1.5rem;
+.timer-circle h1 {
+    margin: 0;
+    font: 600 24px var(--mono);
+    color: var(--ac);
 }
 
+.timer-text,
 .resend-text {
-    margin: 1rem 0;
+    font: 400 13px/1.5 var(--sans);
+    color: var(--txt-3);
 }
 
 .resend-link {
+    color: var(--ac);
+    font-weight: 600;
     cursor: pointer;
-    font-weight: 500;
-    text-decoration: underline;
-    transition: color 0.2s;
 }
-
-.resend-link:hover {}
 
 .resend-link.disabled {
+    color: var(--txt-4);
     cursor: not-allowed;
-    text-decoration: none;
 }
 
-.change-email {
-    margin-top: 1.5rem;
-    text-align: center;
+.alert-success {
+    padding: 10px 14px;
+    border-radius: 12px;
+    background: #E9FBF5;
+    color: #0A9E75;
+    font: 600 13px var(--sans);
 }
 
-/* Paso 3 específico */
-.suggestions-title {
-    font-weight: 500;
-    margin-bottom: 0.5rem;
+.requirement-list {
+    list-style: none;
 }
 
-.suggestions-list {
-    padding-left: 1.5rem;
-    margin: 0;
+.requirement-list li {
+    font: 500 12.5px var(--sans);
+    color: var(--txt-3);
+    padding: 3px 0;
 }
 
-.suggestions-list li {
-    margin-bottom: 0.25rem;
+.requirement-list li.valid {
+    color: #0A9E75;
+}
+
+.hardware-content .detail-group {
+    margin-bottom: 18px;
+}
+
+.hardware-content .detail-group h5 {
+    font: 600 9.5px var(--mono);
+    letter-spacing: .16em;
+    text-transform: uppercase;
+    color: var(--txt-4);
+    margin: 0 0 8px;
+}
+
+.detail-item {
     display: flex;
-    align-items: center;
-    gap: 0.5rem;
+    justify-content: space-between;
+    gap: 14px;
+    padding: 7px 0;
+    border-bottom: 1px solid #F2F4F7;
 }
 
-.suggestions-list i {
-    color: #48bb78;
-    font-size: 0.875rem;
+.detail-label {
+    font: 500 13px var(--sans);
+    color: var(--txt-3);
 }
 
-.validation-messages {
-    margin: 1rem 0;
+.detail-value {
+    font: 500 13px var(--mono);
+    color: var(--ink);
+    text-align: right;
 }
 
-.gradient-bg {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    z-index: -1;
-    background: linear-gradient(to right bottom, #186DDE, #3A89FF, #7BB2FF, #3A89FF);
-    background-size: 400% 400%;
-    animation: gradient 15s ease infinite;
-}
+/* ----------------------------------------------------------- Responsive */
 
-@keyframes gradient {
-    0% {
-        background-position: 0% 50%;
+@media (max-width: 900px) {
+    .login-illustration {
+        display: none;
     }
 
-    50% {
-        background-position: 100% 50%;
+    .login-card {
+        min-height: 100vh;
     }
 
-    100% {
-        background-position: 0% 50%;
-    }
-}
-
-
-
-
-
-
-
-/* ========== SOLUCIÓN NIVEL DIOS - TOOLTIP ABAJO ========== */
-.error-wrapper {
-    position: relative;
-    width: 100%;
-    margin: 0;
-    padding: 0;
-    /* Reducir margen inferior para compensar el tooltip */
-    margin-bottom: 30px;
-}
-
-.error-bubble {
-    /* POSICIÓN ABSOLUTA PARA NO AFECTAR EL LAYOUT */
-    position: absolute;
-    top: 100%;
-    /* SE MUESTRA DEBAJO DEL INPUT */
-    left: 0;
-    margin-top: 1px;
-    /* Pequeño espacio entre input y tooltip */
-
-    /* ESTILOS VISIBLES */
-    display: block;
-    visibility: visible;
-    opacity: 1;
-
-    /* TAMAÑO Y COLOR */
-    width: 100%;
-    /* background: linear-gradient(135deg, red, red); */
-    color: red;
-    /* color: white; */
-
-    /* TEXTO */
-    font-size: 14px;
-    font-weight: 600;
-    /* text-align: center; */
-    padding: 5px 10px;
-
-    /* EFECTOS VISUALES */
-    border-radius: 6px;
-    /* box-shadow: 0 4px 15px rgba(255, 56, 56, 0.3); */
-    z-index: 9999;
-
-    /* ANIMACIÓN */
-    animation: bubbleSlideUp 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
-    transform-origin: top center;
-}
-
-/* FLECHA DEL BUBBLE APUNTANDO HACIA ARRIBA */
-.error-bubble::before {
-    content: '';
-    position: absolute;
-    bottom: 100%;
-    /* Flecha hacia arriba */
-    left: 20px;
-    border: 6px solid transparent;
-    border-bottom-color: red;
-
-    /* Flecha apunta hacia arriba */
-    filter: drop-shadow(0 -2px 2px rgba(0, 0, 0, 0.1));
-}
-
-/* ANIMACIÓN MEJORADA */
-@keyframes bubbleSlideUp {
-    0% {
-        opacity: 0;
-        transform: translateY(-10px) scale(0.95);
+    .login-form {
+        padding: 32px 22px;
+        justify-content: flex-start;
+        gap: 28px;
     }
 
-    100% {
-        opacity: 1;
-        transform: translateY(0) scale(1);
-    }
-}
-
-/* EFECTO EN EL INPUT CUANDO HAY ERROR */
-.input-error {
-    border-color: red !important;
-
-    /* background-color: #fff5f5 !important; */
-    margin-bottom: 0;
-    /* Eliminar margen para que el tooltip quede pegado */
-}
-
-/* AJUSTAR EL FORM-GROUP PARA EL TOOLTIP DEBAJO */
-.form-group {
-    overflow: visible !important;
-    margin-bottom: 25px !important;
-    /* Espacio normal para el siguiente campo */
-}
-
-/* Asegurar que el input-group no tenga margen extra */
-.input-group {
-    margin-bottom: 0;
-}
-
-/* Con min-height la tarjeta crece con el contenido, así que ya no
-   necesitamos forzar overflow: visible en el card (eso era lo que
-   hacía que el formulario se "saliera" del contenedor). Dejamos
-   overflow visible solo en el form y su contenedor, para que los
-   globos de error (que sí usan position:absolute) se puedan ver
-   sin romper el borde redondeado de la tarjeta. */
-.login-form {
-    overflow: visible;
-}
-
-.form-container {
-    overflow: visible;
-}
-
-/* RESPONSIVE */
-@media (max-width: 768px) {
-    .error-bubble {
-        font-size: 11px;
-        padding: 6px 8px;
+    .form-container {
+        margin: 0;
     }
 
-    .error-bubble::before {
-        left: 15px;
+    .form-header {
+        margin-bottom: 30px;
     }
-}
 
-/* Si el tooltip se corta, añadir más espacio en el form-group */
-@media (min-width: 769px) {
-    .form-group {
-        margin-bottom: 30px !important;
+    .form-header h1 {
+        font-size: 26px;
+    }
+
+    .login-footer {
+        padding-top: 24px;
     }
 }

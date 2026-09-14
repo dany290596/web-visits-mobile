@@ -1,45 +1,27 @@
-<div>
-    <!-- Header -->
-    <div class="mb-4 flex justify-between">
-        <div class="inline-block">
-            <h3 class="font-semibold text-foreground text-base">Dashboard</h3>
-            <div class="space-x-1 text-xs font-medium text-muted-foreground">
-                <a [routerLink]="['/layout/dashboard/inicio']" class="hover:text-primary text-base">Inicio</a>
-                <!-- <span> - Inicio</span> -->
+<div class="wv-page">
+    <header class="wv-panel wv-head">
+        <div class="wv-head-text">
+            <h3 class="wv-title">Dashboard</h3>
+            <div class="wv-crumb">
+                <a [routerLink]="['/layout/dashboard/inicio']">Inicio</a>
+                <span>/</span><span>Bienvenida</span>
             </div>
         </div>
-        <!--
-        <div class="inline-block space-x-4">
-            <button
-                class="flex-none rounded-md bg-muted px-4 py-2.5 text-xs font-semibold text-muted-foreground hover:text-foreground">
-                Manage Bids
-            </button>
-            <button class="flex-none rounded-md bg-primary px-4 py-2.5 text-xs font-semibold text-primary-foreground">
-                Manage Bids
-            </button>
+    </header>
+
+    <section class="wv-panel">
+        <div class="wv-panel-head">
+            <span class="wv-panel-title">Bienvenido</span>
         </div>
-        -->
-    </div>
-    <!-- end Header -->
-
-    <div class="grid grid-cols-12 gap-4">
-
-        <div class="col-span-12 flex-col rounded-lg bg-background px-8 py-8 sm:flex-row">
-            <div class="mb-4 flex items-center justify-between">
-                <div class="flex-col items-center">
-                    <h3 class="text-md font-bold text-foreground">Bienvenido</h3>
-                    <span class="text-xs text-muted-foreground"></span>
-                </div>
-            </div>
-        </div>
-
-    </div>
-
+        <p class="welcome-text">
+            Gracias por elegir WebVisitsMobile para la gestionó de sus reuniones. Con WebVisitsMobile, puede programar,
+            modificar o cancelar reuniones en cualquier momento y desde cualquier lugar, de forma rápida y sencilla.
+        </p>
+    </section>
 
     <p-dialog header="¡Bienvenido a WebVisitsMobile!" [(visible)]="PrimeraConexion" [modal]="true"
-        [style]="{width: '50vw', borderRadius: '12px', boxShadow: '0 10px 25px rgba(0,0,0,0.1)'}" [baseZIndex]="10000"
-        [closable]="true" [draggable]="true" [resizable]="true" [showHeader]="true"
-        [breakpoints]="{'960px': '75vw', '640px': '90vw'}" class="modern-dialog">
+        [style]="{width: '50vw', borderRadius: '22px'}" [baseZIndex]="10000" [closable]="true" [draggable]="true"
+        [resizable]="true" [showHeader]="true" [breakpoints]="{'960px': '75vw', '640px': '92vw'}" class="modern-dialog">
 
         <div class="dialog-content">
             <div class="text-center mb-4">
@@ -52,87 +34,70 @@
                     WebVisitsMobile, puede programar, modificar o cancelar reuniones en cualquier
                     momento y desde cualquier lugar, de forma rápida y sencilla.
                 </p>
-
                 <p class="welcome-text">
                     Para proteger la seguridad de su cuenta, le recomendamos actualizar su contraseña
                     periódicamente. Puede hacerlo de manera rápida y sencilla haciendo clic en el
                     siguiente botón:
                 </p>
-
                 <p class="mt-4">
                     <button pButton type="button" label="Cambiar Contraseña" icon="pi pi-key"
-                        class="bg-primary p-button-raised p-button-primary" (click)="CambiarContrasena=true"></button>
+                        class="wv-btn wv-btn--primary" (click)="CambiarContrasena=true"></button>
                 </p>
-
-                <p class="welcome-text">
-                    Si tiene alguna pregunta o requiere de asistencia no dude en contactarnos.
-                </p>
-
-                <p class="welcome-text highlight-text">
-                    ¡Gracias por confiar en nosotros para la gestión de tus reuniones!
-                </p>
+                <p class="welcome-text">Si tiene alguna pregunta o requiere de asistencia no dude en contactarnos.</p>
+                <p class="welcome-text highlight-text">¡Gracias por confiar en nosotros para la gestión de tus
+                    reuniones!</p>
             </div>
 
-            <div class="text-center" *ngIf="CambiarContrasena==true">
-                <form autocomplete="off" [formGroup]="FormularioContrasena" class="password-form">
-                    <h4 class="form-title">Cambiar contraseña</h4>
-
-                    <div class="p-fluid grid">
-                        <div class="field col-12 md:col-12">
+            <div *ngIf="CambiarContrasena==true">
+                <form autocomplete="off" [formGroup]="FormularioContrasena">
+                    <div class="wv-group-title">CAMBIAR CONTRASEÑA</div>
+                    <div class="wv-fields">
+                        <div class="wv-field">
                             <label for="password" class="form-label">Nueva contraseña</label>
                             <p-password [style]="{'width':'100%'}" [inputStyle]="{'width':'100%'}"
                                 placeholder="Contraseña" appendTo="body" promptLabel="Ingresa tu contraseña"
-                                formControlName="contrasena" [toggleMask]="true" [feedback]="false">
-                            </p-password>
+                                formControlName="contrasena" [toggleMask]="true" [feedback]="false"></p-password>
                             <p-message severity="error"
-                                *ngIf="FormularioContrasena.controls['contrasena'].errors?.['required'] && FormularioContrasena.controls['contrasena'].touched"
-                                class="p-error block">
+                                *ngIf="FormularioContrasena.controls['contrasena'].errors?.['required'] && FormularioContrasena.controls['contrasena'].touched">
                                 <i class="pi pi-exclamation-circle"></i> La nueva contraseña es requerida.
                             </p-message>
                             <p-message severity="error"
-                                *ngIf="FormularioContrasena.controls['contrasena'].errors?.['pattern'] && FormularioContrasena.controls['contrasena'].touched"
-                                class="p-error block">
+                                *ngIf="FormularioContrasena.controls['contrasena'].errors?.['pattern'] && FormularioContrasena.controls['contrasena'].touched">
                                 <i class="pi pi-exclamation-circle"></i> La nueva contraseña debe tener mayúscula,
-                                minúscula, número y
-                                carácter especial.
+                                minúscula, número y carácter especial.
                             </p-message>
                         </div>
 
-                        <div class="field col-12 md:col-12">
+                        <div class="wv-field">
                             <label for="confirmPassword" class="form-label">Confirmar contraseña</label>
                             <p-password [style]="{'width':'100%'}" [inputStyle]="{'width':'100%'}" appendTo="body"
                                 placeholder="Confirmar contraseña" promptLabel="Ingresa tu contraseña"
-                                formControlName="contrasenavalidacion" [toggleMask]="true" [feedback]="false">
-                            </p-password>
+                                formControlName="contrasenavalidacion" [toggleMask]="true"
+                                [feedback]="false"></p-password>
                             <p-message severity="error"
-                                *ngIf="FormularioContrasena.controls['contrasenavalidacion'].errors?.['required'] && FormularioContrasena.controls['contrasenavalidacion'].touched"
-                                class="p-error block">
+                                *ngIf="FormularioContrasena.controls['contrasenavalidacion'].errors?.['required'] && FormularioContrasena.controls['contrasenavalidacion'].touched">
                                 <i class="pi pi-exclamation-circle"></i> Debes confirmar la contraseña.
                             </p-message>
                             <p-message severity="error"
-                                *ngIf="FormularioContrasena.controls['contrasenavalidacion'].errors?.['pattern'] && FormularioContrasena.controls['contrasenavalidacion'].touched"
-                                class="p-error block">
+                                *ngIf="FormularioContrasena.controls['contrasenavalidacion'].errors?.['pattern'] && FormularioContrasena.controls['contrasenavalidacion'].touched">
                                 <i class="pi pi-exclamation-circle"></i> La confirmación debe tener mayúscula,
                                 minúscula,
-                                número
-                                y carácter especial.
+                                número y carácter especial.
                             </p-message>
                             <p-message severity="error"
-                                *ngIf="FormularioContrasena.errors?.['noCoincide'] && FormularioContrasena.controls['contrasenavalidacion'].touched"
-                                class="p-error block">
+                                *ngIf="FormularioContrasena.errors?.['noCoincide'] && FormularioContrasena.controls['contrasenavalidacion'].touched">
                                 <i class="pi pi-exclamation-circle"></i> Las contraseñas no coinciden.
                             </p-message>
                         </div>
                     </div>
 
-                    <div class="form-actions mt-4">
+                    <div class="wv-actions">
                         <button pButton type="button" label="Guardar cambios" icon="pi pi-check"
-                            class="p-button-raised p-button-success" [disabled]="FormularioContrasena.invalid"
+                            class="wv-btn wv-btn--primary" [disabled]="FormularioContrasena.invalid"
                             (click)="cambiarContraForm()"></button>
                     </div>
                 </form>
             </div>
         </div>
     </p-dialog>
-
 </div>

@@ -1,22 +1,17 @@
-<div class="flex h-screen w-full overflow-hidden">
+<div class="wv-shell">
     <!-- Sidebar -->
     <app-sidebar></app-sidebar>
 
-    <div class="flex grow flex-col content-start overflow-hidden bg-card">
+    <div class="wv-col">
         <!-- Header -->
         <app-navbar></app-navbar>
+
         <!-- main content -->
-        <div id="main-content"
-            class="scrollbar-thumb-rounded scrollbar-track-rounded grow overflow-auto scrollbar-thin scrollbar-track-transparent scrollbar-thumb-muted">
-            <div class="px-4 py-4 sm:px-8">
-                <router-outlet></router-outlet>
-            </div>
+        <div id="main-content">
+            <router-outlet></router-outlet>
         </div>
 
         <!-- footer -->
         <app-footer></app-footer>
-
-        <!-- Bottom bar -->
-        <!-- <app-bottom-navbar></app-bottom-navbar> -->
     </div>
 </div>

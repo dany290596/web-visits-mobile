@@ -184,17 +184,32 @@ export class PlataformaService {
         return fechaDate.getFullYear() + "-" + MM + "-" + dd + " " + fechaDate.getHours() + ':' + fechaDate.getMinutes() + ':' + fechaDate.getSeconds();
     }
 
+    // dateToFormatEntrada(fecha: any) {
+    //     const fechaDate = new Date(fecha);
+    //     var MM = ((fechaDate.getMonth() + 1) < 10 ? '0' : '') + (fechaDate.getMonth() + 1);
+    //     var dd = ((fechaDate.getDate() + 1) < 10 ? '0' : '') + (fechaDate.getDate());
+    //     return fechaDate.getFullYear() + "-" + MM + "-" + dd + "T" + "00" + ":" + "00" + ":" + "00";
+    // }
+
+    // dateToFormatSalida(fecha: any) {
+    //     const fechaDate = new Date(fecha);
+    //     var MM = ((fechaDate.getMonth() + 1) < 10 ? '0' : '') + (fechaDate.getMonth() + 1);
+    //     var dd = ((fechaDate.getDate() + 1) < 10 ? '0' : '') + (fechaDate.getDate());
+    //     return fechaDate.getFullYear() + "-" + MM + "-" + dd + "T" + "23" + ":" + "59" + ":" + "00";
+    // }
+
+
     dateToFormatEntrada(fecha: any) {
         const fechaDate = new Date(fecha);
         var MM = ((fechaDate.getMonth() + 1) < 10 ? '0' : '') + (fechaDate.getMonth() + 1);
-        var dd = ((fechaDate.getDate() + 1) < 10 ? '0' : '') + (fechaDate.getDate());
+        var dd = (fechaDate.getDate() < 10 ? '0' : '') + fechaDate.getDate();
         return fechaDate.getFullYear() + "-" + MM + "-" + dd + "T" + "00" + ":" + "00" + ":" + "00";
     }
 
     dateToFormatSalida(fecha: any) {
         const fechaDate = new Date(fecha);
         var MM = ((fechaDate.getMonth() + 1) < 10 ? '0' : '') + (fechaDate.getMonth() + 1);
-        var dd = ((fechaDate.getDate() + 1) < 10 ? '0' : '') + (fechaDate.getDate());
+        var dd = (fechaDate.getDate() < 10 ? '0' : '') + fechaDate.getDate();
         return fechaDate.getFullYear() + "-" + MM + "-" + dd + "T" + "23" + ":" + "59" + ":" + "00";
     }
 }

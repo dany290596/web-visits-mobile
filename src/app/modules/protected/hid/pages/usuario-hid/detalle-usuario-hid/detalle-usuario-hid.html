@@ -103,13 +103,12 @@
 
     <!-- Botón cerrar -->
     <div class="flex justify-end space-x-3 pt-4 border-t border-border">
-        @if (data.estado === 1) {
-        <!--
-        <button type="button" (click)="cerrar()"
+        @if (data.estado === 1 && data.descripcionEstadoInvitacion === 'Pendiente') {
+        <!-- <button type="button" (click)="enviar()"
             class="rounded-md bg-primary px-4 py-2 text-xs font-semibold text-primary-foreground">
-            Enviar código
-        </button>
-        -->
+            <i class="pi pi-send"></i>
+            <span>Enviar correo de bienvenida</span>
+        </button> -->
         }
         <button type="button" (click)="cerrar()"
             class="inline-flex items-center justify-center gap-1.5 rounded-md bg-primary px-4 py-2 text-xs font-semibold text-primary-foreground">

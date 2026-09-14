@@ -12,7 +12,7 @@ import { MessageService } from 'primeng/api';
 import { CiudadService } from '../../../../location/services/ciudad.service';
 import { PaisService } from '../../../../location/services/pais.service';
 import { PaisEstadoService } from '../../../../location/services/pais-estado.service';
-import { EmpresaService, TestConnectionDTO } from '../../../services/empresa.service';
+import { EmpresaService } from '../../../services/empresa.service';
 import { ConfiguracionService } from '../../../../configuration/services/configuration.service';
 
 import Swal from 'sweetalert2';

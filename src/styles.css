@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600;700&display=swap');
 @import './assets/styles/apexchart.css';
 
 
@@ -56,7 +56,9 @@
   }
 
   [data-theme='blue'] {
-    --primary: #2490FF;
+    /* azul de la plantilla de referencia (AccessWeb): #186DDE.
+       Antes era #2490FF, más saturado y frío. */
+    --primary: #186DDE;
   }
 
   .dark[data-theme='blue'] {
@@ -111,7 +113,7 @@
   }
 
   body {
-    @apply bg-background text-foreground font-poppins;
+    @apply bg-background text-foreground;
   }
 
   input,
@@ -185,7 +187,7 @@
     transition-timing-function: ease-in;
   }
 
-  .dropdown:hover > .dropdown-content {
+  .dropdown:hover>.dropdown-content {
     pointer-events: auto;
     display: block;
     scale: 1;
@@ -196,6 +198,4157 @@
 }
 
 .swal-theme {
-    background-color: var(--highlight-bg) !important;
-    color: var(--textlight-bg) !important;
+  background-color: var(--highlight-bg) !important;
+  color: var(--textlight-bg) !important;
+}
+
+
+/* ==========================================================================
+   ESTÁNDAR VISUAL AccessWeb — WebVisitsMobile
+   Este bloque va AL FINAL de src/styles.css. Es tu CSS de siempre (secciones
+   1 a 19, sin quitar nada) más la sección 20, que corrige el motivo por el que
+   no se abrían los modales ni el menú de acciones.
+   ========================================================================== */
+
+:root {
+  --ac: #186DDE;
+  --ac-d: #1257B8;
+  --ac-s: #EDF3FE;
+  --ink: #0E1420;
+  --sb: #F4F7FD;
+  --canvas: #E4E9F2;
+  --line: #E2E8F1;
+  --field: #F7F9FC;
+  --txt-2: #4A5568;
+  --txt-3: #6B7686;
+  --txt-4: #98A2B3;
+  --ok: #0A9E75;
+  --ok-bg: #E9FBF5;
+  --err: #D93A37;
+  --err-bg: #FEECEC;
+  /* OJO: aquí NO se declaran --primary ni --primary-foreground. Los define tu
+     tema en @layer base y en [data-theme='violet'|'red'|'blue'...]. Declararlos
+     aquí los pisaría por orden y el panel de colores dejaría de funcionar.
+     El acento los LEE en la sección 19: --ac: var(--primary). */
+  --background: #FFFFFF;
+  --foreground: #0E1420;
+  --card: #E4E9F2;
+  --muted: #F3F5F8;
+  --muted-foreground: #6B7686;
+  --border: #E2E8F1;
+  --destructive: #D93A37;
+  --wv-shadow: 0 1px 2px rgba(14, 20, 32, .04), 0 10px 24px -16px rgba(14, 20, 32, .16);
+  /* Una sola familia en todo el portal: Instrument Sans. --wv-mono se mantiene
+     como nombre por las reglas que ya lo usan, pero apunta a la misma fuente. */
+  --wv-sans: 'Instrument Sans', system-ui, sans-serif;
+  --wv-mono: var(--wv-sans);
+}
+
+body,
+.font-poppins,
+input,
+select,
+textarea,
+button {
+  font-family: var(--wv-sans);
+}
+
+body {
+  color: var(--ink);
+  background: var(--canvas);
+  -webkit-font-smoothing: antialiased;
+}
+
+a {
+  color: var(--ac);
+  text-decoration: none;
+}
+
+a:hover {
+  color: var(--ac-d);
+}
+
+/* ============================================================== 1. SHELL */
+
+.wv-shell {
+  display: flex;
+  height: 100vh;
+  width: 100%;
+  gap: 10px;
+  padding: 10px;
+  background: var(--canvas);
+  overflow: hidden;
+  box-sizing: border-box;
+}
+
+.wv-col {
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 auto;
+  min-width: 0;
+  gap: 10px;
+  overflow: hidden;
+}
+
+#main-content {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding-bottom: 60px;
+}
+
+.wv-page {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+/* ============================================================ 2. SIDEBAR */
+
+.wv-sidebar {
+  width: 256px;
+  flex: 0 0 256px;
+  background: var(--sb);
+  border-radius: 20px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  overflow: hidden;
+  transition: width .22s ease, flex-basis .22s ease;
+}
+
+.wv-sidebar.is-collapsed {
+  width: 82px;
+  flex-basis: 82px;
+}
+
+.wv-sidebar-head {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  padding: 16px 14px 12px;
+}
+
+.wv-sidebar.is-collapsed .wv-sidebar-head {
+  justify-content: center;
+}
+
+.wv-brand-logo {
+  width: 40px;
+  height: 40px;
+  flex: 0 0 40px;
+  border-radius: 13px;
+  object-fit: contain;
+  background: #fff;
+  cursor: pointer;
+}
+
+.wv-brand-name {
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: -.01em;
+  color: var(--ink);
+}
+
+.wv-brand-role {
+  font-size: 11.5px;
+  color: #66748A;
+}
+
+.wv-rail-btn {
+  margin-left: auto;
+  width: 28px;
+  height: 28px;
+  border-radius: 9px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #66748A;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+}
+
+.wv-rail-btn:hover {
+  background: color-mix(in srgb, var(--ac) 9%, transparent);
+}
+
+.wv-rail-btn.is-flipped {
+  transform: rotate(180deg);
+}
+
+.wv-rail-btn svg {
+  width: 14px;
+  height: 14px;
+}
+
+.wv-nav {
+  flex: 1 1 auto;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding: 0 10px 10px;
+}
+
+.wv-group-label {
+  display: block;
+  font-family: var(--wv-mono);
+  font-size: 9.5px;
+  font-weight: 600;
+  letter-spacing: .16em;
+  text-transform: uppercase;
+  color: #9BA8BE;
+  padding: 18px 12px 8px;
+}
+
+.wv-mod {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  height: 42px;
+  padding: 0 11px;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: background .16s;
+}
+
+.wv-mod:hover {
+  background: color-mix(in srgb, var(--ac) 7%, transparent);
+}
+
+.wv-mod.is-open,
+.wv-mod.is-active {
+  background: color-mix(in srgb, var(--ac) 9%, transparent);
+}
+
+.wv-sidebar.is-collapsed .wv-mod {
+  justify-content: center;
+  padding: 0;
+}
+
+.wv-tile {
+  width: 28px;
+  height: 28px;
+  flex: 0 0 28px;
+  border-radius: 9px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: color-mix(in srgb, var(--ac) 9%, transparent);
+  color: var(--ac);
+  transition: background .16s, color .16s;
+}
+
+.wv-mod.is-open .wv-tile,
+.wv-mod.is-active .wv-tile {
+  background: var(--ac);
+  color: #fff;
+}
+
+.wv-tile svg {
+  width: 15px !important;
+  height: 15px !important;
+}
+
+.wv-mod-label {
+  flex: 1 1 auto;
+  min-width: 0;
+  font-size: 13.5px;
+  font-weight: 500;
+  color: #66748A;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  line-height: 1.25;
+}
+
+.wv-mod.is-open .wv-mod-label,
+.wv-mod.is-active .wv-mod-label {
+  color: var(--ink);
+  font-weight: 600;
+}
+
+.wv-chevron {
+  display: flex;
+  align-items: center;
+  color: #8A94A3;
+  background: none;
+  border: none;
+  transition: transform .18s;
+}
+
+.wv-chevron svg {
+  width: 12px !important;
+  height: 12px !important;
+}
+
+.wv-mod.is-open .wv-chevron {
+  transform: rotate(90deg);
+}
+
+.wv-submenu {
+  margin: 2px 0 8px;
+  padding: 6px 8px;
+  background: rgba(255, 255, 255, .72);
+  border-radius: 12px;
+}
+
+.wv-submenu.is-hidden {
+  display: none;
+}
+
+.wv-sub-link {
+  display: block;
+  padding: 8px 10px;
+  border-radius: 9px;
+  font-size: 13.5px;
+  font-weight: 500;
+  color: #4A5A72;
+  cursor: pointer;
+  transition: background .14s, color .14s;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.wv-sub-link:hover {
+  color: var(--ac);
+}
+
+.wv-sub-link.is-active {
+  background: color-mix(in srgb, var(--ac) 10%, transparent);
+  color: var(--ac);
+  font-weight: 600;
+}
+
+.wv-sidebar-foot {
+  margin: 0 14px 14px;
+  padding: 12px 14px;
+  background: color-mix(in srgb, var(--ac) 6%, transparent);
+  border-radius: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  flex: 0 0 auto;
+}
+
+.wv-foot-text {
+  font-family: var(--wv-mono);
+  font-size: 9.5px;
+  font-weight: 600;
+  letter-spacing: .14em;
+  color: #7C8AA0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  max-width: 150px;
+}
+
+.wv-version {
+  font-family: var(--wv-mono);
+  font-size: 9.5px;
+  font-weight: 600;
+  letter-spacing: .1em;
+  color: var(--ac);
+}
+
+.wv-nav ul,
+.wv-submenu ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.wv-nav li,
+.wv-submenu li {
+  list-style: none;
+}
+
+/* ============================================================= 3. TOPBAR */
+
+.wv-topbar {
+  height: 62px;
+  flex: 0 0 62px;
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  box-shadow: var(--wv-shadow);
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 0 14px;
+  overflow: visible;
+  position: relative;
+  z-index: 40;
+}
+
+.wv-icon-btn {
+  width: 38px;
+  height: 38px;
+  flex: 0 0 38px;
+  border-radius: 11px;
+  background: var(--muted);
+  color: var(--txt-2);
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background .16s;
+}
+
+.wv-icon-btn:hover {
+  background: #E8EBF0;
+}
+
+.wv-icon-btn svg {
+  width: 16px !important;
+  height: 16px !important;
+}
+
+.wv-topbar-logo {
+  height: 24px;
+  width: 24px;
+  object-fit: contain;
+}
+
+.wv-divider-v {
+  width: 1px;
+  height: 26px;
+  background: var(--line);
+}
+
+.wv-topbar-title {
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: -.01em;
+  color: var(--ink);
+  white-space: nowrap;
+}
+
+.wv-topbar-right {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex: 0 0 auto;
+  overflow: visible;
+}
+
+.wv-navbar {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  flex: 0 0 auto;
+}
+
+.wv-footer {
+  flex: 0 0 auto;
+  height: 46px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 20px;
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  box-shadow: var(--wv-shadow);
+  font-size: 12.5px;
+  font-weight: 500;
+  color: var(--txt-3);
+}
+
+.wv-footer a {
+  color: var(--txt-3);
+}
+
+.wv-footer a:hover {
+  color: var(--ac);
+}
+
+/* ============================================================= 4. PANELES */
+
+.wv-panel {
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  box-shadow: var(--wv-shadow);
+  padding: 26px 28px 24px;
+}
+
+.wv-panel--flush {
+  padding: 0;
+  overflow: hidden;
+}
+
+.wv-head {
+  display: flex;
+  align-items: flex-end;
+  gap: 20px;
+  flex-wrap: wrap;
+  padding-bottom: 26px;
+}
+
+.wv-head-text {
+  min-width: 0;
+}
+
+.wv-title {
+  margin: 0 0 5px;
+  font-size: 20px;
+  line-height: 1.2;
+  font-weight: 600;
+  letter-spacing: -.02em;
+  color: var(--ink);
+}
+
+.wv-crumb {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 14px;
+  color: var(--txt-3);
+}
+
+.wv-crumb span:first-of-type {
+  color: #C9D1DE;
+}
+
+.wv-head-actions {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.wv-panel-head {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+}
+
+.wv-panel-title {
+  font-size: 16.5px;
+  line-height: 1.3;
+  font-weight: 600;
+  letter-spacing: -.02em;
+  color: var(--ink);
+}
+
+.wv-meta,
+.wv-chip-meta {
+  font-family: var(--wv-mono);
+  font-size: 9.5px;
+  font-weight: 600;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: var(--txt-4);
+}
+
+.wv-meta {
+  margin-left: auto;
+}
+
+.wv-chip-meta {
+  height: 38px;
+  display: inline-flex;
+  align-items: center;
+  padding: 0 13px;
+  border-radius: 12px;
+  background: var(--muted);
+  color: var(--txt-3);
+  letter-spacing: .1em;
+  font-size: 11px;
+}
+
+.wv-group-title {
+  font-family: var(--wv-mono);
+  font-size: 9.5px;
+  font-weight: 600;
+  letter-spacing: .16em;
+  text-transform: uppercase;
+  color: var(--txt-4);
+  padding: 26px 0 12px;
+}
+
+/* =========================================================== 5. CAMPOS */
+
+.wv-fields {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 18px 20px;
+}
+
+.wv-field {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.wv-field--switch {
+  justify-content: flex-end;
+}
+
+.form-label,
+.wv-field label:not([for^='chk']) {
+  display: block;
+  margin-bottom: 8px;
+  font-family: var(--wv-mono);
+  font-size: 9.5px;
+  font-weight: 600;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  color: var(--txt-4);
+}
+
+.form-label .text-red-500 {
+  color: #EF5350;
+}
+
+.wv-field input:not([type='checkbox']),
+.wv-field select,
+.wv-field textarea,
+.wv-field .p-inputtext,
+.wv-field .p-select,
+.wv-field .p-multiselect,
+.wv-field .p-autocomplete,
+.wv-field .p-autocomplete-input,
+.wv-field .p-password,
+.wv-field .p-password-input {
+  width: 100%;
+}
+
+input:not([type='checkbox']):not([type='radio']),
+select,
+textarea,
+.p-inputtext,
+.p-select,
+.p-multiselect,
+.p-autocomplete-input,
+.p-password-input {
+  min-height: 44px;
+  padding-left: 14px;
+  padding-right: 14px;
+  border: 1.5px solid var(--line);
+  border-radius: 12px;
+  background: var(--field);
+  font-size: 14px;
+  color: var(--ink);
+  box-shadow: none;
+  transition: border-color .16s, background .16s, box-shadow .16s;
+}
+
+textarea {
+  padding-top: 12px;
+  padding-bottom: 12px;
+  line-height: 1.55;
+  min-height: 110px;
+}
+
+input:focus,
+select:focus,
+textarea:focus,
+.p-inputtext:focus,
+.p-select.p-focus,
+.p-multiselect.p-focus,
+.p-autocomplete-input:focus {
+  outline: none;
+  background: #fff;
+  border-color: var(--ac);
+  box-shadow: 0 0 0 4px color-mix(in srgb, var(--ac) 10%, transparent);
+}
+
+input::placeholder,
+textarea::placeholder {
+  color: var(--txt-4);
+}
+
+input.is-mono,
+input[type='number'],
+.p-inputmask {
+  font-family: var(--wv-mono);
+}
+
+.is__invalid-input,
+input.input-error,
+.p-invalid {
+  border-color: #EF5350;
+  background: #FFF6F6;
+}
+
+.is__invalid-error,
+.p-message-error {
+  color: var(--err);
+  font-size: 12.5px;
+  margin-top: 6px;
+  background: transparent;
+  border: none;
+}
+
+[type='checkbox'],
+[type='radio'] {
+  accent-color: var(--ac);
+}
+
+.p-checkbox-checked .p-checkbox-box {
+  background: var(--ac);
+  border-color: var(--ac);
+}
+
+/* =========================================================== 6. BOTONES */
+
+.wv-btn {
+  min-height: 44px;
+  padding: 0 20px;
+  border: none;
+  border-radius: 13px;
+  font-size: 14px;
+  font-weight: 600;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+  cursor: pointer;
+  transition: background .16s, color .16s;
+}
+
+.wv-btn i {
+  font-size: 13px;
+}
+
+.wv-btn--primary {
+  background: var(--ac);
+  color: #fff;
+}
+
+.wv-btn--primary:hover {
+  background: var(--ac-d);
+}
+
+.wv-btn--ghost {
+  background: var(--muted);
+  color: var(--txt-2);
+}
+
+.wv-btn--ghost:hover {
+  background: #E8EBF0;
+  color: var(--ink);
+}
+
+.wv-btn--danger {
+  background: #EF5350;
+  color: #fff;
+}
+
+.wv-actions {
+  border-top: 1px solid #EEF0F4;
+  margin-top: 24px;
+  padding-top: 20px;
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
+.wv-head .wv-btn,
+.wv-head-actions .wv-btn {
+  min-height: 44px;
+}
+
+button.bg-primary,
+button.bg-muted {
+  min-height: 42px;
+  border-radius: 12px;
+  font-size: 13.5px;
+  font-weight: 600;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+button.bg-primary {
+  background: var(--ac);
+  color: #fff;
+}
+
+button.bg-primary:hover {
+  background: var(--ac-d);
+}
+
+button.bg-muted {
+  background: var(--muted);
+  color: var(--txt-2);
+}
+
+/* ===================================================== 7. CHIP + SWITCH */
+
+.wv-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.wv-chip {
+  height: 44px;
+  display: inline-flex;
+  align-items: center;
+  gap: 11px;
+  padding: 0 15px;
+  border-radius: 13px;
+  background: var(--muted);
+  border: 1px solid transparent;
+  cursor: pointer;
+  transition: background .16s, border-color .16s;
+}
+
+.wv-chip label {
+  margin: 0 !important;
+  font-size: 13.5px !important;
+  font-weight: 600 !important;
+  font-family: var(--wv-sans) !important;
+  letter-spacing: 0 !important;
+  text-transform: none !important;
+  color: var(--txt-2) !important;
+  cursor: pointer;
+}
+
+.wv-chip:has(.p-toggleswitch-checked) {
+  background: var(--ac-s);
+  border-color: var(--ac);
+}
+
+.wv-chip:has(.p-toggleswitch-checked) label {
+  color: var(--ac) !important;
+}
+
+.p-toggleswitch {
+  width: 36px;
+  height: 20px;
+}
+
+.p-toggleswitch .p-toggleswitch-slider {
+  background: #CFD6E0;
+  border-radius: 999px;
+}
+
+.p-toggleswitch.p-toggleswitch-checked .p-toggleswitch-slider {
+  background: var(--ac);
+}
+
+.p-toggleswitch .p-toggleswitch-handle {
+  width: 14px;
+  height: 14px;
+  background: #fff;
+  box-shadow: none;
+}
+
+/* =============================================== 8. TABS / SEGMENTADO */
+
+.p-tablist-tab-list,
+.p-tabview-nav {
+  border-bottom: 1px solid #EEF0F4;
+  gap: 26px;
+  background: transparent;
+}
+
+.p-tab,
+.p-tabview-nav li .p-tabview-nav-link {
+  border: none;
+  border-bottom: 2.5px solid transparent;
+  background: transparent;
+  padding: 0 0 14px;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--txt-4);
+}
+
+.p-tab.p-tab-active,
+.p-tabview-nav li.p-highlight .p-tabview-nav-link {
+  color: var(--ink);
+  border-bottom-color: var(--ac);
+}
+
+.p-tabpanels {
+  background: transparent;
+  padding: 24px 0 0;
+}
+
+.p-selectbutton {
+  background: #EDF1F8;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 4px;
+  gap: 4px;
+  display: inline-flex;
+}
+
+.p-selectbutton .p-togglebutton {
+  flex: 1;
+  min-height: 34px;
+  border: none;
+  border-radius: 9px;
+  background: transparent;
+  color: #8A94A3;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.p-selectbutton .p-togglebutton.p-togglebutton-checked {
+  background: #fff;
+  color: var(--ink);
+  box-shadow: 0 1px 2px rgba(14, 20, 32, .06);
+}
+
+/* ========================================================== 9. TABLAS */
+
+app-table-dynamic {
+  display: block;
+}
+
+app-table-dynamic>.p-1 {
+  padding: 22px 28px 18px !important;
+}
+
+app-table-dynamic .p-tag.\!bg-primary {
+  background: var(--ac-s) !important;
+  color: var(--ac) !important;
+  border-radius: 8px !important;
+  font-family: var(--wv-mono);
+  font-size: 10.5px !important;
+  letter-spacing: .08em;
+}
+
+app-table-dynamic .text-900.font-semibold,
+app-table-dynamic .text-base.font-semibold {
+  font-size: 16.5px;
+  font-weight: 600;
+  letter-spacing: -.02em;
+  color: var(--ink);
+}
+
+.p-datatable .p-datatable-thead>tr>th {
+  background: #FAFBFC;
+  border-top: 1px solid #F2F4F7;
+  border-bottom: 1px solid #F2F4F7;
+  font-family: var(--wv-mono);
+  font-size: 9.5px;
+  font-weight: 600;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: var(--txt-4);
+  padding: 13px 16px;
+}
+
+.p-datatable .p-datatable-thead>tr>th:first-child {
+  padding-left: 28px;
+}
+
+.p-datatable .p-datatable-tbody>tr {
+  background: #fff;
+  transition: background .14s;
+}
+
+.p-datatable .p-datatable-tbody>tr:hover {
+  background: #F8FAFD;
+}
+
+.p-datatable .p-datatable-tbody>tr>td {
+  border: none;
+  border-bottom: 1px solid #F2F4F7;
+  padding: 16px;
+  font-size: 14px;
+  color: var(--ink);
+}
+
+.p-datatable .p-datatable-tbody>tr>td:first-child {
+  padding-left: 28px;
+}
+
+.p-datatable .p-datatable-tbody>tr.bg-surface-50 {
+  background: #fff;
+}
+
+.col-acciones-fija {
+  background: #fff;
+}
+
+.p-tag {
+  border-radius: 999px;
+  padding: 4px 11px;
+  font-size: 12px;
+  font-weight: 600;
+  background: var(--muted);
+  color: var(--txt-3);
+}
+
+.p-tag.p-tag-success {
+  background: var(--ok-bg);
+  color: var(--ok);
+}
+
+.p-tag.p-tag-danger {
+  background: var(--err-bg);
+  color: var(--err);
+}
+
+.p-tag.p-tag-warn,
+.p-tag.p-tag-warning {
+  background: #FFF4E5;
+  color: #B26A00;
+}
+
+.p-datatable .p-button.p-button-rounded {
+  width: 34px;
+  height: 34px;
+  min-height: 34px;
+  padding: 0;
+  border-radius: 10px;
+  border-color: transparent;
+  background: var(--muted);
+  color: var(--txt-2);
+}
+
+.p-datatable .p-button.p-button-rounded:hover {
+  background: var(--ac-s);
+  color: var(--ac);
+}
+
+.p-paginator {
+  background: transparent;
+  border: none;
+  padding: 14px 28px;
+}
+
+.p-paginator .p-paginator-page,
+.p-paginator .p-paginator-next,
+.p-paginator .p-paginator-prev {
+  min-width: 34px;
+  height: 34px;
+  border-radius: 10px;
+  font-family: var(--wv-mono);
+  font-weight: 600;
+  color: var(--txt-2);
+}
+
+.p-paginator .p-paginator-page.p-highlight {
+  background: var(--ac);
+  color: #fff;
+}
+
+.p-datatable .p-datatable-emptymessage .pi {
+  font-size: 30px !important;
+  color: var(--txt-4);
+}
+
+.p-datatable .p-datatable-emptymessage h5 {
+  font-size: 15px;
+  color: var(--txt-3);
+}
+
+/* ===================================================== 10. ESTADO VACÍO */
+
+.wv-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 48px 20px;
+  text-align: center;
+}
+
+.wv-empty p {
+  margin: 0;
+  font-size: 13.5px;
+  color: var(--txt-3);
+  max-width: 420px;
+}
+
+.wv-empty-title {
+  font-size: 15px !important;
+  font-weight: 600;
+  color: var(--ink) !important;
+}
+
+.wv-empty-tile {
+  width: 44px;
+  height: 44px;
+  border-radius: 14px;
+  background: var(--muted);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--txt-4);
+  margin-bottom: 6px;
+}
+
+.wv-empty .pi {
+  font-size: 18px;
+  color: var(--txt-4);
+}
+
+/* ========================================================= 11. MODALES */
+
+.p-dialog-mask {
+  background: rgba(14, 20, 32, .5);
+  backdrop-filter: blur(3px);
+}
+
+.p-dialog {
+  border-radius: 22px;
+  border: none;
+  box-shadow: 0 30px 70px -20px rgba(14, 20, 32, .5);
+}
+
+.p-dialog .p-dialog-header {
+  border-bottom: none;
+  padding: 26px 30px 12px;
+  background: #fff;
+  font-size: 19px;
+  font-weight: 600;
+  letter-spacing: -.02em;
+  color: var(--ink);
+}
+
+.p-dialog .p-dialog-content {
+  padding: 6px 30px 24px;
+  background: #fff;
+}
+
+.p-dialog .p-dialog-footer {
+  padding: 16px 30px 26px;
+  border-top: 1px solid #EEF0F4;
+  background: #fff;
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
+.p-dialog .p-dialog-header-icon {
+  width: 38px;
+  height: 38px;
+  border-radius: 11px;
+  background: var(--muted);
+  color: var(--txt-2);
+}
+
+.p-dialog .form-label {
+  margin-top: 0;
+}
+
+.p-dialog .grid.grid-cols-12 {
+  gap: 18px 20px;
+}
+
+/* ========================================================== 12. VARIOS */
+
+.p-progressspinner-circle {
+  stroke: var(--ac);
+}
+
+.p-progressbar .p-progressbar-value {
+  background: var(--ac);
+}
+
+.p-menu {
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  box-shadow: 0 20px 50px -20px rgba(14, 20, 32, .3);
+  padding: 6px;
+}
+
+.p-menu .p-menuitem-link {
+  border-radius: 10px;
+  font-size: 13.5px;
+}
+
+.p-menu .p-menuitem-link:hover {
+  background: var(--ac-s);
+  color: var(--ac);
+}
+
+::-webkit-scrollbar {
+  width: 9px;
+  height: 9px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #CFD6E0;
+  border: 2px solid transparent;
+  border-radius: 999px;
+  background-clip: content-box;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #B6C0CF;
+  background-clip: content-box;
+}
+
+/* ======================================================= 13. RESPONSIVE */
+
+@media (max-width: 1024px) {
+  .wv-shell {
+    padding: 8px;
+    gap: 8px;
+  }
+}
+
+@media (max-width: 900px) {
+  .wv-shell {
+    padding: 8px;
+    gap: 8px;
+  }
+
+  .wv-topbar {
+    height: 58px;
+    flex-basis: 58px;
+    padding: 0 10px;
+    gap: 10px;
+  }
+
+  .wv-topbar-title,
+  .wv-divider-v {
+    display: none;
+  }
+
+  .wv-panel {
+    padding: 18px 16px 20px;
+    border-radius: 16px;
+  }
+
+  .wv-panel--flush {
+    padding: 0;
+  }
+
+  .wv-head {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 16px;
+    padding-bottom: 18px;
+  }
+
+  .wv-title {
+    font-size: 20px;
+  }
+
+  .wv-head-actions {
+    margin-left: 0;
+  }
+
+  .wv-head-actions .wv-btn {
+    width: 100%;
+  }
+
+  .wv-fields {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .wv-actions {
+    flex-direction: column;
+  }
+
+  .wv-actions .wv-btn {
+    width: 100%;
+  }
+
+  .wv-chips .wv-chip {
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  app-table-dynamic>.p-1 {
+    padding: 18px 16px 14px !important;
+  }
+
+  .p-datatable-wrapper {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .p-datatable .p-datatable-thead>tr>th,
+  .p-datatable .p-datatable-tbody>tr>td {
+    padding: 13px 12px;
+    white-space: nowrap;
+  }
+
+  .p-datatable .p-datatable-thead>tr>th:first-child,
+  .p-datatable .p-datatable-tbody>tr>td:first-child {
+    padding-left: 16px;
+  }
+
+  .p-paginator {
+    padding: 14px 16px;
+  }
+
+  .p-dialog {
+    width: 92vw !important;
+    border-radius: 20px;
+  }
+
+  .p-dialog .p-dialog-header {
+    padding: 20px 20px 10px;
+    font-size: 17px;
+  }
+
+  .p-dialog .p-dialog-content {
+    padding: 6px 20px 18px;
+  }
+
+  .p-dialog .p-dialog-footer {
+    padding: 14px 20px 20px;
+  }
+
+  .p-dialog .p-dialog-footer .p-button {
+    flex: 1;
+  }
+}
+
+/* ==========================================================================
+   14. PÁGINAS NO REESCRITAS
+   ========================================================================== */
+
+#main-content>div {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+#main-content>div>.grid.grid-cols-12 {
+  gap: 10px;
+  margin: 0;
+}
+
+#main-content>div>.mb-4.flex.justify-between {
+  margin: 0 !important;
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  box-shadow: var(--wv-shadow);
+  padding: 26px 28px;
+  align-items: flex-end;
+  flex-wrap: wrap;
+  gap: 20px;
+}
+
+#main-content>div>.mb-4.flex.justify-between>.inline-block {
+  display: block;
+  min-width: 0;
+}
+
+#main-content>div>.mb-4.flex.justify-between h3 {
+  font-size: 20px !important;
+  line-height: 1.2;
+  font-weight: 600;
+  letter-spacing: -.02em;
+  color: var(--ink);
+  margin-bottom: 5px;
+}
+
+#main-content>div>.mb-4.flex.justify-between h3+div,
+#main-content>div>.mb-4.flex.justify-between h3+div a {
+  font-size: 14px !important;
+  font-weight: 400 !important;
+  color: var(--txt-3) !important;
+}
+
+#main-content>div>.mb-4.flex.justify-between h3+div a:hover {
+  color: var(--ac) !important;
+}
+
+#main-content>div>.mb-4.flex.justify-between>.inline-block.space-x-4 {
+  margin-left: auto;
+}
+
+#main-content>div>.grid.grid-cols-12>.col-span-12.rounded-lg.bg-background {
+  border: 1px solid var(--line);
+  border-radius: 18px !important;
+  box-shadow: var(--wv-shadow);
+  padding: 26px 28px 24px !important;
+  display: block;
+}
+
+#main-content .rounded-lg.bg-background .rounded-lg.bg-background {
+  border: 0;
+  box-shadow: none;
+  border-radius: 0 !important;
+  padding: 0 !important;
+  background: transparent !important;
+}
+
+#main-content .rounded-lg.bg-background .rounded-lg.bg-background.overflow-x-auto {
+  margin: 24px -28px -24px;
+  padding: 0 !important;
+  overflow-x: auto;
+}
+
+#main-content form>.grid.grid-cols-12,
+#main-content .rounded-lg.bg-background>.grid.grid-cols-12>.col-span-12>form>.grid.grid-cols-12 {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 18px 20px;
+}
+
+#main-content form>.grid.grid-cols-12>[class*='col-span-'] {
+  grid-column: auto !important;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  padding-top: 0 !important;
+}
+
+#main-content form>.grid.grid-cols-12>[class*='col-span-']>.p-inputtext,
+#main-content form>.grid.grid-cols-12>[class*='col-span-'] input,
+#main-content form>.grid.grid-cols-12>[class*='col-span-'] select {
+  width: 100%;
+}
+
+#main-content .flex.align-items-center.gap-3 {
+  height: 44px;
+  display: inline-flex;
+  align-items: center;
+  gap: 11px;
+  padding: 0 15px;
+  border-radius: 13px;
+  background: var(--muted);
+  border: 1px solid transparent;
+  align-self: flex-end;
+}
+
+#main-content .flex.align-items-center.gap-3 label {
+  margin: 0 !important;
+  font-family: var(--wv-sans) !important;
+  font-size: 13.5px !important;
+  font-weight: 600 !important;
+  letter-spacing: 0 !important;
+  text-transform: none !important;
+  color: var(--txt-2) !important;
+}
+
+#main-content .flex.align-items-center.gap-3:has(.p-toggleswitch-checked) {
+  background: var(--ac-s);
+  border-color: var(--ac);
+}
+
+#main-content .flex.align-items-center.gap-3:has(.p-toggleswitch-checked) label {
+  color: var(--ac) !important;
+}
+
+#main-content .flex.justify-end.space-x-4,
+#main-content .flex.justify-end.space-x-3 {
+  border-top: 1px solid #EEF0F4;
+  margin-top: 24px !important;
+  padding-top: 20px !important;
+  gap: 10px;
+}
+
+#main-content .flex.justify-end.space-x-4>*+*,
+#main-content .flex.justify-end.space-x-3>*+* {
+  margin-left: 0 !important;
+}
+
+#main-content .grid.grid-cols-12.px-4.mt-4 {
+  padding: 0 !important;
+  margin: 0 !important;
+}
+
+#main-content button.bg-primary,
+#main-content button.bg-muted,
+.p-dialog button.bg-primary,
+.p-dialog button.bg-muted {
+  min-height: 44px;
+  padding: 0 20px !important;
+  border-radius: 13px !important;
+  font-size: 14px !important;
+  font-weight: 600;
+  gap: 9px;
+}
+
+.p-dialog h3.text-base.font-semibold,
+#main-content h3.text-base.font-semibold {
+  font-family: var(--wv-mono);
+  font-size: 9.5px;
+  letter-spacing: .16em;
+  text-transform: uppercase;
+  color: var(--txt-4);
+  font-weight: 600;
+}
+
+.p-dialog h3.text-base.font-semibold span[style*='border-left'],
+#main-content h3.text-base.font-semibold span[style*='border-left'] {
+  display: none !important;
+}
+
+#main-content .text-md.font-bold {
+  font-size: 16.5px;
+  letter-spacing: -.02em;
+}
+
+#main-content img,
+.p-dialog img {
+  max-width: 100%;
+  height: auto;
+}
+
+.welcome-logo {
+  max-width: 220px;
+  margin: 0 auto 6px;
+  display: block;
+}
+
+.welcome-text {
+  font-size: 14px;
+  line-height: 1.55;
+  color: var(--txt-2);
+}
+
+.highlight-text {
+  color: var(--ac);
+  font-weight: 600;
+}
+
+#main-content .pi {
+  font-size: 14px;
+  line-height: 1;
+}
+
+#main-content .pi.text-3xl,
+#main-content .pi[style*='font-size'] {
+  font-size: 28px !important;
+}
+
+svg-icon svg {
+  width: 1.15rem;
+  height: 1.15rem;
+}
+
+@media (max-width: 900px) {
+  #main-content>div>.mb-4.flex.justify-between {
+    flex-direction: column;
+    align-items: stretch;
+    padding: 18px 16px 20px;
+    border-radius: 16px;
+  }
+
+  #main-content>div>.mb-4.flex.justify-between h3 {
+    font-size: 20px !important;
+  }
+
+  #main-content>div>.mb-4.flex.justify-between>.inline-block.space-x-4 {
+    margin-left: 0;
+  }
+
+  #main-content>div>.mb-4.flex.justify-between button {
+    width: 100%;
+  }
+
+  #main-content>div>.grid.grid-cols-12>.col-span-12.rounded-lg.bg-background {
+    padding: 18px 16px 20px !important;
+    border-radius: 16px !important;
+  }
+
+  #main-content .rounded-lg.bg-background .rounded-lg.bg-background.overflow-x-auto {
+    margin: 20px -16px -20px;
+  }
+
+  #main-content form>.grid.grid-cols-12 {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  #main-content .flex.align-items-center.gap-3 {
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  #main-content .flex.justify-end.space-x-4,
+  #main-content .flex.justify-end.space-x-3 {
+    flex-direction: column;
+  }
+
+  #main-content .flex.justify-end.space-x-4>button,
+  #main-content .flex.justify-end.space-x-3>button {
+    width: 100%;
+  }
+}
+
+/* ==========================================================================
+   15. MODAL REESCRITO (agregar/editar)
+   ========================================================================== */
+
+.wv-modal {
+  display: block;
+}
+
+.wv-modal-head {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  margin-bottom: 24px;
+}
+
+.wv-modal-tile {
+  width: 52px;
+  height: 52px;
+  flex: 0 0 52px;
+  border-radius: 16px;
+  background: var(--ac-s);
+  color: var(--ac);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.wv-modal-tile .pi {
+  font-size: 18px;
+}
+
+.wv-modal-text {
+  min-width: 0;
+}
+
+.wv-modal-title {
+  margin: 0;
+  font-size: 19px;
+  font-weight: 600;
+  letter-spacing: -.02em;
+  color: var(--ink);
+}
+
+.wv-modal-sub {
+  margin: 3px 0 0;
+  font-size: 14px;
+  line-height: 1.4;
+  color: var(--txt-3);
+}
+
+.wv-modal-head .wv-icon-btn {
+  margin-left: auto;
+}
+
+.wv-permisos {
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  padding: 6px;
+  overflow: hidden;
+}
+
+/* ==========================================================================
+   16. MENÚ COLAPSADO Y ALTURA DEL SIDEBAR
+   ========================================================================== */
+
+.wv-sidebar {
+  height: 100%;
+  align-self: stretch;
+}
+
+.wv-sidebar.is-collapsed {
+  width: 82px;
+  flex: 0 0 82px;
+}
+
+.wv-sidebar.is-collapsed .wv-brand-name,
+.wv-sidebar.is-collapsed .wv-brand-role,
+.wv-sidebar.is-collapsed .wv-mod-label,
+.wv-sidebar.is-collapsed .wv-chevron,
+.wv-sidebar.is-collapsed .wv-submenu,
+.wv-sidebar.is-collapsed .wv-group-label,
+.wv-sidebar.is-collapsed .wv-foot-text {
+  display: none !important;
+}
+
+.wv-sidebar.is-collapsed .wv-sidebar-head {
+  flex-direction: column;
+  gap: 8px;
+  padding: 16px 0 10px;
+}
+
+.wv-sidebar.is-collapsed .wv-rail-btn {
+  margin: 0;
+}
+
+.wv-sidebar.is-collapsed .wv-nav {
+  padding: 0 8px 10px;
+  overflow-x: hidden;
+}
+
+.wv-sidebar.is-collapsed .wv-mod {
+  justify-content: center;
+  padding: 0;
+  gap: 0;
+  margin-bottom: 6px;
+}
+
+.wv-sidebar.is-collapsed .wv-tile {
+  width: 38px;
+  height: 38px;
+  flex: 0 0 38px;
+  border-radius: 12px;
+}
+
+.wv-sidebar.is-collapsed .wv-tile svg {
+  width: 17px !important;
+  height: 17px !important;
+}
+
+.wv-sidebar.is-collapsed .wv-sidebar-foot {
+  margin: 0 10px 14px;
+  padding: 10px 0;
+  justify-content: center;
+}
+
+.wv-sidebar.is-collapsed .wv-version {
+  font-size: 9px;
+  letter-spacing: .05em;
+}
+
+.wv-sidebar,
+.wv-sidebar * {
+  min-width: 0;
+}
+
+.wv-sidebar.is-collapsed .wv-mod>*:not(.wv-tile) {
+  display: none !important;
+}
+
+.wv-sidebar.is-collapsed app-sidebar-submenu,
+.wv-sidebar.is-collapsed small {
+  display: none !important;
+}
+
+.wv-sidebar.is-collapsed .wv-nav a,
+.wv-sidebar.is-collapsed .wv-nav span:not(.wv-tile),
+.wv-sidebar.is-collapsed .wv-nav b {
+  font-size: 0 !important;
+}
+
+.wv-sidebar.is-collapsed .wv-nav .wv-tile {
+  font-size: initial !important;
+}
+
+.wv-sidebar.is-collapsed .wv-nav a {
+  padding: 0 !important;
+}
+
+app-sidebar>nav[class*='w-[70px]'] .truncate,
+app-sidebar>nav[class*='w-[70px]'] small {
+  display: none !important;
+}
+
+.wv-nav {
+  padding-bottom: 16px !important;
+}
+
+@media (max-width: 1023px) {
+  .wv-sidebar {
+    display: none !important;
+  }
+
+  .wv-shell {
+    padding: 8px;
+    gap: 8px;
+  }
+}
+
+/* ==========================================================================
+   17-18. MENÚ DE PERFIL Y DRAWER MÓVIL
+   ========================================================================== */
+
+.sr-only {
+  position: absolute !important;
+  width: 1px !important;
+  height: 1px !important;
+  padding: 0 !important;
+  margin: -1px !important;
+  overflow: hidden !important;
+  clip: rect(0, 0, 0, 0) !important;
+  white-space: nowrap !important;
+  border: 0 !important;
+}
+
+app-profile-menu {
+  display: block !important;
+  flex: 0 0 auto;
+}
+
+app-profile-menu>.relative {
+  margin-left: 0 !important;
+  position: relative;
+}
+
+app-profile-menu>.relative>button {
+  width: 38px;
+  height: 38px;
+  min-height: 38px;
+  padding: 0 !important;
+  border: none;
+  border-radius: 12px !important;
+  background: var(--muted) !important;
+  overflow: hidden;
+  display: inline-flex !important;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  flex: 0 0 38px;
+}
+
+app-profile-menu>.relative>button:hover {
+  background: #E8EBF0 !important;
+}
+
+app-profile-menu>.relative>button img {
+  width: 38px !important;
+  height: 38px !important;
+  border-radius: 12px !important;
+  object-fit: cover;
+  display: block;
+}
+
+app-profile-menu>.relative>div {
+  right: 0 !important;
+  left: auto !important;
+  top: calc(100% + 8px) !important;
+  margin-top: 0 !important;
+  width: 268px !important;
+  max-height: 76vh;
+  overflow-y: auto;
+  z-index: 200 !important;
+  background: #fff !important;
+  border: 1px solid var(--line) !important;
+  border-style: solid !important;
+  border-radius: 16px !important;
+  box-shadow: 0 24px 60px -20px rgba(14, 20, 32, .35) !important;
+  padding: 16px 0 12px !important;
+}
+
+app-profile-menu>.relative>div>.flex.flex-col.items-center img {
+  width: 44px;
+  height: 44px;
+  border-radius: 13px !important;
+  object-fit: cover;
+}
+
+app-profile-menu p {
+  margin: 2px 0;
+}
+
+app-profile-menu .text-muted-foreground.text-xs {
+  font-size: 12.5px !important;
+  color: var(--txt-3) !important;
+}
+
+app-profile-menu .p-chip.user-chip,
+app-profile-menu .p-chip {
+  background: var(--ac-s) !important;
+  color: var(--ac) !important;
+  border-radius: 999px !important;
+  padding: 3px 11px !important;
+  font-family: var(--wv-mono);
+  font-size: 10.5px !important;
+  letter-spacing: .08em;
+}
+
+app-profile-menu .border-b,
+app-profile-menu hr {
+  border-color: #EEF0F4 !important;
+  border-style: solid !important;
+}
+
+app-profile-menu ul {
+  margin: 8px !important;
+  padding: 0 !important;
+  list-style: none;
+}
+
+app-profile-menu ul li {
+  display: flex !important;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 12px !important;
+  border-radius: 10px !important;
+  font-size: 13.5px !important;
+  font-weight: 500 !important;
+  color: var(--txt-2) !important;
+  cursor: pointer;
+}
+
+app-profile-menu ul li:hover {
+  background: var(--ac-s) !important;
+  color: var(--ac) !important;
+}
+
+app-profile-menu svg-icon svg {
+  width: 1.05rem !important;
+  height: 1.05rem !important;
+}
+
+app-profile-menu>.relative>div>.mx-4 {
+  margin: 12px 16px !important;
+}
+
+app-profile-menu>.relative>div>.mx-4>span {
+  font-family: var(--wv-mono);
+  font-size: 9.5px !important;
+  font-weight: 600 !important;
+  letter-spacing: .16em;
+  text-transform: uppercase;
+  color: var(--txt-4) !important;
+}
+
+app-profile-menu .grid.grid-cols-2 {
+  display: grid !important;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px !important;
+  margin-top: 8px !important;
+}
+
+app-profile-menu .grid.grid-cols-2>div {
+  height: 34px !important;
+  display: inline-flex !important;
+  align-items: center;
+  gap: 8px;
+  padding: 0 10px !important;
+  border: 1px solid var(--line) !important;
+  border-style: solid !important;
+  border-radius: 10px !important;
+  background: #fff !important;
+  color: var(--txt-2) !important;
+  font-size: 12.5px !important;
+  font-weight: 600 !important;
+  cursor: pointer;
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+app-profile-menu .grid.grid-cols-2>div:hover {
+  background: var(--ac-s) !important;
+  color: var(--ac) !important;
+}
+
+app-profile-menu .grid.grid-cols-2>div.bg-card {
+  background: var(--ac-s) !important;
+  border-color: var(--ac) !important;
+  color: var(--ac) !important;
+}
+
+app-profile-menu .grid.grid-cols-2>div>span[style*='background'] {
+  width: 16px !important;
+  height: 16px !important;
+  flex: 0 0 16px;
+  border-radius: 999px !important;
+  box-shadow: 0 0 0 1px rgba(14, 20, 32, .08);
+}
+
+app-profile-menu .grid.grid-cols-2 p {
+  margin: 0;
+  text-transform: capitalize;
+}
+
+.wv-mobile-menu {
+  display: block;
+}
+
+.wv-only-mobile {
+  display: none !important;
+}
+
+.wv-mobile-menu app-navbar-mobile>div {
+  position: fixed !important;
+  top: 76px;
+  left: 8px;
+  right: 8px;
+  bottom: auto;
+  inset-inline: 8px;
+  z-index: 120 !important;
+  padding: 0 !important;
+}
+
+.wv-mobile-menu app-navbar-mobile>div>div {
+  background: #F4F7FD !important;
+  border: 1px solid var(--line);
+  border-radius: 18px !important;
+  box-shadow: 0 30px 70px -20px rgba(14, 20, 32, .45) !important;
+  overflow: hidden;
+}
+
+.wv-mobile-menu app-navbar-mobile>div>div>div {
+  padding: 12px 0 10px !important;
+}
+
+.wv-mobile-menu app-navbar-mobile .flex.items-center.justify-between {
+  padding: 0 14px 6px !important;
+}
+
+.wv-mobile-menu app-navbar-mobile b {
+  font-size: 14px;
+}
+
+.wv-mobile-menu app-navbar-mobile .overflow-y-auto {
+  max-height: 68vh !important;
+  padding: 0 10px !important;
+}
+
+.wv-mobile-menu app-navbar-mobile-menu>div {
+  padding-top: 10px !important;
+}
+
+.wv-mobile-menu app-navbar-mobile-menu small {
+  font-family: var(--wv-mono);
+  font-size: 9.5px !important;
+  font-weight: 600 !important;
+  letter-spacing: .16em;
+  text-transform: uppercase;
+  color: #9BA8BE !important;
+}
+
+.wv-mobile-menu app-navbar-mobile-menu ul,
+.wv-mobile-menu app-navbar-mobile-submenu ul {
+  list-style: none !important;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+.wv-mobile-menu app-navbar-mobile-menu ul>li>div {
+  display: flex !important;
+  align-items: center;
+  gap: 12px !important;
+  min-height: 44px;
+  padding: 0 10px !important;
+  border-radius: 10px;
+  cursor: pointer;
+}
+
+.wv-mobile-menu app-navbar-mobile-menu ul>li>div:hover {
+  background: color-mix(in srgb, var(--ac) 7%, transparent);
+}
+
+.wv-mobile-menu app-navbar-mobile-menu ul>li>div>div:first-child {
+  width: 28px;
+  height: 28px;
+  flex: 0 0 28px;
+  border-radius: 9px;
+  background: color-mix(in srgb, var(--ac) 9%, transparent);
+  color: var(--ac) !important;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.wv-mobile-menu app-navbar-mobile-menu ul>li>div>div:first-child svg {
+  width: 15px !important;
+  height: 15px !important;
+}
+
+.wv-mobile-menu app-navbar-mobile-menu ul>li a {
+  display: block !important;
+  font-size: 13.5px !important;
+  font-weight: 500 !important;
+  color: #4A5A72 !important;
+  padding: 0 !important;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.wv-mobile-menu app-navbar-mobile-menu ul>li a.text-primary {
+  color: var(--ac) !important;
+  font-weight: 600 !important;
+}
+
+.wv-mobile-menu app-navbar-mobile-menu ul>li>div>button {
+  display: inline-flex !important;
+  margin-left: auto;
+  width: 28px;
+  height: 28px;
+  flex: 0 0 28px;
+  border-radius: 8px;
+  background: #fff;
+  border: 1px solid var(--line);
+  align-items: center;
+  justify-content: center;
+}
+
+.wv-mobile-menu app-navbar-mobile-menu ul>li>div>button svg {
+  width: 13px !important;
+  height: 13px !important;
+}
+
+.wv-mobile-menu app-navbar-mobile-submenu>div {
+  padding-left: 0 !important;
+}
+
+.wv-mobile-menu app-navbar-mobile-submenu ul {
+  border: none !important;
+  margin: 2px 0 8px 40px !important;
+  padding: 6px 6px !important;
+  background: rgba(255, 255, 255, .8);
+  border-radius: 12px;
+}
+
+.wv-mobile-menu app-navbar-mobile-submenu a {
+  display: block !important;
+  padding: 9px 10px !important;
+  border-radius: 9px;
+  font-size: 13px !important;
+  color: #4A5A72 !important;
+}
+
+.wv-mobile-menu app-navbar-mobile-submenu a:hover {
+  background: color-mix(in srgb, var(--ac) 8%, transparent);
+  color: var(--ac) !important;
+}
+
+.wv-mobile-menu app-navbar-mobile-submenu a.text-primary {
+  background: color-mix(in srgb, var(--ac) 10%, transparent);
+  color: var(--ac) !important;
+  font-weight: 600 !important;
+}
+
+@media (max-width: 1023px) {
+  .wv-only-mobile {
+    display: flex !important;
+  }
+}
+
+@media (min-width: 1024px) {
+
+  .wv-mobile-menu,
+  app-navbar-mobile {
+    display: none !important;
+  }
+}
+
+/* ==========================================================================
+   19. SELECTOR DE COLOR / MODO OSCURO + CIERRE DEL DRAWER
+   ========================================================================== */
+
+:root {
+  --ac: var(--primary);
+  --ac-d: color-mix(in srgb, var(--primary) 82%, #000);
+  --ac-s: color-mix(in srgb, var(--primary) 8%, #fff);
+}
+
+/* El tema base es el rosa (#E11D48) que declara @layer base. No se pisa aquí:
+   hacerlo repintaba de azul justo al elegir "Rosa" en el panel de colores. */
+
+html.dark {
+  --canvas: #0B0F1A;
+  --line: #232B3D;
+  --field: #121826;
+  --ink: #F6F8FB;
+  --txt-2: #C3CBDA;
+  --txt-3: #A1A8BF;
+  --txt-4: #7C8AA0;
+  --sb: #0F1522;
+  --muted: #1A2130;
+}
+
+html.dark body {
+  background: var(--canvas);
+  color: var(--ink);
+}
+
+html.dark .wv-panel,
+html.dark .wv-topbar,
+html.dark .wv-footer,
+html.dark .p-datatable .p-datatable-tbody>tr,
+html.dark .p-dialog,
+html.dark .p-dialog .p-dialog-header,
+html.dark .p-dialog .p-dialog-content,
+html.dark .p-dialog .p-dialog-footer,
+html.dark app-profile-menu>.relative>div {
+  background: #121826 !important;
+  border-color: var(--line) !important;
+}
+
+html.dark .wv-sidebar {
+  background: var(--sb);
+}
+
+html.dark input:not([type='checkbox']),
+html.dark select,
+html.dark textarea,
+html.dark .p-inputtext,
+html.dark .p-select {
+  background: var(--field);
+  border-color: var(--line);
+  color: var(--ink);
+}
+
+html.dark .p-datatable .p-datatable-thead>tr>th {
+  background: #0F1522;
+  border-color: var(--line);
+}
+
+html.dark .p-datatable .p-datatable-tbody>tr>td {
+  border-color: var(--line);
+  color: var(--ink);
+}
+
+html.dark .p-datatable .p-datatable-tbody>tr:hover {
+  background: #161E2E;
+}
+
+html.dark .wv-actions,
+html.dark .p-tablist-tab-list {
+  border-color: var(--line);
+}
+
+.wv-mobile-menu app-navbar-mobile>div.pointer-events-none {
+  visibility: hidden !important;
+  pointer-events: none !important;
+}
+
+.wv-mobile-menu app-navbar-mobile>div.pointer-events-auto {
+  visibility: visible !important;
+  pointer-events: auto !important;
+}
+
+.wv-mobile-menu app-navbar-mobile .flex.items-center.justify-between>div:last-child {
+  margin-right: 0 !important;
+}
+
+.wv-mobile-menu app-navbar-mobile .flex.items-center.justify-between button {
+  position: relative;
+  z-index: 5;
+  width: 40px !important;
+  height: 40px !important;
+  border-radius: 11px !important;
+  background: var(--muted) !important;
+  border: 1px solid var(--line);
+  pointer-events: auto !important;
+  cursor: pointer;
+}
+
+.wv-mobile-menu app-navbar-mobile .flex.items-center.justify-between button svg {
+  width: 16px !important;
+  height: 16px !important;
+}
+
+/* ==========================================================================
+   20. CORRECCIÓN — MODALES Y MENÚ DE ACCIONES QUE NO APARECÍAN
+   --------------------------------------------------------------------------
+   No se quita nada de lo anterior. Esto solo arregla lo siguiente:
+
+   En table-dynamic.html el menú de acciones es <p-menu appendTo="body">, y el
+   modal se crea con document.body.appendChild(): LOS DOS CUELGAN DEL <body>,
+   fuera de .wv-shell.
+
+   Problema 1 — apilamiento. El modal se crea con la clase Tailwind z-50
+   (z-index: 50). La sección 18 le da al desplegable del perfil z-index: 200.
+   200 gana a 50: el modal quedaba por debajo de una capa invisible.
+
+   Problema 2 — clics. Ese mismo desplegable mide 268px de ancho y hasta 76vh
+   de alto, pegado arriba a la derecha. Angular al cerrarlo solo le pone
+   opacity: 0, así que SIGUE OCUPANDO SU CAJA justo encima de Agregar, Buscar
+   y los tres puntos de cada fila. Los clics se los quedaba él.
+   ========================================================================== */
+
+/* --- 20.1 el desplegable del perfil, cerrado, deja de existir ----------- */
+
+app-profile-menu>.relative>div[style*='opacity: 0'],
+app-profile-menu>.relative>div[style*='opacity:0'],
+app-profile-menu>.relative>div.opacity-0,
+app-profile-menu>.relative>div.pointer-events-none {
+  visibility: hidden !important;
+  pointer-events: none !important;
+}
+
+app-profile-menu>.relative>div[style*='opacity: 0'] *,
+app-profile-menu>.relative>div[style*='opacity:0'] *,
+app-profile-menu>.relative>div.opacity-0 *,
+app-profile-menu>.relative>div.pointer-events-none * {
+  pointer-events: none !important;
+}
+
+app-profile-menu>.relative>div.pointer-events-auto {
+  visibility: visible !important;
+  pointer-events: auto !important;
+}
+
+/* nada invisible de la barra superior puede bloquear la página */
+.wv-topbar [style*='opacity: 0'],
+.wv-topbar [style*='opacity:0'] {
+  pointer-events: none !important;
+}
+
+/* --- 20.2 orden de capas: los overlays del <body> mandan ---------------- */
+
+/* modal creado por modal.service.ts
+   OJO con este valor: los paneles de PrimeNG (p-datepicker, p-autocomplete,
+   p-multiselect) se montan en el <body> con z-index ~1100. Si el modal sube
+   por encima de eso, los paneles se abren DEBAJO y parece que la fecha no se
+   puede elegir y que el catálogo no se expande. 250 basta para ganarle al
+   desplegable del perfil (z-index 200) sin tapar los paneles. */
+body>div.fixed.inset-0.z-50 {
+  z-index: 250 !important;
+}
+
+/* menú de acciones y desplegables de PrimeNG (appendTo="body") */
+body>.p-menu,
+body>.p-menu-overlay,
+.p-menu.p-menu-overlay,
+body>.p-select-overlay,
+body>.p-autocomplete-overlay,
+body>.p-popover,
+body>.p-tooltip {
+  z-index: 1300 !important;
+}
+
+/* --- 20.2.b calendarios y catálogos dentro del modal ------------------- */
+/* El modal está en z-index 3000. Los paneles de p-datepicker y de los
+   catálogos (p-select / p-autocomplete / p-multiselect / p-listbox) nacen con
+   z-index ~1100, así que se abrían DEBAJO del modal: parecía que la fecha no
+   se podía elegir y que el catálogo no se expandía. Aquí no se limita a
+   'body >' porque PrimeNG los monta en el contenedor del modal según el caso. */
+
+.p-datepicker-panel,
+.p-datepicker.p-component-overlay,
+.p-select-overlay,
+.p-multiselect-overlay,
+.p-autocomplete-overlay,
+.p-listbox-overlay,
+.p-treeselect-overlay,
+.p-cascadeselect-overlay,
+.p-popover,
+.p-overlaypanel {
+  z-index: 1300 !important;
+}
+
+/* el panel del calendario, con el lenguaje visual del resto */
+.p-datepicker-panel {
+  border: 1px solid var(--line) !important;
+  border-radius: 14px !important;
+  box-shadow: 0 20px 50px -20px rgba(14, 20, 32, .3) !important;
+  padding: 10px !important;
+  background: #fff !important;
+}
+
+.p-datepicker-panel .p-datepicker-header {
+  border-bottom: 1px solid var(--line) !important;
+  padding-bottom: 8px !important;
+  background: transparent !important;
+}
+
+.p-datepicker-panel .p-datepicker-title {
+  font-size: 13.5px;
+  font-weight: 600;
+}
+
+.p-datepicker-panel table th>span {
+  font-family: var(--wv-mono);
+  font-size: 9.5px;
+  font-weight: 600;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: var(--txt-4);
+}
+
+.p-datepicker-panel table td>span {
+  border-radius: 9px;
+  font-size: 13px;
+  font-weight: 500;
+}
+
+.p-datepicker-panel table td>span.p-datepicker-day-selected {
+  background: var(--ac) !important;
+  color: #fff !important;
+}
+
+.p-datepicker-panel table td>span:not(.p-datepicker-day-selected):hover {
+  background: var(--ac-s) !important;
+  color: var(--ac) !important;
+}
+
+/* SweetAlert2 por encima de todo */
+body .swal2-container {
+  z-index: 2000 !important;
+}
+
+/* diálogos de PrimeNG, si alguna pantalla los usa */
+body .p-dialog-mask.p-overlay-mask {
+  z-index: 250 !important;
+}
+
+/* --- 20.3 el shell no puede recortar overlays -------------------------- */
+
+.wv-topbar,
+.wv-topbar-right,
+.wv-navbar {
+  overflow: visible;
+}
+
+/* --- 20.5 el panel de colores repinta TODO el diseño -------------------- */
+/* Los tokens de acento se recalculan desde --primary, que es justo lo que
+   cambia el selector de color. Al ir al final del archivo, esta declaración
+   es la que manda. */
+
+:root {
+  --ac: var(--primary);
+  --ac-d: color-mix(in srgb, var(--primary) 82%, #000);
+  --ac-s: color-mix(in srgb, var(--primary) 8%, #fff);
+}
+
+/* el chip del color activo dentro del panel de perfil */
+app-profile-menu .grid.grid-cols-2>div.bg-card {
+  background: color-mix(in srgb, var(--primary) 10%, #fff) !important;
+  border-color: var(--primary) !important;
+  color: var(--primary) !important;
+}
+
+
+/* --- 20.6 el drawer móvil no existe en escritorio ---------------------- */
+
+@media (min-width: 1024px) {
+
+  .wv-mobile-menu,
+  .wv-mobile-menu app-navbar-mobile,
+  .wv-mobile-menu app-navbar-mobile>div,
+  app-navbar-mobile {
+    display: none !important;
+    pointer-events: none !important;
+  }
+}
+
+
+/* ==========================================================================
+   21. TABLAS
+   --------------------------------------------------------------------------
+   Escrito sobre table-dynamic.html. No toca nada de la sección 20:
+   ni una regla de position, z-index o pointer-events sobre overlays.
+   ========================================================================== */
+
+/* --- 21.1 Cabecera del bloque (contador + selector de página) ---------- */
+
+app-table-dynamic>.p-1 {
+  border-bottom: none !important;
+  padding: 4px 0 18px !important;
+}
+
+app-table-dynamic>.p-1>.grid.grid-cols-12 {
+  row-gap: 10px;
+}
+
+/* el contador: chip cuadrado en versalitas, no una píldora azul enorme */
+app-table-dynamic .p-tag.\!bg-primary {
+  background: var(--ac-s) !important;
+  color: var(--ac) !important;
+  border-radius: 9px !important;
+  padding: 5px 10px !important;
+  font-family: var(--wv-mono);
+  font-size: 11px !important;
+  font-weight: 600 !important;
+  letter-spacing: .06em;
+  line-height: 1;
+}
+
+app-table-dynamic .text-900.text-base.font-semibold {
+  font-size: 16.5px;
+  font-weight: 600;
+  letter-spacing: -.02em;
+  color: var(--ink);
+}
+
+app-table-dynamic .text-600 {
+  font-size: 13px;
+  color: var(--txt-3);
+  font-weight: 500;
+}
+
+/* selector de página compacto */
+app-table-dynamic .p-select {
+  min-height: 38px !important;
+  min-width: 72px;
+  border-radius: 10px;
+  background: #fff;
+  padding-left: 12px;
+  padding-right: 6px;
+  font-family: var(--wv-mono);
+  font-size: 13px;
+  font-weight: 600;
+}
+
+app-table-dynamic .p-select-label {
+  padding: 0;
+}
+
+app-table-dynamic .p-select-dropdown {
+  width: 26px;
+  color: var(--txt-4);
+}
+
+/* --- 21.2 Marco de la tabla ------------------------------------------- */
+
+app-table-dynamic .p-datatable {
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  overflow: hidden;
+  background: #fff;
+}
+
+app-table-dynamic .p-datatable-table {
+  min-width: 100%;
+}
+
+app-table-dynamic .p-datatable-wrapper {
+  border-radius: 14px;
+}
+
+/* --- 21.3 Cabecera de columnas ---------------------------------------- */
+
+app-table-dynamic .p-datatable-thead>tr>th {
+  background: #FAFBFC !important;
+  border-top: none !important;
+  border-bottom: 1px solid #EDF0F5 !important;
+  font-family: var(--wv-mono);
+  font-size: 9.5px !important;
+  font-weight: 600 !important;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: var(--txt-4) !important;
+  padding: 14px 18px !important;
+  white-space: nowrap;
+}
+
+app-table-dynamic .p-datatable-thead>tr>th:first-child {
+  padding-left: 22px !important;
+}
+
+/* --- 21.4 Filas -------------------------------------------------------- */
+
+/* una sola convención: fondo blanco y hover con el color activo */
+app-table-dynamic .p-datatable-tbody>tr,
+app-table-dynamic .p-datatable-tbody>tr.bg-surface-50,
+app-table-dynamic .p-datatable-striped .p-datatable-tbody>tr:nth-child(even) {
+  background: #fff !important;
+}
+
+app-table-dynamic .p-datatable-tbody>tr:hover,
+app-table-dynamic .p-datatable-tbody>tr.p-datatable-row-hover {
+  background: color-mix(in srgb, var(--ac) 4%, #fff) !important;
+}
+
+app-table-dynamic .p-datatable-tbody>tr>td {
+  border: none !important;
+  border-bottom: 1px solid #F2F4F7 !important;
+  padding: 14px 18px !important;
+  font-size: 14px;
+  color: var(--ink);
+  vertical-align: middle;
+}
+
+app-table-dynamic .p-datatable-tbody>tr>td:first-child {
+  padding-left: 22px !important;
+}
+
+/* primera columna: el nombre del registro con más peso */
+app-table-dynamic .p-datatable-tbody>tr>td:first-child .text-900 {
+  font-weight: 600;
+  color: var(--ink);
+}
+
+app-table-dynamic .p-datatable-tbody>tr>td .text-900.text-sm {
+  font-size: 14px;
+}
+
+/* la última fila no lleva línea */
+app-table-dynamic .p-datatable-tbody>tr:last-child>td {
+  border-bottom: none !important;
+}
+
+/* --- 21.5 Badges de estado -------------------------------------------- */
+
+app-table-dynamic .p-datatable-tbody .p-tag {
+  border-radius: 999px;
+  padding: 4px 12px !important;
+  font-size: 12px !important;
+  font-weight: 600 !important;
+  line-height: 1.35;
+}
+
+app-table-dynamic .p-tag.p-tag-success {
+  background: var(--ok-bg);
+  color: var(--ok);
+}
+
+app-table-dynamic .p-tag.p-tag-danger {
+  background: var(--err-bg);
+  color: var(--err);
+}
+
+app-table-dynamic .p-tag.p-tag-warn,
+app-table-dynamic .p-tag.p-tag-warning {
+  background: #FFF4E5;
+  color: #B26A00;
+}
+
+app-table-dynamic .p-tag.p-tag-info {
+  background: var(--ac-s);
+  color: var(--ac);
+}
+
+/* punto de color delante del estado */
+app-table-dynamic .p-datatable-tbody .p-tag .p-tag-label::before {
+  content: '';
+  display: inline-block;
+  width: 6px;
+  height: 6px;
+  border-radius: 999px;
+  background: currentColor;
+  margin-right: 7px;
+  vertical-align: middle;
+}
+
+/* --- 21.6 Columna de acciones ------------------------------------------ */
+/* Sin la línea/sombra de columna congelada, más estrecha y alineada. */
+
+app-table-dynamic .col-acciones-fija {
+  width: 110px !important;
+  min-width: 110px !important;
+  background: #fff !important;
+  box-shadow: none !important;
+  border-left: none !important;
+}
+
+app-table-dynamic .p-datatable-tbody>tr:hover .col-acciones-fija {
+  background: color-mix(in srgb, var(--ac) 4%, #fff) !important;
+}
+
+app-table-dynamic th.col-acciones-fija {
+  text-align: right !important;
+}
+
+app-table-dynamic td.col-acciones-fija .flex {
+  justify-content: flex-end !important;
+}
+
+app-table-dynamic .p-datatable-frozen-column {
+  box-shadow: none !important;
+}
+
+/* el botón de los tres puntos */
+app-table-dynamic .p-datatable-tbody .p-button.p-button-rounded {
+  width: 34px !important;
+  height: 34px !important;
+  min-height: 34px;
+  padding: 0;
+  border-radius: 10px !important;
+  background: var(--muted) !important;
+  border: 1px solid transparent !important;
+  color: var(--txt-3) !important;
+  transition: background .14s, color .14s, border-color .14s;
+}
+
+app-table-dynamic .p-datatable-tbody .p-button.p-button-rounded:hover {
+  background: var(--ac-s) !important;
+  border-color: var(--ac) !important;
+  color: var(--ac) !important;
+}
+
+app-table-dynamic .p-datatable-tbody .p-button.p-button-rounded .pi {
+  font-size: 14px;
+}
+
+/* --- 21.7 Fila de detalle ---------------------------------------------- */
+
+app-table-dynamic .p-datatable-tbody>tr.bg-gray-50 {
+  background: #FAFBFC !important;
+}
+
+app-table-dynamic .p-datatable-tbody>tr.bg-gray-50>td {
+  padding: 0 !important;
+  border-top: 1px solid #EDF0F5 !important;
+}
+
+app-table-dynamic .p-datatable-tbody .w-1.bg-primary {
+  background: var(--ac) !important;
+  width: 3px !important;
+}
+
+app-table-dynamic .p-datatable-tbody .border.border-primary {
+  border: 1px solid var(--line) !important;
+  border-radius: 12px !important;
+  background: #fff !important;
+  box-shadow: none !important;
+  padding: 14px 16px !important;
+}
+
+app-table-dynamic .p-datatable-tbody .border.border-primary .text-xs {
+  font-family: var(--wv-mono);
+  font-size: 9.5px !important;
+  font-weight: 600 !important;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: var(--txt-4) !important;
+  margin-bottom: 8px !important;
+}
+
+app-table-dynamic .p-datatable-tbody .border.border-primary .text-sm.font-semibold {
+  font-size: 14px !important;
+  font-weight: 600 !important;
+  color: var(--ink) !important;
+}
+
+/* --- 21.8 Estado vacío -------------------------------------------------- */
+
+app-table-dynamic .p-datatable-emptymessage>td {
+  border-bottom: none !important;
+  padding: 40px 20px !important;
+}
+
+app-table-dynamic .p-datatable-emptymessage .rounded-lg.bg-background {
+  border: none !important;
+  box-shadow: none !important;
+  background: transparent !important;
+}
+
+app-table-dynamic .p-datatable-emptymessage .pi-inbox {
+  font-size: 26px !important;
+  color: var(--txt-4);
+  background: var(--muted);
+  width: 56px;
+  height: 56px;
+  line-height: 56px;
+  border-radius: 18px;
+  margin-bottom: 14px;
+}
+
+app-table-dynamic .p-datatable-emptymessage h5 {
+  font-size: 15px !important;
+  font-weight: 600;
+  color: var(--ink) !important;
+  margin: 0 0 4px !important;
+}
+
+app-table-dynamic .p-datatable-emptymessage p {
+  font-size: 13.5px !important;
+  color: var(--txt-3) !important;
+}
+
+/* --- 21.9 Cargando ------------------------------------------------------ */
+
+app-table-dynamic .p-progressspinner-circle {
+  stroke: var(--ac) !important;
+}
+
+app-table-dynamic .text-500 {
+  font-size: 13.5px;
+  color: var(--txt-3);
+}
+
+/* --- 21.10 Modo oscuro -------------------------------------------------- */
+
+html.dark app-table-dynamic .p-datatable {
+  background: #121826;
+  border-color: var(--line);
+}
+
+html.dark app-table-dynamic .p-datatable-thead>tr>th {
+  background: #0F1522 !important;
+  border-bottom-color: var(--line) !important;
+}
+
+html.dark app-table-dynamic .p-datatable-tbody>tr,
+html.dark app-table-dynamic .p-datatable-tbody>tr.bg-surface-50,
+html.dark app-table-dynamic .col-acciones-fija {
+  background: #121826 !important;
+}
+
+html.dark app-table-dynamic .p-datatable-tbody>tr:hover,
+html.dark app-table-dynamic .p-datatable-tbody>tr:hover .col-acciones-fija {
+  background: #161E2E !important;
+}
+
+html.dark app-table-dynamic .p-datatable-tbody>tr>td {
+  border-bottom-color: var(--line) !important;
+  color: var(--ink);
+}
+
+html.dark app-table-dynamic .p-datatable-tbody>tr.bg-gray-50 {
+  background: #0F1522 !important;
+}
+
+html.dark app-table-dynamic .p-datatable-tbody .border.border-primary {
+  background: #121826 !important;
+  border-color: var(--line) !important;
+}
+
+html.dark app-table-dynamic .p-select {
+  background: var(--field);
+}
+
+/* --- 21.11 Móvil -------------------------------------------------------- */
+
+@media (max-width: 900px) {
+  app-table-dynamic>.p-1 {
+    padding: 4px 0 14px !important;
+  }
+
+  app-table-dynamic>.p-1 .flex.justify-end {
+    justify-content: flex-start !important;
+  }
+
+  app-table-dynamic .p-datatable-wrapper {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  app-table-dynamic .p-datatable-thead>tr>th,
+  app-table-dynamic .p-datatable-tbody>tr>td {
+    padding: 12px 14px !important;
+    white-space: nowrap;
+  }
+
+  app-table-dynamic .p-datatable-thead>tr>th:first-child,
+  app-table-dynamic .p-datatable-tbody>tr>td:first-child {
+    padding-left: 16px !important;
+  }
+
+  app-table-dynamic .col-acciones-fija {
+    width: 74px !important;
+    min-width: 74px !important;
+  }
+}
+
+/* ==========================================================================
+   22. LOGIN — formulario a la izquierda, panel azul a la derecha
+   Solo se invierte el orden visual con 'order'. No se toca el HTML ni nada más.
+   ========================================================================== */
+
+/* Panel azul a la izquierda, formulario a la derecha (como la referencia). */
+.login-card .login-illustration {
+  order: 1;
+}
+
+.login-card .login-form {
+  order: 2;
+}
+
+/* ==========================================================================
+   23. TIPOGRAFÍA — una sola familia en todo el portal
+   --------------------------------------------------------------------------
+   Instrument Sans en todo. Antes había tres familias mezcladas: Poppins
+   (heredada del proyecto), JetBrains Mono en rótulos y etiquetas, e Instrument
+   Sans en el resto. Los rótulos que iban en mono además llevaban mayúsculas y
+   letter-spacing amplio, que es lo que se veía distinto en el menú, el pie y
+   las cabeceras de tabla.
+
+   Se toma como referencia la hoja de AccessWeb: etiquetas y rótulos en
+   Instrument Sans 13.5px/500, sin mayúsculas forzadas ni letter-spacing.
+   Solo tipografía: ni un cambio de color, tamaño de panel, z-index o layout.
+   ========================================================================== */
+
+body,
+button,
+input,
+select,
+textarea,
+optgroup,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p,
+span,
+div,
+a,
+label,
+small,
+strong,
+li,
+td,
+th,
+.p-component,
+.p-button,
+.p-inputtext,
+.p-select,
+.p-datatable,
+.p-menu,
+.p-tag,
+.p-chip,
+.p-message,
+.swal2-popup {
+  font-family: var(--wv-sans);
+}
+
+/* los iconos conservan su propia fuente: darles Instrument Sans los borra */
+.pi,
+[class*=' pi-'],
+[class^='pi-'],
+.material-icons,
+.material-symbols-outlined,
+svg-icon,
+i[class*='fa-'] {
+  font-family: inherit;
+}
+
+.pi,
+[class*=' pi-'],
+[class^='pi-'] {
+  font-family: 'primeicons' !important;
+}
+
+/* --- 23.1 rótulos de grupo del menú lateral y del drawer --------------- */
+
+.wv-group-label,
+.wv-mobile-menu app-navbar-mobile-menu small,
+app-sidebar-menu small,
+app-navbar-mobile-menu small {
+  font-family: var(--wv-sans) !important;
+  font-size: 12.5px !important;
+  font-weight: 600 !important;
+  letter-spacing: 0 !important;
+  text-transform: none !important;
+}
+
+/* --- 23.2 pie de página y versión -------------------------------------- */
+
+.wv-foot-text,
+.wv-version,
+app-footer,
+app-footer span,
+app-footer div {
+  font-family: var(--wv-sans) !important;
+  font-size: 12.5px !important;
+  font-weight: 500 !important;
+  letter-spacing: 0 !important;
+  text-transform: none !important;
+}
+
+/* --- 23.3 etiquetas de campo ------------------------------------------- */
+
+.form-label,
+.wv-field label:not([for^='chk']),
+.wv-group-title,
+#main-content form label,
+.p-dialog label,
+body>div.fixed.inset-0.z-50 label {
+  font-family: var(--wv-sans) !important;
+  font-size: 13.5px !important;
+  font-weight: 500 !important;
+  letter-spacing: 0 !important;
+  text-transform: none !important;
+}
+
+/* subtítulos de sección dentro de formularios */
+.p-dialog h3.text-base.font-semibold,
+#main-content h3.text-base.font-semibold {
+  font-family: var(--wv-sans) !important;
+  font-size: 15px !important;
+  font-weight: 600 !important;
+  letter-spacing: -.01em !important;
+  text-transform: none !important;
+}
+
+/* --- 23.4 metadatos y chips -------------------------------------------- */
+
+.wv-meta,
+.wv-chip-meta,
+app-profile-menu .p-chip,
+app-profile-menu .p-chip.user-chip,
+app-profile-menu>.relative>div>.mx-4>span,
+app-table-dynamic .p-tag.\!bg-primary {
+  font-family: var(--wv-sans) !important;
+  letter-spacing: 0 !important;
+  text-transform: none !important;
+}
+
+.wv-meta,
+.wv-chip-meta {
+  font-size: 12.5px !important;
+  font-weight: 500 !important;
+}
+
+app-profile-menu>.relative>div>.mx-4>span {
+  font-size: 12.5px !important;
+}
+
+app-profile-menu .p-chip,
+app-table-dynamic .p-tag.\!bg-primary {
+  font-size: 12px !important;
+}
+
+/* --- 23.5 tablas -------------------------------------------------------- */
+
+.p-datatable .p-datatable-thead>tr>th,
+app-table-dynamic .p-datatable-thead>tr>th {
+  font-family: var(--wv-sans) !important;
+  font-size: 12.5px !important;
+  font-weight: 600 !important;
+  letter-spacing: 0 !important;
+  text-transform: none !important;
+}
+
+app-table-dynamic .p-datatable-tbody .border.border-primary .text-xs {
+  font-family: var(--wv-sans) !important;
+  font-size: 12.5px !important;
+  font-weight: 500 !important;
+  letter-spacing: 0 !important;
+  text-transform: none !important;
+}
+
+app-table-dynamic .p-select,
+.p-paginator .p-paginator-page,
+.p-paginator .p-paginator-next,
+.p-paginator .p-paginator-prev,
+.p-paginator .p-paginator-current {
+  font-family: var(--wv-sans) !important;
+  letter-spacing: 0 !important;
+}
+
+/* --- 23.6 campos y calendario ------------------------------------------ */
+
+input.is-mono,
+input[type='number'],
+.p-inputmask,
+.p-datepicker-input,
+.p-datepicker-panel table th>span {
+  font-family: var(--wv-sans) !important;
+}
+
+.p-datepicker-panel table th>span {
+  font-size: 12.5px !important;
+  font-weight: 600 !important;
+  letter-spacing: 0 !important;
+  text-transform: capitalize;
+}
+
+/* ==========================================================================
+   24. CONTROLES — se toma como referencia la hoja de AccessWeb
+   --------------------------------------------------------------------------
+   Los interruptores estaban como píldoras azules con texto en negrita,
+   flotando entre las columnas de campos: cada uno con borde de acento, a
+   distinta altura, y compitiendo con los propios campos. En la referencia son
+   filas discretas de 44px, del ancho de la columna, con la etiqueta a la
+   izquierda y el interruptor a la derecha, alineadas con la base del campo
+   vecino. Se replica eso.
+
+   Solo apariencia de controles: ni un cambio de z-index, overflow, posición
+   ni de la lógica de la sección 20.
+   ========================================================================== */
+
+/* --- 24.1 fila de interruptor ----------------------------------------- */
+/* La app los escribe como <div class="flex align-items-center gap-3"> con un
+   <label> y un <p-toggleswitch>. */
+
+#main-content [class*='col-']>.flex:has(p-toggleswitch),
+#main-content [class*='col-']>.flex:has(p-inputswitch),
+.p-dialog [class*='col-']>.flex:has(p-toggleswitch),
+body>div.fixed.inset-0.z-50 [class*='col-']>.flex:has(p-toggleswitch),
+.wv-chip:has(p-toggleswitch) {
+  width: 100%;
+  height: 44px;
+  padding: 0 14px;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: var(--muted);
+  display: flex !important;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px !important;
+  transition: background .14s, border-color .14s;
+}
+
+#main-content [class*='col-']>.flex:has(p-toggleswitch)>label,
+#main-content [class*='col-']>.flex:has(p-inputswitch)>label,
+.p-dialog [class*='col-']>.flex:has(p-toggleswitch)>label,
+body>div.fixed.inset-0.z-50 [class*='col-']>.flex:has(p-toggleswitch)>label,
+.wv-chip:has(p-toggleswitch)>label {
+  margin: 0 !important;
+  font-family: var(--wv-sans) !important;
+  font-size: 13.5px !important;
+  font-weight: 500 !important;
+  letter-spacing: 0 !important;
+  text-transform: none !important;
+  color: var(--txt-2) !important;
+  cursor: pointer;
+}
+
+/* activo: solo un matiz del color, sin píldora ni negritas */
+#main-content [class*='col-']>.flex:has(.p-toggleswitch-checked),
+.p-dialog [class*='col-']>.flex:has(.p-toggleswitch-checked),
+body>div.fixed.inset-0.z-50 [class*='col-']>.flex:has(.p-toggleswitch-checked) {
+  border-color: color-mix(in srgb, var(--ac) 35%, var(--line));
+  background: var(--ac-s);
+}
+
+#main-content [class*='col-']>.flex:has(.p-toggleswitch-checked)>label,
+.p-dialog [class*='col-']>.flex:has(.p-toggleswitch-checked)>label {
+  color: var(--ac) !important;
+}
+
+/* la columna que contiene un interruptor se alinea con la base del campo
+   vecino, así la fila deja de quedar escalonada */
+#main-content [class*='col-']:has(> .flex p-toggleswitch),
+#main-content [class*='col-']:has(> .flex p-inputswitch),
+.p-dialog [class*='col-']:has(> .flex p-toggleswitch) {
+  display: flex;
+  align-items: flex-end;
+}
+
+/* el componente trae margin-top:-8px (.switch-align), que lo descuadra */
+#main-content .flex>p-toggleswitch.switch-align,
+#main-content .flex>p-inputswitch.switch-align,
+.p-dialog .flex>p-toggleswitch.switch-align {
+  margin-top: 0 !important;
+}
+
+/* --- 24.2 el interruptor ---------------------------------------------- */
+
+.p-toggleswitch,
+.p-inputswitch {
+  width: 40px !important;
+  height: 22px !important;
+  flex: none;
+}
+
+.p-toggleswitch .p-toggleswitch-slider,
+.p-inputswitch .p-inputswitch-slider {
+  background: #CFD6E0 !important;
+  border-radius: 999px !important;
+  border: 0 !important;
+  box-shadow: none !important;
+}
+
+.p-toggleswitch .p-toggleswitch-handle,
+.p-inputswitch .p-inputswitch-slider::before {
+  width: 16px !important;
+  height: 16px !important;
+  background: #fff !important;
+  box-shadow: 0 1px 2px rgba(14, 20, 32, .2) !important;
+}
+
+.p-toggleswitch.p-toggleswitch-checked .p-toggleswitch-slider,
+.p-inputswitch.p-inputswitch-checked .p-inputswitch-slider {
+  background: var(--ac) !important;
+}
+
+.p-toggleswitch:focus-visible .p-toggleswitch-slider,
+.p-toggleswitch.p-focus .p-toggleswitch-slider {
+  box-shadow: 0 0 0 4px color-mix(in srgb, var(--ac) 14%, transparent) !important;
+}
+
+/* --- 24.3 campos ------------------------------------------------------- */
+
+input.p-inputtext,
+.p-inputtext,
+.form-control,
+.p-select,
+.p-multiselect,
+.p-datepicker-input,
+.p-inputnumber-input,
+.p-password-input,
+textarea.p-inputtextarea {
+  width: 100%;
+  min-height: 44px;
+  padding: 0 14px !important;
+  border: 1.5px solid var(--line) !important;
+  border-radius: 12px !important;
+  background: var(--field) !important;
+  color: var(--ink) !important;
+  font-family: var(--wv-sans) !important;
+  font-size: 14px !important;
+  font-weight: 400 !important;
+  box-shadow: none !important;
+  transition: background .14s, border-color .14s, box-shadow .14s;
+}
+
+textarea.p-inputtextarea {
+  padding: 12px 14px !important;
+  min-height: 96px;
+  line-height: 1.5;
+}
+
+input.p-inputtext:hover,
+.p-inputtext:hover,
+.p-select:hover,
+.p-multiselect:hover {
+  border-color: color-mix(in srgb, var(--ac) 30%, var(--line)) !important;
+}
+
+input.p-inputtext:focus,
+.p-inputtext:focus,
+.p-select.p-focus,
+.p-multiselect.p-focus,
+.p-password-input:focus,
+textarea.p-inputtextarea:focus {
+  background: var(--panel, #fff) !important;
+  border-color: var(--ac) !important;
+  box-shadow: 0 0 0 4px color-mix(in srgb, var(--ac) 12%, transparent) !important;
+  outline: none !important;
+}
+
+.p-select,
+.p-multiselect {
+  display: flex;
+  align-items: center;
+}
+
+.p-select .p-select-label,
+.p-multiselect .p-multiselect-label {
+  padding: 0 !important;
+  color: var(--txt-2);
+  font-family: var(--wv-sans);
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+}
+
+.p-select .p-select-dropdown,
+.p-multiselect .p-multiselect-dropdown {
+  width: 28px;
+  color: var(--txt-4);
+  background: transparent;
+  border: 0;
+}
+
+/* contraseña: el campo ocupa el ancho y el ojo no lo desborda */
+.p-password {
+  display: block;
+  width: 100%;
+}
+
+.p-password .p-password-input {
+  padding-right: 42px !important;
+}
+
+.p-password .p-password-toggle-mask-icon,
+.p-password .p-icon-field>.p-inputicon {
+  color: var(--txt-4);
+  right: 14px;
+}
+
+/* el asterisco de obligatorio */
+label .text-red-500,
+.form-label .text-red-500,
+.aw-required,
+.required-mark {
+  color: #EF5350;
+  font-weight: 500;
+}
+
+/* --- 24.4 casillas y radios ------------------------------------------- */
+
+.p-checkbox .p-checkbox-box,
+.p-radiobutton .p-radiobutton-box {
+  width: 20px;
+  height: 20px;
+  border: 1.5px solid var(--line) !important;
+  background: var(--field) !important;
+  box-shadow: none !important;
+}
+
+.p-checkbox .p-checkbox-box {
+  border-radius: 6px !important;
+}
+
+.p-checkbox.p-checkbox-checked .p-checkbox-box,
+.p-radiobutton.p-radiobutton-checked .p-radiobutton-box {
+  background: var(--ac) !important;
+  border-color: var(--ac) !important;
+}
+
+/* --- 24.5 pestañas ----------------------------------------------------- */
+
+.p-tablist-tab-list,
+.p-tabview-nav {
+  border-bottom: 1px solid var(--line) !important;
+  background: transparent !important;
+}
+
+.p-tab,
+.p-tabview-nav li .p-tabview-nav-link {
+  background: transparent !important;
+  border: 0 !important;
+  border-bottom: 2.5px solid transparent !important;
+  padding: 14px 2px !important;
+  margin-right: 26px !important;
+  font-family: var(--wv-sans) !important;
+  font-size: 14px !important;
+  font-weight: 500 !important;
+  color: var(--txt-4) !important;
+  transition: color .14s, border-color .14s;
+}
+
+.p-tab:hover {
+  color: var(--txt-2) !important;
+}
+
+.p-tab.p-tab-active,
+.p-tabview-nav li.p-highlight .p-tabview-nav-link {
+  color: var(--ink) !important;
+  font-weight: 600 !important;
+  border-bottom-color: var(--ac) !important;
+}
+
+.p-tablist-active-bar {
+  display: none !important;
+}
+
+/* --- 24.6 botones del pie del formulario ------------------------------- */
+
+.p-button:not(.p-button-rounded):not(.p-paginator-page) {
+  min-height: 44px;
+  padding: 0 20px !important;
+  border-radius: 12px !important;
+  font-family: var(--wv-sans) !important;
+  font-size: 14px !important;
+  font-weight: 600 !important;
+  box-shadow: none !important;
+  gap: 8px;
+}
+
+.p-button:not(.p-button-outlined):not(.p-button-text):not(.p-button-rounded) {
+  background: var(--ac) !important;
+  border-color: var(--ac) !important;
+  color: #fff !important;
+}
+
+.p-button:not(.p-button-outlined):not(.p-button-text):not(.p-button-rounded):hover {
+  background: color-mix(in srgb, var(--ac) 84%, #000) !important;
+}
+
+.p-button.p-button-secondary,
+.p-button.p-button-text {
+  background: var(--muted) !important;
+  border-color: transparent !important;
+  color: var(--txt-2) !important;
+}
+
+/* ==========================================================================
+   25. HOMOLOGAR LOS INTERRUPTORES CON LOS DEMÁS CAMPOS
+   --------------------------------------------------------------------------
+   Un campo normal ocupa dos piezas: la etiqueta (13.5px + 8px de separación,
+   unos 26px) y el control de 44px. La fila del interruptor solo tiene el
+   control, así que empezaba en el borde superior de la columna y quedaba una
+   línea más arriba que el campo de al lado.
+
+   Aquí se le añade ese hueco de 26px, de modo que su caja de 44px queda a la
+   misma altura que el input vecino. Y la etiqueta pasa a leerse igual que las
+   demás — mismo tamaño, mismo peso y mismo gris — en vez de en azul y negrita.
+   ========================================================================== */
+
+#main-content [class*='col-']>.flex:has(p-toggleswitch),
+#main-content [class*='col-']>.flex:has(p-inputswitch),
+.p-dialog [class*='col-']>.flex:has(p-toggleswitch),
+body>div.fixed.inset-0.z-50 [class*='col-']>.flex:has(p-toggleswitch) {
+  margin-top: 26px;
+}
+
+/* si la columna es la primera de su fila y no hay campo al lado, no hace falta
+   el hueco: la fila del formulario ya la separa */
+#main-content .grid>[class*='col-']:first-child>.flex:has(p-toggleswitch) {
+  margin-top: 26px;
+}
+
+/* la etiqueta del interruptor: idéntica a la de un campo */
+#main-content [class*='col-']>.flex:has(p-toggleswitch)>label,
+#main-content [class*='col-']>.flex:has(p-inputswitch)>label,
+.p-dialog [class*='col-']>.flex:has(p-toggleswitch)>label,
+body>div.fixed.inset-0.z-50 [class*='col-']>.flex:has(p-toggleswitch)>label,
+#main-content [class*='col-']>.flex:has(.p-toggleswitch-checked)>label,
+.p-dialog [class*='col-']>.flex:has(.p-toggleswitch-checked)>label {
+  font-family: var(--wv-sans) !important;
+  font-size: 13.5px !important;
+  font-weight: 500 !important;
+  letter-spacing: 0 !important;
+  text-transform: none !important;
+  color: var(--txt-3) !important;
+}
+
+/* el estado lo comunica el interruptor, no el fondo ni el color del texto:
+   así los cuatro interruptores se leen igual entre sí y con los campos */
+#main-content [class*='col-']>.flex:has(.p-toggleswitch-checked),
+.p-dialog [class*='col-']>.flex:has(.p-toggleswitch-checked),
+body>div.fixed.inset-0.z-50 [class*='col-']>.flex:has(.p-toggleswitch-checked) {
+  border-color: var(--line);
+  background: var(--muted);
+}
+
+#main-content [class*='col-']>.flex:has(p-toggleswitch):hover,
+.p-dialog [class*='col-']>.flex:has(p-toggleswitch):hover {
+  border-color: color-mix(in srgb, var(--ac) 30%, var(--line));
+}
+
+/* ==========================================================================
+   26. INTERRUPTOR CON ETIQUETA ARRIBA (.wv-switch-box)
+   --------------------------------------------------------------------------
+   La plantilla ya no envuelve etiqueta e interruptor en un .flex: la etiqueta
+   es un .form-label normal y el interruptor va dentro de un <div
+   class="wv-switch-box">. Así la caja se pinta en el div — no en el
+   <p-toggleswitch>, que es el control y se deformaba — y la pieza queda con la
+   misma estructura que un campo: etiqueta encima, control de 44px debajo.
+   ========================================================================== */
+
+.wv-switch-box {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  height: 44px;
+  padding: 0 14px;
+  border: 1.5px solid var(--line);
+  border-radius: 12px;
+  background: var(--field);
+  transition: border-color .14s, background .14s;
+}
+
+.wv-switch-box:hover {
+  border-color: color-mix(in srgb, var(--ac) 30%, var(--line));
+}
+
+.wv-switch-box:has(.p-toggleswitch-checked) {
+  border-color: color-mix(in srgb, var(--ac) 35%, var(--line));
+  background: var(--ac-s);
+}
+
+.wv-switch-box p-toggleswitch {
+  display: inline-flex;
+  margin: 0 !important;
+}
+
+/* ==========================================================================
+   27. CABECERA DE PÁGINA Y DETALLES DE CONTROL
+   --------------------------------------------------------------------------
+   Tomado de la pantalla de referencia (Usuario - listado):
+   · la cabecera con el título y el botón Agregar va DENTRO de un panel blanco,
+     no suelta sobre el fondo gris. La regla anterior exigía que el bloque
+     fuese hijo directo de #main-content > div, y en varias páginas cuelga un
+     nivel más abajo, así que no se aplicaba. Aquí se busca por contenido.
+   · el desplegable de los select se dibujaba como un cuadro aparte, con su
+     propia línea divisoria pegada al borde. Pasa a ser solo el chevrón.
+   · las etiquetas de estado partían la palabra en dos líneas.
+   ========================================================================== */
+
+/* --- 27.1 cabecera de página en panel --------------------------------- */
+
+#main-content .flex.justify-between:has(> .inline-block > h3) {
+  margin: 0 0 10px !important;
+  background: var(--panel, #fff);
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  box-shadow: var(--wv-shadow);
+  padding: 22px 28px;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 20px;
+}
+
+#main-content .flex.justify-between:has(> .inline-block > h3)>.inline-block {
+  display: block;
+  min-width: 0;
+}
+
+#main-content .flex.justify-between:has(> .inline-block > h3) h3 {
+  font-size: 20px !important;
+  line-height: 1.2;
+  font-weight: 600 !important;
+  letter-spacing: -.02em;
+  color: var(--ink) !important;
+  margin: 0 0 4px !important;
+}
+
+#main-content .flex.justify-between:has(> .inline-block > h3) h3+div,
+#main-content .flex.justify-between:has(> .inline-block > h3) h3+div a {
+  font-size: 13.5px !important;
+  font-weight: 400 !important;
+  color: var(--txt-3) !important;
+}
+
+#main-content .flex.justify-between:has(> .inline-block > h3) h3+div a:hover {
+  color: var(--ac) !important;
+}
+
+#main-content .flex.justify-between:has(> .inline-block > h3)>.inline-block.space-x-4 {
+  margin-left: auto;
+}
+
+/* --- 27.2 el desplegable de los select -------------------------------- */
+
+.p-select .p-select-dropdown,
+.p-multiselect .p-multiselect-dropdown,
+.p-datepicker .p-datepicker-dropdown,
+.p-autocomplete .p-autocomplete-dropdown {
+  width: 34px !important;
+  min-width: 34px !important;
+  background: transparent !important;
+  border: 0 !important;
+  border-left: 0 !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+  color: var(--txt-4) !important;
+}
+
+.p-select .p-select-dropdown .p-icon,
+.p-multiselect .p-multiselect-dropdown .p-icon,
+.p-select .p-select-dropdown svg,
+.p-multiselect .p-multiselect-dropdown svg {
+  width: 14px;
+  height: 14px;
+}
+
+/* el select reserva sitio para el chevrón, así el texto no se le mete debajo */
+.p-select,
+.p-multiselect,
+.p-autocomplete {
+  padding-right: 4px !important;
+}
+
+/* --- 27.3 etiquetas de estado en una sola línea ----------------------- */
+
+.p-datatable .p-tag,
+app-table-dynamic .p-tag {
+  white-space: nowrap;
+  display: inline-flex;
+  align-items: center;
+  width: auto;
+  max-width: none;
+}
+
+.p-datatable .p-tag .p-tag-label {
+  white-space: nowrap;
+}
+
+/* la celda no fuerza el corte */
+app-table-dynamic .p-datatable-tbody>tr>td:has(.p-tag) {
+  white-space: nowrap;
+}
+
+/* --- 27.4 cabecera de columnas, como la referencia -------------------- */
+
+app-table-dynamic .p-datatable-thead>tr>th {
+  font-size: 13.5px !important;
+  font-weight: 500 !important;
+  color: var(--txt-3) !important;
+}
+
+/* ==========================================================================
+   28. TABLA EN FILAS-TARJETA Y RADIOS HOMOLOGADOS
+   --------------------------------------------------------------------------
+   En la pantalla de referencia la tabla no tiene marco: la cabecera va sin
+   fondo y cada registro es una tarjeta independiente, separada de la
+   siguiente, con su barra de color a la izquierda. Mi versión las pegaba con
+   líneas de borde dentro de un marco que además quedaba cortado por el borde
+   del panel.
+
+   Además se igualan los radios: paneles 18, controles y filas 12. Antes el
+   marco de la tabla iba a 14 y se notaba la diferencia con el panel.
+   ========================================================================== */
+
+/* --- 28.1 el marco desaparece ----------------------------------------- */
+
+app-table-dynamic .p-datatable {
+  border: 0 !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  overflow: visible !important;
+}
+
+app-table-dynamic .p-datatable-wrapper {
+  border-radius: 0 !important;
+  padding: 0 2px;
+}
+
+app-table-dynamic .p-datatable-table,
+app-table-dynamic .p-datatable table {
+  border-collapse: separate !important;
+  border-spacing: 0 8px !important;
+}
+
+/* --- 28.2 cabecera sin fondo ------------------------------------------ */
+
+app-table-dynamic .p-datatable-thead>tr>th {
+  background: transparent !important;
+  border: 0 !important;
+  padding: 6px 18px 10px !important;
+  font-size: 13.5px !important;
+  font-weight: 500 !important;
+  color: var(--txt-3) !important;
+}
+
+app-table-dynamic .p-datatable-thead>tr>th:first-child {
+  padding-left: 20px !important;
+}
+
+/* --- 28.3 cada registro, una tarjeta ---------------------------------- */
+
+app-table-dynamic .p-datatable-tbody>tr {
+  background: var(--panel, #fff) !important;
+}
+
+app-table-dynamic .p-datatable-tbody>tr>td {
+  border: 1px solid var(--line) !important;
+  border-left: 0 !important;
+  border-right: 0 !important;
+  background: var(--panel, #fff) !important;
+  padding: 16px 18px !important;
+  font-size: 14px;
+  color: var(--ink);
+  vertical-align: middle;
+}
+
+app-table-dynamic .p-datatable-tbody>tr>td:first-child {
+  border-left: 3px solid var(--ac) !important;
+  border-top-left-radius: 12px;
+  border-bottom-left-radius: 12px;
+  padding-left: 17px !important;
+}
+
+app-table-dynamic .p-datatable-tbody>tr>td:last-child {
+  border-right: 1px solid var(--line) !important;
+  border-top-right-radius: 12px;
+  border-bottom-right-radius: 12px;
+}
+
+app-table-dynamic .p-datatable-tbody>tr:hover>td {
+  background: color-mix(in srgb, var(--ac) 4%, #fff) !important;
+  border-color: color-mix(in srgb, var(--ac) 22%, var(--line)) !important;
+}
+
+app-table-dynamic .p-datatable-tbody>tr:hover>td:first-child {
+  border-left-color: var(--ac) !important;
+}
+
+/* la fila de detalle sigue siendo un bloque completo */
+app-table-dynamic .p-datatable-tbody>tr.bg-gray-50>td {
+  border-radius: 12px;
+  border-left: 3px solid var(--ac) !important;
+  border-right: 1px solid var(--line) !important;
+  background: #FAFBFC !important;
+}
+
+/* --- 28.4 la columna de acciones acompaña a la tarjeta ---------------- */
+
+app-table-dynamic .col-acciones-fija {
+  background: var(--panel, #fff) !important;
+}
+
+app-table-dynamic .p-datatable-tbody>tr:hover .col-acciones-fija {
+  background: color-mix(in srgb, var(--ac) 4%, #fff) !important;
+}
+
+/* --- 28.5 aire dentro del panel --------------------------------------- */
+
+#main-content .rounded-lg.bg-background .overflow-x-auto:has(app-table-dynamic) {
+  padding-left: 4px;
+  padding-right: 4px;
+}
+
+/* --- 28.6 radios homologados ------------------------------------------ */
+
+#main-content .rounded-lg.bg-background,
+#main-content .flex.justify-between:has(> .inline-block > h3),
+.wv-panel {
+  border-radius: 18px !important;
+}
+
+#main-content .rounded-lg.bg-background .rounded-lg.bg-background {
+  border-radius: 0 !important;
+}
+
+input.p-inputtext,
+.p-inputtext,
+.form-control,
+.p-select,
+.p-multiselect,
+.p-datepicker-input,
+.p-inputnumber-input,
+.p-password-input,
+textarea.p-inputtextarea,
+.wv-switch-box,
+button.rounded-md,
+.p-button:not(.p-button-rounded):not(.p-paginator-page) {
+  border-radius: 12px !important;
+}
+
+/* ==========================================================================
+   29. AZUL DE LA PLANTILLA DE REFERENCIA
+   --------------------------------------------------------------------------
+   La referencia usa #186DDE como primario, con #1257B8 en hover y #EDF3FE como
+   fondo suave. El tema 'blue' del proyecto venía en #2490FF, más frío y
+   saturado: por eso los botones se veían de un azul distinto.
+
+   Los tonos derivados se calculan igual que allí, así que cualquier color del
+   panel (rosa, violeta, verde…) sigue funcionando con la misma proporción.
+   ========================================================================== */
+
+:root {
+  --ac-dd: color-mix(in srgb, var(--primary) 72%, #000);
+  --on-ac: #fff;
+}
+
+/* hover de los botones sólidos, con el tono de la referencia */
+button.rounded-md.bg-primary:hover,
+.p-button:not(.p-button-outlined):not(.p-button-text):not(.p-button-rounded):hover {
+  background: var(--ac-d) !important;
+  border-color: var(--ac-d) !important;
+}
+
+button.rounded-md.bg-primary:active,
+.p-button:not(.p-button-outlined):not(.p-button-text):not(.p-button-rounded):active {
+  background: var(--ac-dd) !important;
+}
+
+/* ==========================================================================
+   30. LOGIN — igual que la referencia
+   --------------------------------------------------------------------------
+   Tres diferencias con el ejemplo:
+   · las etiquetas salían en versalitas con letter-spacing amplio ("CORREO
+     ELECTRÓNICO", y el pie en "VERSIÓN 1.0.0"). En la referencia son texto
+     normal en Instrument Sans: "Correo electrónico".
+   · los campos tenían caja rellena con esquinas redondeadas; en la referencia
+     solo llevan línea inferior, sin fondo.
+   · el botón era una píldora; en la referencia el radio es de 12.
+   ========================================================================== */
+
+/* los iconos quedan fuera: PrimeIcons es una fuente y con Instrument Sans
+   se convierten en cuadros vacíos */
+.login-card,
+.login-card *:not(.pi):not([class^='pi-']):not([class*=' pi-']):not(.material-icons):not(.material-symbols-outlined) {
+  font-family: var(--wv-sans) !important;
+}
+
+.login-card .pi,
+.login-card [class^='pi-'],
+.login-card [class*=' pi-'] {
+  font-family: 'primeicons' !important;
+}
+
+/* --- 30.1 etiquetas ---------------------------------------------------- */
+
+.login-card .login-form label,
+.login-card .login-form .form-label {
+  font-family: var(--wv-sans) !important;
+  font-size: 14px !important;
+  font-weight: 400 !important;
+  letter-spacing: 0 !important;
+  text-transform: none !important;
+  color: var(--ink) !important;
+  margin-bottom: 6px !important;
+}
+
+/* --- 30.2 campos: solo línea inferior ---------------------------------- */
+
+.login-card input.p-inputtext,
+.login-card .p-inputtext,
+.login-card .p-password-input,
+.login-card input[type='text'],
+.login-card input[type='email'],
+.login-card input[type='password'] {
+  background: transparent !important;
+  border: 0 !important;
+  border-bottom: 1.5px solid var(--line) !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+  padding: 0 0 0 34px !important;
+  height: 42px;
+  min-height: 42px;
+  font-size: 15px !important;
+  color: var(--ink) !important;
+}
+
+.login-card input.p-inputtext:focus,
+.login-card .p-inputtext:focus,
+.login-card .p-password-input:focus {
+  background: transparent !important;
+  border-bottom-color: var(--ac) !important;
+  box-shadow: none !important;
+}
+
+.login-card input::placeholder {
+  color: var(--txt-4) !important;
+}
+
+/* el icono, dentro de la línea y a la izquierda */
+.login-card .p-icon-field,
+.login-card .p-inputgroup {
+  position: relative;
+  display: block;
+  width: 100%;
+}
+
+.login-card .p-inputicon,
+.login-card .p-input-icon-left>i,
+.login-card .p-inputgroup-addon {
+  position: absolute;
+  left: 4px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: transparent !important;
+  border: 0 !important;
+  padding: 0 !important;
+  width: auto !important;
+  color: var(--txt-3) !important;
+  z-index: 1;
+}
+
+.login-card .p-password {
+  display: block;
+  width: 100%;
+}
+
+.login-card .p-password .p-password-input {
+  padding-right: 34px !important;
+}
+
+/* --- 30.3 botón -------------------------------------------------------- */
+
+.login-card .login-button,
+.login-card button[type='submit'],
+.login-card .p-button {
+  width: 100%;
+  height: 48px;
+  border-radius: 12px !important;
+  background: var(--ac) !important;
+  border: 0 !important;
+  color: #fff !important;
+  font-family: var(--wv-sans) !important;
+  font-size: 15px !important;
+  font-weight: 600 !important;
+  box-shadow: none !important;
+}
+
+.login-card .login-button:hover:not(:disabled),
+.login-card button[type='submit']:hover:not(:disabled) {
+  background: var(--ac-d) !important;
+}
+
+.login-card .login-button:disabled,
+.login-card button[type='submit']:disabled {
+  background: color-mix(in srgb, var(--ac) 45%, #fff) !important;
+  color: #fff !important;
+  cursor: not-allowed;
+}
+
+/* --- 30.4 pie ---------------------------------------------------------- */
+
+.login-card .login-footer,
+.login-card .login-footer *,
+.login-card .version-text {
+  font-family: var(--wv-sans) !important;
+  font-size: 13px !important;
+  font-weight: 400 !important;
+  letter-spacing: 0 !important;
+  text-transform: none !important;
+  color: var(--txt-3) !important;
+}
+
+.login-card .login-footer {
+  border-top: 1px solid var(--line);
+  padding-top: 16px;
+  text-align: left;
+}
+
+/* --- 30.5 encabezado, recordarme y enlace ------------------------------ */
+
+/* solo el título del FORMULARIO: antes alcanzaba también al
+   "Bienvenido a WebVisitsMobile" del panel azul y lo ponía negro */
+.login-card .login-form h1,
+.login-card .login-form h2,
+.login-card .login-form .login-title {
+  font-size: 26px !important;
+  font-weight: 600 !important;
+  letter-spacing: -.02em;
+  color: var(--ink) !important;
+}
+
+.login-card .login-form .login-subtitle,
+.login-card .login-form h2+p {
+  font-size: 14px !important;
+  color: var(--txt-3) !important;
+}
+
+/* el panel azul conserva su tipografía grande y blanca */
+.login-card .login-illustration h1,
+.login-card .login-illustration h2,
+.login-card .login-illustration .welcome-title {
+  font-size: clamp(36px, 4vw, 54px) !important;
+  line-height: 1.05 !important;
+  font-weight: 700 !important;
+  letter-spacing: -.03em !important;
+  color: #fff !important;
+}
+
+.login-card .login-illustration p,
+.login-card .login-illustration .welcome-subtitle {
+  font-size: 15px !important;
+  font-weight: 400 !important;
+  color: rgba(255, 255, 255, .82) !important;
+}
+
+.login-card .login-form a {
+  font-size: 14px !important;
+  font-weight: 500 !important;
+  color: var(--ac) !important;
+}
+
+.login-card .login-form .p-checkbox+label,
+.login-card .login-form .remember-label {
+  font-size: 14px !important;
+  font-weight: 400 !important;
+  color: var(--txt-2) !important;
+}
+
+/* --- 30.6 los campos, con línea inferior visible ----------------------- */
+/* sign-in.css pinta el relleno en el contenedor, no en el input: por eso
+   seguía viéndose la caja azulada. */
+
+.login-card .login-form .p-icon-field,
+.login-card .login-form .p-inputgroup,
+.login-card .login-form .input-wrapper,
+.login-card .login-form .p-password {
+  background: transparent !important;
+  border: 0 !important;
+  border-bottom: 1.5px solid var(--line) !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+  padding: 0 !important;
+}
+
+.login-card .login-form .p-icon-field:focus-within,
+.login-card .login-form .p-inputgroup:focus-within,
+.login-card .login-form .input-wrapper:focus-within,
+.login-card .login-form .p-password:focus-within {
+  border-bottom-color: var(--ac) !important;
+}
+
+.login-card .login-form input.p-inputtext,
+.login-card .login-form .p-password-input {
+  border-bottom: 0 !important;
+}
+
+.login-card .login-form .pi {
+  font-size: 16px;
+}
+
+/* --- 30.7 estructura real del login: .input-group ---------------------- */
+/* sign-in.html usa  <div class="input-group"> <span class="input-group-text">
+   <i class="pi pi-envelope"> </span> <input class="form-control"> </div>.
+   Mis reglas anteriores apuntaban a .p-icon-field / .input-wrapper, que no
+   existen aquí: de ahí que no apareciera la línea inferior y que el icono
+   quedara más alto que el campo. */
+
+.login-card .login-form .input-group {
+  display: flex !important;
+  align-items: center !important;
+  gap: 10px;
+  width: 100%;
+  height: 44px;
+  padding: 0 !important;
+  background: transparent !important;
+  border: 0 !important;
+  border-bottom: 1.5px solid var(--line) !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+  overflow: visible !important;
+}
+
+.login-card .login-form .input-group:focus-within {
+  border-bottom-color: var(--ac) !important;
+  border-bottom-width: 2px !important;
+}
+
+/* el icono: caja sin fondo, centrada con el campo */
+.login-card .login-form .input-group .input-group-text {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center;
+  align-self: center !important;
+  height: 100% !important;
+  width: 22px;
+  min-width: 22px;
+  margin: 0 !important;
+  padding: 0 !important;
+  background: transparent !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  color: var(--txt-3) !important;
+  line-height: 1 !important;
+}
+
+.login-card .login-form .input-group .input-group-text .pi {
+  font-family: 'primeicons' !important;
+  font-size: 17px;
+  line-height: 1 !important;
+  display: block;
+}
+
+.login-card .login-form .input-group:focus-within .input-group-text {
+  color: var(--ac) !important;
+}
+
+/* el campo: sin caja ni relleno, dentro de la misma línea */
+.login-card .login-form .input-group .form-control,
+.login-card .login-form .input-group input {
+  flex: 1 1 auto;
+  height: 100% !important;
+  min-height: 0 !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  background: transparent !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+  font-size: 15px !important;
+  color: var(--ink) !important;
+  outline: none !important;
+}
+
+.login-card .login-form .input-group .form-control:focus {
+  box-shadow: none !important;
+}
+
+/* el ojo de la contraseña, al otro extremo de la línea */
+.login-card .login-form .input-group .toggle-password,
+.login-card .login-form .input-group button {
+  align-self: center !important;
+  height: 100% !important;
+  width: 34px;
+  margin: 0 !important;
+  padding: 0 !important;
+  background: transparent !important;
+  border: 0 !important;
+  color: var(--txt-4) !important;
+}
+
+/* el contenedor de error no debe añadir su propia caja */
+.login-card .login-form .error-wrapper {
+  background: transparent !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  padding: 0 !important;
+}
+
+.login-card .login-form .form-group {
+  margin-bottom: 22px;
+}
+
+/* --- 30.8 autocompletado del navegador -------------------------------- */
+/* Al elegir un correo sugerido, Chrome pinta el campo con su propio fondo
+   (-internal-light-dark / -internal-autofill-selected). Ese relleno tapa la
+   línea inferior y deja el bloque azulado. El fondo no se puede cambiar con
+   'background' — Chrome lo ignora — pero sí con una sombra interior enorme,
+   que es la técnica estándar. */
+
+.login-card .login-form input:-webkit-autofill,
+.login-card .login-form input:-webkit-autofill:hover,
+.login-card .login-form input:-webkit-autofill:focus,
+.login-card .login-form input:-webkit-autofill:active,
+.login-card .login-form .form-control:-webkit-autofill {
+  -webkit-box-shadow: 0 0 0 1000px #fff inset !important;
+  box-shadow: 0 0 0 1000px #fff inset !important;
+  -webkit-text-fill-color: var(--ink) !important;
+  caret-color: var(--ink);
+  background: transparent !important;
+  background-clip: content-box !important;
+  transition: background-color 6000000s 0s, color 6000000s 0s;
+}
+
+/* Firefox */
+.login-card .login-form input:autofill,
+.login-card .login-form .form-control:autofill {
+  background: transparent !important;
+  box-shadow: 0 0 0 1000px #fff inset !important;
+  -webkit-text-fill-color: var(--ink) !important;
+  filter: none;
+}
+
+/* la línea se dibuja en .input-group, así que sigue visible con el campo
+   autocompletado; se refuerza para que nada la tape */
+.login-card .login-form .input-group:has(input:-webkit-autofill) {
+  border-bottom: 1.5px solid var(--line) !important;
+  background: transparent !important;
+}
+
+.login-card .login-form .input-group:has(input:-webkit-autofill):focus-within {
+  border-bottom-color: var(--ac) !important;
+}
+
+/* mismo tratamiento en el resto de la app */
+#main-content input:-webkit-autofill,
+.p-dialog input:-webkit-autofill,
+body>div.fixed.inset-0.z-50 input:-webkit-autofill {
+  -webkit-box-shadow: 0 0 0 1000px var(--field) inset !important;
+  -webkit-text-fill-color: var(--ink) !important;
+  transition: background-color 6000000s 0s, color 6000000s 0s;
+}
+
+/* ==========================================================================
+   31. PAGINADOR DE LA CABECERA ("Página 1 de 3")
+   --------------------------------------------------------------------------
+   Se partía en tres líneas: "Página / 1 / de" y el "3" caía debajo, pegado al
+   borde. Pasa a una sola línea, con el selector más ancho y separación entre
+   las piezas, como en la referencia.
+   ========================================================================== */
+
+app-table-dynamic>.p-1>.grid.grid-cols-12>div:last-child {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  flex-wrap: nowrap;
+  gap: 10px;
+  white-space: nowrap;
+  padding-right: 4px;
+}
+
+app-table-dynamic>.p-1>.grid.grid-cols-12>div:last-child>* {
+  flex: 0 0 auto;
+  white-space: nowrap;
+  margin: 0 !important;
+}
+
+app-table-dynamic>.p-1 .text-600,
+app-table-dynamic>.p-1>.grid.grid-cols-12>div:last-child span,
+app-table-dynamic>.p-1>.grid.grid-cols-12>div:last-child label {
+  font-size: 14px !important;
+  font-weight: 400 !important;
+  color: var(--txt-3) !important;
+  white-space: nowrap;
+}
+
+app-table-dynamic>.p-1 .p-select {
+  width: 84px !important;
+  min-width: 84px !important;
+  height: 44px;
+  min-height: 44px !important;
+  padding: 0 6px 0 14px !important;
+  font-size: 14px !important;
+  font-weight: 400 !important;
+}
+
+app-table-dynamic>.p-1 .p-select .p-select-label {
+  padding: 0 !important;
+  font-size: 14px !important;
+  color: var(--ink) !important;
+}
+
+/* el contador de la izquierda, como en la referencia */
+app-table-dynamic>.p-1>.grid.grid-cols-12>div:first-child {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  white-space: nowrap;
+}
+
+app-table-dynamic .p-tag.\!bg-primary {
+  min-width: 34px;
+  justify-content: center;
+  font-size: 13px !important;
+  padding: 5px 9px !important;
+}
+
+app-table-dynamic .text-900.text-base.font-semibold {
+  font-size: 17px !important;
+}
+
+@media (max-width: 700px) {
+  app-table-dynamic>.p-1>.grid.grid-cols-12>div:last-child {
+    justify-content: flex-start;
+  }
 }
