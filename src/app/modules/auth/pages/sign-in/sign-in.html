@@ -235,25 +235,38 @@
 </p-dialog>
 
 <p-dialog header="Cambio de contraseña" [modal]="true" [(visible)]="CambiarContrasena"
-    [style]="{ width: '50rem', borderRadius: '12px' }" [breakpoints]="{'640px': '90vw'}" class="password-dialog">
+    [style]="{ width: '40rem', borderRadius: '24px', overflow: 'hidden' }" [breakpoints]="{'640px': '92vw'}"
+    class="password-dialog" styleClass="password-dialog"
+    [contentStyle]="{ borderBottomLeftRadius: '24px', borderBottomRightRadius: '24px' }">
 
     <form autocomplete="off" [formGroup]="FormularioContrasena" class="password-form">
         <!-- Paso 1: Ingreso de email -->
         <div *ngIf="PasoCambioContrasena==1" class="step-container">
-            <div class="step-header">
-                <i class="pi pi-envelope step-icon"></i>
-                <h4 class="step-title">Recuperación de contraseña</h4>
-                <p class="step-description">
-                    Ingrese su dirección de correo electrónico para recibir instrucciones de recuperación.
-                </p>
+            <div class="step-header"
+                style="display:flex;align-items:flex-start;gap:14px;text-align:left;margin-bottom:26px">
+                <i class="pi pi-envelope step-icon"
+                    style="flex:0 0 44px;width:44px;height:44px;display:flex;align-items:center;justify-content:center;margin:0;border-radius:12px;background:color-mix(in srgb, var(--ac, #186DDE) 12%, transparent);color:var(--ac, #186DDE);font-size:17px"></i>
+                <div style="min-width:0">
+                    <h4 class="step-title"
+                        style="margin:0 0 4px;font-size:17px;font-weight:600;letter-spacing:-.01em;color:var(--ink, #0E1420)">
+                        Recuperación de contraseña</h4>
+                    <p class="step-description"
+                        style="margin:0;font-size:14px;line-height:1.45;color:var(--txt-3, #6B7686)">
+                        Ingrese su dirección de correo electrónico para recibir instrucciones de recuperación.
+                    </p>
+                </div>
             </div>
 
             <div class="form-group">
-                <label for="email" class="form-label">Correo electrónico</label>
-                <div class="input-with-icon">
-                    <i class="pi pi-at input-icon"></i>
+                <label for="email" class="form-label"
+                    style="display:block;margin-bottom:8px;font-size:14px;font-weight:400;color:var(--ink, #0E1420);letter-spacing:0;text-transform:none">Correo
+                    electrónico</label>
+                <div class="input-with-icon" style="position:relative;display:block">
+                    <i class="pi pi-at input-icon"
+                        style="position:absolute;left:16px;top:50%;transform:translateY(-50%);color:var(--txt-4, #98A2B3);font-size:15px;line-height:1;z-index:2;pointer-events:none"></i>
                     <input type="email" id="email" pInputText class="form-control" placeholder="tucorreo@ejemplo.com"
-                        formControlName="email">
+                        formControlName="email"
+                        style="width:100% !important;height:48px !important;padding:0 16px 0 46px !important;border:1px solid var(--line, #E2E8F1) !important;border-radius:12px !important;background:var(--field, #F7F9FC) !important;color:var(--ink, #0E1420) !important;font-size:15px !important;box-shadow:none !important">
                 </div>
 
                 <small class="error-message" *ngIf="errorCorreo">
@@ -262,8 +275,10 @@
                 </small>
             </div>
 
-            <div class="form-actions">
+            <div class="form-actions"
+                style="margin-top:24px;padding-top:24px;border-top:1px solid var(--line, #E2E8F1)">
                 <button class="bg-primary btn-login" type="button"
+                    style="width:100%;height:50px;border:0;border-radius:12px;font-size:15px;font-weight:600;color:#fff"
                     [disabled]="FormularioContrasena.get('email')!.invalid" (click)="enviarCorreo()">Enviar</button>
             </div>
         </div>

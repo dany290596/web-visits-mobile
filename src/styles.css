@@ -6315,3 +6315,56 @@ html.dark .wv-switch-box:has(.p-toggleswitch-checked) {
   background: transparent !important;
   border: 0 !important;
 }
+
+/* --- 49. diálogo de cambio de contraseña ------------------------------- */
+
+.password-dialog.p-dialog,
+.p-dialog.password-dialog {
+  border-radius: 24px !important;
+  overflow: hidden !important;
+  border: 0 !important;
+}
+
+.password-dialog .p-dialog-header {
+  border-top-left-radius: 24px !important;
+  border-top-right-radius: 24px !important;
+  border-bottom: 0 !important;
+  padding: 26px 28px 8px !important;
+}
+
+.password-dialog .p-dialog-title {
+  font-size: 19px !important;
+  font-weight: 600 !important;
+}
+
+.password-dialog .p-dialog-content {
+  border-bottom-left-radius: 24px !important;
+  border-bottom-right-radius: 24px !important;
+  padding: 10px 28px 28px !important;
+}
+
+/* el diálogo en oscuro */
+html.dark .password-dialog.p-dialog,
+html.dark .password-dialog .p-dialog-header,
+html.dark .password-dialog .p-dialog-content {
+  background: #121826 !important;
+}
+
+html.dark .password-dialog .p-dialog-title,
+html.dark .password-dialog h4 {
+  color: var(--ink) !important;
+}
+
+html.dark .password-dialog p,
+html.dark .password-dialog small {
+  color: var(--txt-3) !important;
+}
+
+html.dark .password-dialog input::placeholder {
+  color: var(--txt-4) !important;
+}
+
+html.dark .password-dialog input:-webkit-autofill {
+  -webkit-text-fill-color: var(--ink) !important;
+  -webkit-box-shadow: 0 0 0 1000px var(--field) inset !important;
+}
