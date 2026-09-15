@@ -6277,3 +6277,41 @@ html.dark .p-togglebutton.p-togglebutton-checked {
 html.dark .p-selectbutton .p-togglebutton.p-togglebutton-checked .p-togglebutton-label {
   color: var(--ink) !important;
 }
+
+/* --- 48. interruptores sin caja ---------------------------------------- */
+/* Quedaban dentro de un recuadro tipo campo (borde + fondo). Se quita la caja
+   y se conserva el interruptor y su alineación con los campos vecinos. */
+
+.wv-switch-box,
+#main-content [class*='col-']>.flex:has(p-toggleswitch),
+#main-content [class*='col-']>.flex:has(p-inputswitch),
+.p-dialog [class*='col-']>.flex:has(p-toggleswitch),
+body>div.fixed.inset-0.z-50 [class*='col-']>.flex:has(p-toggleswitch),
+#main-content [class*='col-']>.flex:has(.p-toggleswitch-checked),
+.p-dialog [class*='col-']>.flex:has(.p-toggleswitch-checked),
+.wv-switch-box:hover,
+.wv-switch-box:has(.p-toggleswitch-checked),
+#main-content [class*='col-']>.flex:has(p-toggleswitch):hover {
+  border: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  border-radius: 0 !important;
+  padding: 0 !important;
+}
+
+/* el interruptor mantiene el alto de un campo para no descuadrar la fila */
+.wv-switch-box,
+#main-content [class*='col-']>.flex:has(p-toggleswitch),
+.p-dialog [class*='col-']>.flex:has(p-toggleswitch) {
+  display: flex !important;
+  align-items: center !important;
+  height: 44px !important;
+  min-height: 44px !important;
+}
+
+html.dark .wv-switch-box,
+html.dark #main-content [class*='col-']>.flex:has(p-toggleswitch),
+html.dark .wv-switch-box:has(.p-toggleswitch-checked) {
+  background: transparent !important;
+  border: 0 !important;
+}
