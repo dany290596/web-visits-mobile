@@ -5986,3 +5986,52 @@ html.dark app-table-dynamic .p-tag.p-tag-info .p-tag-label::before,
 html.dark .p-datatable .p-tag.p-tag-info .p-tag-label::before {
   background: #4ED7AC !important;
 }
+
+/* --- 43. borde izquierdo de la fila según el estado del registro ------- */
+/* Verde si el registro está activo, gris oscuro si está inactivo. Se resuelve
+   con :has() sobre el badge de la propia fila, así no hace falta tocar el
+   componente ni la lógica. */
+
+app-table-dynamic .p-datatable-tbody>tr:has(.p-tag-info)>td:first-child,
+app-table-dynamic .p-datatable-tbody>tr:has(.p-tag-primary)>td:first-child,
+app-table-dynamic .p-datatable-tbody>tr:has(.p-tag-success)>td:first-child,
+app-table-dynamic-simple .p-datatable-tbody>tr:has(.p-tag-info)>td:first-child,
+.p-datatable .p-datatable-tbody>tr:has(.p-tag-info)>td:first-child {
+  border-left-color: var(--ok) !important;
+}
+
+app-table-dynamic .p-datatable-tbody>tr:hover:has(.p-tag-info)>td:first-child,
+app-table-dynamic .p-datatable-tbody>tr:hover:has(.p-tag-success)>td:first-child {
+  border-left-color: var(--ok) !important;
+}
+
+app-table-dynamic .p-datatable-tbody>tr:has(.p-tag-danger)>td:first-child,
+app-table-dynamic .p-datatable-tbody>tr:has(.p-tag-secondary)>td:first-child,
+app-table-dynamic-simple .p-datatable-tbody>tr:has(.p-tag-danger)>td:first-child,
+.p-datatable .p-datatable-tbody>tr:has(.p-tag-danger)>td:first-child {
+  border-left-color: #475467 !important;
+}
+
+app-table-dynamic .p-datatable-tbody>tr:hover:has(.p-tag-danger)>td:first-child {
+  border-left-color: #475467 !important;
+}
+
+/* la fila de detalle hereda el color del estado de su registro */
+app-table-dynamic .p-datatable-tbody>tr.bg-gray-50:has(.p-tag-info)>td,
+app-table-dynamic .p-datatable-tbody>tr.bg-gray-50:has(.p-tag-success)>td {
+  border-left-color: var(--ok) !important;
+}
+
+app-table-dynamic .p-datatable-tbody>tr.bg-gray-50:has(.p-tag-danger)>td {
+  border-left-color: #475467 !important;
+}
+
+/* modo oscuro */
+html.dark app-table-dynamic .p-datatable-tbody>tr:has(.p-tag-info)>td:first-child,
+html.dark app-table-dynamic .p-datatable-tbody>tr:has(.p-tag-success)>td:first-child {
+  border-left-color: #4ED7AC !important;
+}
+
+html.dark app-table-dynamic .p-datatable-tbody>tr:has(.p-tag-danger)>td:first-child {
+  border-left-color: #7C8AA0 !important;
+}
