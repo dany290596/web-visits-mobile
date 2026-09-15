@@ -6035,3 +6035,61 @@ html.dark app-table-dynamic .p-datatable-tbody>tr:has(.p-tag-success)>td:first-c
 html.dark app-table-dynamic .p-datatable-tbody>tr:has(.p-tag-danger)>td:first-child {
   border-left-color: #7C8AA0 !important;
 }
+
+/* --- 44. fila de detalle como en el portal de referencia --------------- */
+
+/* 1. la barra azul vertical interior: la sustituye el borde de la fila */
+app-table-dynamic .p-datatable-tbody .w-1.bg-primary,
+app-table-dynamic .p-datatable-tbody>tr.bg-gray-50 .w-1 {
+  display: none !important;
+}
+
+/* 2. el detalle comparte fondo con la fila: sin gris ni recuadros */
+app-table-dynamic .p-datatable-tbody>tr.bg-gray-50>td {
+  background: #fff !important;
+}
+
+app-table-dynamic .p-datatable-tbody>tr.bg-gray-50 .border,
+app-table-dynamic .p-datatable-tbody>tr.bg-gray-50 .border.border-primary {
+  border: 0 !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  padding: 0 !important;
+}
+
+/* línea fina de separación arriba, como en la referencia */
+app-table-dynamic .p-datatable-tbody>tr.bg-gray-50 .p-5,
+app-table-dynamic .p-datatable-tbody>tr.bg-gray-50>td>.flex>div:last-child {
+  border-top: 1px solid var(--line);
+}
+
+/* 3. etiqueta arriba en gris, valor debajo en tono fuerte */
+app-table-dynamic .p-datatable-tbody>tr.bg-gray-50 .text-xs {
+  font-size: 14px !important;
+  font-weight: 400 !important;
+  color: var(--txt-3) !important;
+  letter-spacing: 0 !important;
+  text-transform: none !important;
+}
+
+app-table-dynamic .p-datatable-tbody>tr.bg-gray-50 .text-sm.font-semibold,
+app-table-dynamic .p-datatable-tbody>tr.bg-gray-50 .font-semibold {
+  font-size: 15px !important;
+  font-weight: 500 !important;
+  color: var(--ink) !important;
+}
+
+/* rejilla más holgada */
+app-table-dynamic .p-datatable-tbody>tr.bg-gray-50 .grid {
+  gap: 22px 32px !important;
+}
+
+/* modo oscuro */
+html.dark app-table-dynamic .p-datatable-tbody>tr.bg-gray-50>td {
+  background: #121826 !important;
+}
+
+html.dark app-table-dynamic .p-datatable-tbody>tr.bg-gray-50 .p-5 {
+  border-top-color: var(--line);
+}
