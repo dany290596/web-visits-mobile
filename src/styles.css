@@ -2780,9 +2780,15 @@ app-table-dynamic .p-tag.p-tag-success {
   color: var(--ok);
 }
 
+/* "Inactivo": gris oscuro, no rojo. El rojo queda para errores reales. */
 app-table-dynamic .p-tag.p-tag-danger {
-  background: var(--err-bg);
-  color: var(--err);
+  background: #EEF1F5 !important;
+  color: #475467 !important;
+}
+
+app-table-dynamic .p-tag.p-tag-danger .p-tag-label::before,
+app-table-dynamic .p-tag.p-tag-danger::before {
+  background: #475467 !important;
 }
 
 app-table-dynamic .p-tag.p-tag-warn,
@@ -5873,4 +5879,110 @@ body.dark .login-form input,
 .dark .login-form input {
   background: transparent !important;
   background-color: transparent !important;
+}
+
+/* --- 41. estado "Inactivo" en gris oscuro ------------------------------- */
+/* Aplica a las dos tablas (table-dynamic y table-dynamic-simple) y a los
+   detalles de registro. Los p-message y p-error del formulario no se tocan. */
+
+app-table-dynamic .p-tag.p-tag-danger,
+app-table-dynamic-simple .p-tag.p-tag-danger,
+.p-datatable .p-tag.p-tag-danger,
+.p-datatable .p-tag.p-tag-secondary {
+  background: #EEF1F5 !important;
+  color: #475467 !important;
+  border-color: transparent !important;
+}
+
+app-table-dynamic .p-tag.p-tag-danger *,
+app-table-dynamic-simple .p-tag.p-tag-danger *,
+.p-datatable .p-tag.p-tag-danger * {
+  color: #475467 !important;
+}
+
+/* el punto que precede al texto */
+app-table-dynamic .p-tag.p-tag-danger .p-tag-label::before,
+app-table-dynamic-simple .p-tag.p-tag-danger .p-tag-label::before,
+.p-datatable .p-tag.p-tag-danger .p-tag-label::before {
+  background: #98A2B3 !important;
+}
+
+/* modo oscuro */
+html.dark app-table-dynamic .p-tag.p-tag-danger,
+html.dark app-table-dynamic-simple .p-tag.p-tag-danger,
+html.dark .p-datatable .p-tag.p-tag-danger {
+  background: rgba(255, 255, 255, .08) !important;
+  color: #C3CBDA !important;
+}
+
+html.dark app-table-dynamic .p-tag.p-tag-danger *,
+html.dark .p-datatable .p-tag.p-tag-danger * {
+  color: #C3CBDA !important;
+}
+
+html.dark app-table-dynamic .p-tag.p-tag-danger .p-tag-label::before,
+html.dark .p-datatable .p-tag.p-tag-danger .p-tag-label::before {
+  background: #7C8AA0 !important;
+}
+
+/* --- 42. estado "Activo" en verde -------------------------------------- */
+/* Llega con severity info/primary (azul). En las tablas pasa a verde, igual
+   que en el portal de referencia. El azul se reserva para acciones. */
+
+app-table-dynamic .p-tag.p-tag-info,
+app-table-dynamic .p-tag.p-tag-primary,
+app-table-dynamic-simple .p-tag.p-tag-info,
+app-table-dynamic-simple .p-tag.p-tag-primary,
+.p-datatable .p-tag.p-tag-info,
+.p-datatable .p-tag.p-tag-primary {
+  background: var(--ok-bg) !important;
+  color: var(--ok) !important;
+  border-color: transparent !important;
+}
+
+app-table-dynamic .p-tag.p-tag-info *,
+app-table-dynamic .p-tag.p-tag-primary *,
+app-table-dynamic-simple .p-tag.p-tag-info *,
+.p-datatable .p-tag.p-tag-info *,
+.p-datatable .p-tag.p-tag-primary * {
+  color: var(--ok) !important;
+}
+
+app-table-dynamic .p-tag.p-tag-info .p-tag-label::before,
+app-table-dynamic .p-tag.p-tag-primary .p-tag-label::before,
+app-table-dynamic-simple .p-tag.p-tag-info .p-tag-label::before,
+.p-datatable .p-tag.p-tag-info .p-tag-label::before,
+.p-datatable .p-tag.p-tag-primary .p-tag-label::before {
+  background: var(--ok) !important;
+}
+
+/* el contador de la cabecera conserva el azul: lleva !bg-primary propio */
+app-table-dynamic .p-tag.\!bg-primary,
+app-table-dynamic-simple .p-tag.\!bg-primary {
+  background: var(--ac-s) !important;
+  color: var(--ac) !important;
+}
+
+app-table-dynamic .p-tag.\!bg-primary * {
+  color: var(--ac) !important;
+}
+
+/* modo oscuro */
+html.dark app-table-dynamic .p-tag.p-tag-info,
+html.dark app-table-dynamic .p-tag.p-tag-primary,
+html.dark app-table-dynamic-simple .p-tag.p-tag-info,
+html.dark .p-datatable .p-tag.p-tag-info,
+html.dark .p-datatable .p-tag.p-tag-primary {
+  background: rgba(10, 158, 117, .18) !important;
+  color: #4ED7AC !important;
+}
+
+html.dark app-table-dynamic .p-tag.p-tag-info *,
+html.dark .p-datatable .p-tag.p-tag-info * {
+  color: #4ED7AC !important;
+}
+
+html.dark app-table-dynamic .p-tag.p-tag-info .p-tag-label::before,
+html.dark .p-datatable .p-tag.p-tag-info .p-tag-label::before {
+  background: #4ED7AC !important;
 }
