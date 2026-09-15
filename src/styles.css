@@ -6093,3 +6093,187 @@ html.dark app-table-dynamic .p-datatable-tbody>tr.bg-gray-50>td {
 html.dark app-table-dynamic .p-datatable-tbody>tr.bg-gray-50 .p-5 {
   border-top-color: var(--line);
 }
+
+/* --- 45. grupos de opciones (Todos / Sí / No) -------------------------- */
+/* Eran más altos y con bordes distintos que los demás campos. Se igualan a
+   44px, radio 12 y el mismo borde y fondo que los inputs y combos. */
+
+.p-selectbutton,
+p-selectbutton .p-selectbutton,
+.p-togglebutton-group {
+  display: inline-flex !important;
+  width: 100%;
+  height: 44px;
+  min-height: 44px;
+  overflow: hidden;
+  border: 1.5px solid var(--line) !important;
+  border-radius: 12px !important;
+  background: var(--field) !important;
+  box-shadow: none !important;
+}
+
+.p-selectbutton .p-togglebutton,
+.p-selectbutton .p-button,
+.p-togglebutton {
+  flex: 1 1 0;
+  height: 100% !important;
+  min-height: 0 !important;
+  margin: 0 !important;
+  padding: 0 12px !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  font-family: var(--wv-sans) !important;
+  font-size: 14px !important;
+  font-weight: 400 !important;
+  color: var(--txt-3) !important;
+  justify-content: center;
+  transition: background .14s, color .14s;
+}
+
+.p-selectbutton .p-togglebutton+.p-togglebutton,
+.p-selectbutton .p-button+.p-button {
+  border-left: 1px solid var(--line) !important;
+}
+
+.p-selectbutton .p-togglebutton:hover:not(.p-togglebutton-checked),
+.p-selectbutton .p-button:hover:not(.p-highlight) {
+  background: rgba(0, 0, 0, .02) !important;
+  color: var(--ink) !important;
+}
+
+/* opción activa: azul del tema, plano */
+.p-selectbutton .p-togglebutton.p-togglebutton-checked,
+.p-selectbutton .p-button.p-highlight,
+.p-togglebutton.p-togglebutton-checked {
+  background: var(--ac) !important;
+  color: #fff !important;
+  font-weight: 500 !important;
+}
+
+.p-selectbutton .p-togglebutton.p-togglebutton-checked .p-togglebutton-label,
+.p-selectbutton .p-button.p-highlight .p-button-label {
+  color: #fff !important;
+}
+
+/* PrimeNG 18 dibuja un panel interno con su propio fondo y sombra */
+.p-togglebutton-content,
+.p-selectbutton .p-togglebutton-content {
+  background: transparent !important;
+  box-shadow: none !important;
+  border-radius: 0 !important;
+  padding: 0 !important;
+  width: 100%;
+  justify-content: center;
+}
+
+.p-togglebutton-checked .p-togglebutton-content {
+  background: transparent !important;
+}
+
+.p-togglebutton-label {
+  font-family: var(--wv-sans) !important;
+  font-size: 14px !important;
+}
+
+.p-selectbutton:focus-within {
+  border-color: var(--ac) !important;
+  box-shadow: 0 0 0 4px color-mix(in srgb, var(--ac) 12%, transparent) !important;
+}
+
+/* modo oscuro */
+html.dark .p-selectbutton,
+html.dark .p-togglebutton-group {
+  background: var(--field) !important;
+  border-color: var(--line) !important;
+}
+
+html.dark .p-selectbutton .p-togglebutton {
+  color: var(--txt-3) !important;
+}
+
+html.dark .p-selectbutton .p-togglebutton+.p-togglebutton {
+  border-left-color: var(--line) !important;
+}
+
+html.dark .p-selectbutton .p-togglebutton:hover:not(.p-togglebutton-checked) {
+  background: rgba(255, 255, 255, .05) !important;
+  color: var(--ink) !important;
+}
+
+/* --- 46. ajustes de los grupos de opciones ------------------------------ */
+
+/* la etiqueta del grupo debe medir igual que "Nombre" o "Estado" */
+#main-content label:has(+ p-selectbutton),
+#main-content label:has(+ .p-selectbutton),
+#main-content p-selectbutton~label,
+#main-content .field:has(p-selectbutton) label,
+#main-content div:has(> p-selectbutton)>label {
+  font-family: var(--wv-sans) !important;
+  font-size: 14px !important;
+  font-weight: 400 !important;
+  line-height: 1.35 !important;
+  letter-spacing: 0 !important;
+  text-transform: none !important;
+  color: var(--txt-3) !important;
+  margin-bottom: 8px !important;
+  display: block;
+}
+
+/* la opción activa respeta el radio del grupo */
+.p-selectbutton .p-togglebutton:first-child,
+.p-selectbutton .p-button:first-child {
+  border-top-left-radius: 10px !important;
+  border-bottom-left-radius: 10px !important;
+}
+
+.p-selectbutton .p-togglebutton:last-child,
+.p-selectbutton .p-button:last-child {
+  border-top-right-radius: 10px !important;
+  border-bottom-right-radius: 10px !important;
+}
+
+/* --- 47. opción activa del grupo: blanca, no azul --------------------- */
+/* La pastilla azul pesaba demasiado. Se resuelve como en la referencia: la
+   opción elegida es una tarjeta clara elevada sobre el carril, con el texto
+   en tono fuerte. Funciona igual en claro y en oscuro. */
+
+.p-selectbutton .p-togglebutton.p-togglebutton-checked,
+.p-selectbutton .p-button.p-highlight,
+.p-togglebutton.p-togglebutton-checked {
+  background: #fff !important;
+  color: var(--ink) !important;
+  font-weight: 500 !important;
+  box-shadow: 0 1px 2px rgba(14, 20, 32, .06), 0 1px 1px rgba(14, 20, 32, .04) !important;
+}
+
+.p-selectbutton .p-togglebutton.p-togglebutton-checked .p-togglebutton-label,
+.p-selectbutton .p-button.p-highlight .p-button-label {
+  color: var(--ink) !important;
+}
+
+/* la tarjeta va ligeramente metida dentro del carril */
+.p-selectbutton .p-togglebutton.p-togglebutton-checked,
+.p-selectbutton .p-button.p-highlight {
+  margin: 3px !important;
+  height: calc(100% - 6px) !important;
+  border-radius: 9px !important;
+}
+
+.p-selectbutton .p-togglebutton.p-togglebutton-checked+.p-togglebutton,
+.p-selectbutton .p-togglebutton-checked {
+  border-left-color: transparent !important;
+}
+
+html.dark .p-selectbutton .p-togglebutton.p-togglebutton-checked,
+html.dark .p-selectbutton .p-button.p-highlight,
+html.dark .p-togglebutton.p-togglebutton-checked {
+  background: #1B2436 !important;
+  color: var(--ink) !important;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, .4) !important;
+}
+
+html.dark .p-selectbutton .p-togglebutton.p-togglebutton-checked .p-togglebutton-label {
+  color: var(--ink) !important;
+}
