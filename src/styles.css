@@ -6431,3 +6431,170 @@ app-table-dynamic .p-tag::before,
   margin: 0 !important;
   background: none !important;
 }
+
+/* ==========================================================================
+   53. CHIPS E ICONOS: COLOR CON OPACIDAD, SIN FONDO BLANCO
+   --------------------------------------------------------------------------
+   Las utilidades bg-blue-100, bg-green-100, bg-purple-100 y bg-gray-100/200
+   de Tailwind son colores sólidos y muy claros: en modo oscuro quedan como
+   parches blancos. Aquí el fondo se compone del color propio con opacidad, así
+   sirve en claro y en oscuro con una sola regla. Solo afecta al color; no
+   cambia tamaños, posiciones ni comportamiento.
+   ========================================================================== */
+
+/* --- 53.1 fondos de tile y chip ---------------------------------------- */
+
+#main-content .bg-blue-100,
+.p-dialog .bg-blue-100,
+body>div.fixed.inset-0.z-50 .bg-blue-100 {
+  background: color-mix(in srgb, var(--primary, #186DDE) 14%, transparent) !important;
+}
+
+#main-content .bg-green-100,
+.p-dialog .bg-green-100,
+body>div.fixed.inset-0.z-50 .bg-green-100 {
+  background: color-mix(in srgb, #0A9E75 16%, transparent) !important;
+}
+
+#main-content .bg-purple-100,
+.p-dialog .bg-purple-100,
+body>div.fixed.inset-0.z-50 .bg-purple-100 {
+  background: color-mix(in srgb, #7C4DCF 16%, transparent) !important;
+}
+
+#main-content .bg-red-100,
+.p-dialog .bg-red-100,
+body>div.fixed.inset-0.z-50 .bg-red-100 {
+  background: color-mix(in srgb, #D93A37 14%, transparent) !important;
+}
+
+#main-content .bg-yellow-100,
+#main-content .bg-amber-100,
+.p-dialog .bg-yellow-100,
+.p-dialog .bg-amber-100 {
+  background: color-mix(in srgb, #B26A00 16%, transparent) !important;
+}
+
+#main-content .bg-gray-100,
+#main-content .bg-gray-200,
+#main-content .bg-slate-100,
+#main-content .bg-slate-200,
+.p-dialog .bg-gray-100,
+.p-dialog .bg-gray-200 {
+  background: color-mix(in srgb, #64748B 14%, transparent) !important;
+}
+
+/* --- 53.2 texto sobre esos fondos -------------------------------------- */
+
+#main-content .text-blue-600,
+#main-content .text-blue-700,
+#main-content .text-blue-800,
+.p-dialog .text-blue-600,
+.p-dialog .text-blue-800 {
+  color: var(--primary, #186DDE) !important;
+}
+
+#main-content .text-green-700,
+#main-content .text-green-800,
+.p-dialog .text-green-800 {
+  color: #0A9E75 !important;
+}
+
+#main-content .text-purple-700,
+#main-content .text-purple-800,
+.p-dialog .text-purple-800 {
+  color: #7C4DCF !important;
+}
+
+#main-content .text-red-700,
+#main-content .text-red-800 {
+  color: #D93A37 !important;
+}
+
+#main-content .text-yellow-800,
+#main-content .text-amber-800 {
+  color: #B26A00 !important;
+}
+
+#main-content .text-gray-700,
+#main-content .text-gray-800 {
+  color: #475467 !important;
+}
+
+/* --- 53.3 bordes claros ------------------------------------------------ */
+
+#main-content .border-gray-200,
+#main-content .border-gray-300,
+#main-content .border-slate-200,
+.p-dialog .border-gray-200 {
+  border-color: var(--line) !important;
+}
+
+#main-content .divide-gray-200>*+*,
+#main-content .divide-gray-300>*+* {
+  border-color: var(--line) !important;
+}
+
+/* --- 53.4 modo oscuro: solo se aclara el tono del texto ---------------- */
+
+html.dark #main-content .bg-blue-100,
+html.dark .p-dialog .bg-blue-100 {
+  background: color-mix(in srgb, #7FB2FF 16%, transparent) !important;
+}
+
+html.dark #main-content .text-blue-600,
+html.dark #main-content .text-blue-700,
+html.dark #main-content .text-blue-800,
+html.dark .p-dialog .text-blue-600,
+html.dark .p-dialog .text-blue-800 {
+  color: #7FB2FF !important;
+}
+
+html.dark #main-content .bg-green-100 {
+  background: color-mix(in srgb, #4ED7AC 18%, transparent) !important;
+}
+
+html.dark #main-content .text-green-700,
+html.dark #main-content .text-green-800 {
+  color: #4ED7AC !important;
+}
+
+html.dark #main-content .bg-purple-100 {
+  background: color-mix(in srgb, #BFA3FF 18%, transparent) !important;
+}
+
+html.dark #main-content .text-purple-700,
+html.dark #main-content .text-purple-800 {
+  color: #BFA3FF !important;
+}
+
+html.dark #main-content .bg-red-100 {
+  background: color-mix(in srgb, #FF8A87 16%, transparent) !important;
+}
+
+html.dark #main-content .text-red-700,
+html.dark #main-content .text-red-800 {
+  color: #FF8A87 !important;
+}
+
+html.dark #main-content .bg-gray-100,
+html.dark #main-content .bg-gray-200,
+html.dark #main-content .bg-slate-100,
+html.dark #main-content .bg-slate-200 {
+  background: color-mix(in srgb, #C3CBDA 14%, transparent) !important;
+}
+
+html.dark #main-content .text-gray-700,
+html.dark #main-content .text-gray-800 {
+  color: #C3CBDA !important;
+}
+
+html.dark #main-content .text-gray-400,
+html.dark #main-content .text-gray-500 {
+  color: #8A94A3 !important;
+}
+
+/* el círculo blanco que bordea los avatares */
+html.dark #main-content .border-white {
+  border-color: #121826 !important;
+}
