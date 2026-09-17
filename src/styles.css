@@ -6403,3 +6403,31 @@ html.dark .password-dialog input:-webkit-autofill {
     display: none !important;
   }
 }
+
+/* --- 51. sin el punto delante del estado ------------------------------- */
+/* El color del chip ya distingue el estado; el punto sobra. */
+
+app-table-dynamic .p-tag .p-tag-label::before,
+app-table-dynamic-simple .p-tag .p-tag-label::before,
+.p-datatable .p-tag .p-tag-label::before,
+app-table-dynamic .p-tag::before,
+.p-datatable .p-tag::before {
+  content: none !important;
+  display: none !important;
+}
+
+/* refuerzo: ningún pseudo-elemento dentro de un chip de estado, en cualquier
+   tabla, detalle o tema */
+.p-tag::before,
+.p-tag::after,
+.p-tag *::before,
+.p-tag *::after,
+.p-tag .p-tag-label::before,
+.p-tag .p-tag-label::after {
+  content: none !important;
+  display: none !important;
+  width: 0 !important;
+  height: 0 !important;
+  margin: 0 !important;
+  background: none !important;
+}

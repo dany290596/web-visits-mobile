@@ -1,0 +1,155 @@
+/* Mi cuenta — una sola fuente, un solo tamaño, espacios homogéneos.
+   La plantilla mezclaba text-xs/sm/lg/xl, tres pesos y las etiquetas en
+   text-muted-foreground (gris claro). Aquí etiqueta y valor comparten tamaño y
+   ambos se leen; el espaciado usa un solo valor (24px) en relleno, huecos entre cards,
+   cabeceras y filas.
+   Referencia: Configuraciones > Mi cuenta del otro portal. */
+
+:host {
+    display: block;
+    font-family: 'Instrument Sans', system-ui, sans-serif;
+}
+
+:host ::ng-deep * {
+    font-family: 'Instrument Sans', system-ui, sans-serif;
+}
+
+/* --- espaciado: un solo valor en todo -------------------------------- */
+
+.acc-card {
+    padding: 24px;
+}
+
+/* Hueco entre cards: el mismo que separa la barra superior del primer card
+   (10px, el ritmo del shell). Antes eran 24px y no coincidía. */
+.acc-card-gap {
+    margin-top: 10px;
+}
+
+/* las columnas también a 10px */
+:host ::ng-deep .grid.grid-cols-12.gap-6 {
+    gap: 10px;
+}
+
+.acc-card-head {
+    margin-bottom: 24px;
+}
+
+/* tarjeta del avatar: el hueco bajo el chip era mayor que el del resto */
+.acc-avatar-body {
+    padding: 56px 24px 24px;
+}
+
+/* bloque de Ubicación: el título quedaba encima de "País" */
+.acc-section {
+    margin-top: 24px;
+    padding-top: 24px;
+    border-top: 1px solid var(--line, #E2E8F1);
+}
+
+.acc-chips {
+    margin-top: 24px;
+}
+
+/* --- etiqueta y valor: mismo tamaño, ambos legibles ------------------ */
+
+.acc-grid {
+    row-gap: 24px;
+}
+
+.acc-label {
+    display: block;
+    margin: 0;
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 1.45;
+    letter-spacing: 0;
+    color: #3D4A5C;
+}
+
+.acc-value {
+    display: block;
+    margin: 4px 0 0;
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 1.45;
+    letter-spacing: 0;
+    color: var(--ink, #0E1420);
+}
+
+/* --- títulos ---------------------------------------------------------- */
+
+.acc-card-title {
+    margin: 0;
+    font-size: 17px;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+    color: var(--ink, #0E1420);
+}
+
+.acc-subtitle {
+    margin: 0 0 16px;
+    font-size: 15px;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+    color: var(--ink, #0E1420);
+}
+
+.acc-crumb {
+    font-size: 14px;
+    font-weight: 400;
+    color: var(--ink, #0E1420);
+}
+
+/* --- chips ------------------------------------------------------------ */
+
+.acc-chip {
+    display: inline-flex;
+    align-items: center;
+    padding: 4px 11px;
+    border-radius: 999px;
+    font-size: 13px;
+    font-weight: 500;
+    line-height: 1.35;
+    letter-spacing: 0;
+}
+
+/* --- tabla de permisos ------------------------------------------------ */
+
+.acc-th {
+    padding: 12px 16px;
+    text-align: left;
+    font-size: 14px;
+    font-weight: 500;
+    letter-spacing: 0;
+    text-transform: none;
+    color: var(--ink, #0E1420);
+}
+
+.acc-td {
+    padding: 12px 16px;
+    font-size: 14px;
+    font-weight: 400;
+    color: var(--ink, #0E1420);
+}
+
+/* --- modo oscuro ------------------------------------------------------ */
+
+:host-context(html.dark) .acc-label,
+:host-context(html.dark) .acc-crumb,
+:host-context(html.dark) .acc-th {
+    color: #F6F8FB;
+}
+
+:host-context(html.dark) .acc-value,
+:host-context(html.dark) .acc-card-title,
+:host-context(html.dark) .acc-subtitle,
+:host-context(html.dark) .acc-td {
+    color: #F6F8FB;
+}
+
+:host-context(html.dark) .acc-section,
+:host-context(html.dark) .border-gray-200,
+:host-context(html.dark) .divide-gray-200>* {
+    border-color: #232B3D;
+}

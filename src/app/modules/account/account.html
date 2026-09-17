@@ -1,9 +1,9 @@
 <div>
     <!-- Header -->
-    <div class="mb-4 flex justify-between">
+    <div class="flex justify-between">
         <div class="inline-block">
             <h3 class="font-semibold text-foreground text-base">Mi cuenta</h3>
-            <div class="space-x-1 text-xs font-medium text-muted-foreground">
+            <div class="space-x-1 acc-crumb">
                 <a [routerLink]="['/layout/account']" class="hover:text-primary text-base">Inicio</a>
             </div>
         </div>
@@ -25,12 +25,12 @@
                         </div>
                     </div>
                 </div>
-                <div class="pt-14 pb-6 px-6 text-center">
-                    <h4 class="text-xl font-bold text-foreground">{{ accountData.correo }}</h4>
-                    <p class="text-sm text-muted-foreground">{{ accountData.perfil }} - {{ accountData.tipoUsuario }}
+                <div class="acc-avatar-body text-center">
+                    <h4 class="acc-card-title">{{ accountData.correo }}</h4>
+                    <p class="acc-label">{{ accountData.perfil }} - {{ accountData.tipoUsuario }}
                     </p>
                     <div class="mt-2">
-                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium"
+                        <span class="acc-chip"
                             [ngClass]="{'bg-green-100 text-green-800': accountData.estado === 1, 'bg-red-100 text-red-800': accountData.estado !== 1}">
                             {{ accountData.estado === 1 ? 'Activo' : 'Inactivo' }}
                         </span>
@@ -39,18 +39,18 @@
             </div>
 
             <!-- Mini tarjeta de empresa resumida -->
-            <div class="mt-6 rounded-xl bg-background p-6" *ngIf="accountData.empresaCliente">
-                <div class="flex items-center gap-3 mb-3">
+            <div class="rounded-xl bg-background acc-card acc-card-gap" *ngIf="accountData.empresaCliente">
+                <div class="acc-card-head flex items-center gap-3">
                     <div class="w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center shadow-sm">
                         <svg class="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                 d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
                         </svg>
                     </div>
-                    <h4 class="text-lg font-semibold text-foreground">Empresa</h4>
+                    <h4 class="acc-card-title">Empresa</h4>
                 </div>
-                <p class="text-sm font-medium text-foreground">{{ accountData.empresaCliente.razonSocial }}</p>
-                <p class="text-xs text-muted-foreground mt-1">RFC: {{ accountData.empresaCliente.rfc }}</p>
+                <p class="acc-value">{{ accountData.empresaCliente.razonSocial }}</p>
+                <p class="acc-label mt-1">RFC: {{ accountData.empresaCliente.rfc }}</p>
             </div>
         </div>
 
@@ -58,116 +58,123 @@
         <div class="col-span-12 lg:col-span-8">
             <!-- Tarjeta: Información de la empresa -->
             <!-- Tarjeta: Información de la empresa -->
-<div class="rounded-xl bg-background p-6" *ngIf="accountData.empresaCliente">
-    <div class="flex items-center gap-3 mb-4">
-        <div class="w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center shadow-sm">
-            <svg class="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-            </svg>
-        </div>
-        <h3 class="text-lg font-bold text-foreground">Datos de la empresa</h3>
-    </div>
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
-        <div>
-            <span class="text-muted-foreground">Razón social</span>
-            <p class="font-medium text-foreground">{{ accountData.empresaCliente.razonSocial }}</p>
-        </div>
-        <div>
-            <span class="text-muted-foreground">RFC</span>
-            <p class="font-medium text-foreground">{{ accountData.empresaCliente.rfc }}</p>
-        </div>
-        <div>
-            <span class="text-muted-foreground">Teléfono empresa</span>
-            <p class="font-medium text-foreground">{{ accountData.empresaCliente.telefonoEmpresa }}</p>
-        </div>
-        <div>
-            <span class="text-muted-foreground">Teléfono móvil</span>
-            <p class="font-medium text-foreground">{{ accountData.empresaCliente.telefonoMovil || 'N/D' }}</p>
-        </div>
-        <div class="md:col-span-2">
-            <span class="text-muted-foreground">Correo electrónico</span>
-            <p class="font-medium text-foreground">{{ accountData.empresaCliente.correoElectronico }}</p>
-        </div>
-    </div>
+            <div class="rounded-xl bg-background acc-card" *ngIf="accountData.empresaCliente">
+                <div class="acc-card-head flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center shadow-sm">
+                        <svg class="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                        </svg>
+                    </div>
+                    <h3 class="acc-card-title">Datos de la empresa</h3>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 acc-grid">
+                    <div>
+                        <span class="acc-label">Razón social</span>
+                        <p class="acc-value">{{ accountData.empresaCliente.razonSocial }}</p>
+                    </div>
+                    <div>
+                        <span class="acc-label">RFC</span>
+                        <p class="acc-value">{{ accountData.empresaCliente.rfc }}</p>
+                    </div>
+                    <div>
+                        <span class="acc-label">Teléfono empresa</span>
+                        <p class="acc-value">{{ accountData.empresaCliente.telefonoEmpresa }}</p>
+                    </div>
+                    <div>
+                        <span class="acc-label">Teléfono móvil</span>
+                        <p class="acc-value">{{ accountData.empresaCliente.telefonoMovil || 'N/D' }}</p>
+                    </div>
+                    <div class="md:col-span-2">
+                        <span class="acc-label">Correo electrónico</span>
+                        <p class="acc-value">{{ accountData.empresaCliente.correoElectronico }}</p>
+                    </div>
+                </div>
 
-    <!-- 🔽 NUEVO: Ubicación y credenciales -->
-    <div class="mt-5 border-t border-gray-200 pt-5" *ngIf="accountData.empresaCliente.pais || accountData.empresaCliente.paisEstado || accountData.empresaCliente.ciudad">
-        <h4 class="text-sm font-semibold text-foreground mb-3 flex items-center gap-2">
-            <svg class="w-4 h-4 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/>
-            </svg>
-            Ubicación
-        </h4>
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm">
-            <div>
-                <span class="text-muted-foreground">País</span>
-                <p class="font-medium text-foreground">{{ accountData.empresaCliente.pais?.nombre || '—' }}</p>
-            </div>
-            <div>
-                <span class="text-muted-foreground">Estado</span>
-                <p class="font-medium text-foreground">{{ accountData.empresaCliente.paisEstado?.nombre || '—' }}</p>
-            </div>
-            <div>
-                <span class="text-muted-foreground">Ciudad</span>
-                <p class="font-medium text-foreground">{{ accountData.empresaCliente.ciudad?.nombre || '—' }}</p>
-            </div>
-        </div>
-    </div>
+                <!-- 🔽 NUEVO: Ubicación y credenciales -->
+                <div class="acc-section"
+                    *ngIf="accountData.empresaCliente.pais || accountData.empresaCliente.paisEstado || accountData.empresaCliente.ciudad">
+                    <h4 class="acc-subtitle flex items-center gap-2">
+                        <svg class="w-4 h-4 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                        </svg>
+                        Ubicación
+                    </h4>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 acc-grid">
+                        <div>
+                            <span class="acc-label">País</span>
+                            <p class="acc-value">{{ accountData.empresaCliente.pais?.nombre || '—' }}</p>
+                        </div>
+                        <div>
+                            <span class="acc-label">Estado</span>
+                            <p class="acc-value">{{ accountData.empresaCliente.paisEstado?.nombre || '—' }}</p>
+                        </div>
+                        <div>
+                            <span class="acc-label">Ciudad</span>
+                            <p class="acc-value">{{ accountData.empresaCliente.ciudad?.nombre || '—' }}</p>
+                        </div>
+                    </div>
+                </div>
 
-    <div class="mt-4 flex flex-wrap gap-2" *ngIf="accountData.empresaCliente.usaCredencialesHID || accountData.empresaCliente.usaCredencialesWallet">
-        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800" *ngIf="accountData.empresaCliente.usaCredencialesHID">
-            HID {{ accountData.empresaCliente.usaCredencialesHID === 1 ? 'Activado' : 'Desactivado' }}
-        </span>
-        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-purple-100 text-purple-800" *ngIf="accountData.empresaCliente.usaCredencialesWallet">
-            Wallet {{ accountData.empresaCliente.usaCredencialesWallet === 1 ? 'Activado' : 'Desactivado' }}
-        </span>
-    </div>
-    <!-- 🔼 FIN NUEVO -->
-</div>
+                <div class="acc-chips flex flex-wrap gap-2"
+                    *ngIf="accountData.empresaCliente.usaCredencialesHID || accountData.empresaCliente.usaCredencialesWallet">
+                    <span class="acc-chip bg-blue-100 text-blue-800"
+                        *ngIf="accountData.empresaCliente.usaCredencialesHID">
+                        HID {{ accountData.empresaCliente.usaCredencialesHID === 1 ? 'Activado' : 'Desactivado' }}
+                    </span>
+                    <span class="acc-chip bg-purple-100 text-purple-800"
+                        *ngIf="accountData.empresaCliente.usaCredencialesWallet">
+                        Wallet {{ accountData.empresaCliente.usaCredencialesWallet === 1 ? 'Activado' : 'Desactivado' }}
+                    </span>
+                </div>
+                <!-- 🔼 FIN NUEVO -->
+            </div>
 
             <!-- Tarjeta: Licencia HID -->
-            <div class="mt-6 rounded-xl bg-background p-6">
-                <div class="flex items-center gap-3 mb-4">
+            <div class="rounded-xl bg-background acc-card acc-card-gap">
+                <div class="acc-card-head flex items-center gap-3">
                     <div class="w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center shadow-sm">
                         <svg class="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                 d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
                         </svg>
                     </div>
-                    <h3 class="text-lg font-bold text-foreground">Licencia HID</h3>
+                    <h3 class="acc-card-title">Licencia HID</h3>
                 </div>
                 <ng-container *ngIf="accountData.licencia && accountData.licencia.nombre; else sinLicencia">
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 acc-grid">
                         <div>
-                            <span class="text-muted-foreground">Nombre</span>
-                            <p class="font-medium text-foreground">{{ accountData.licencia.nombre }}</p>
+                            <span class="acc-label">Nombre</span>
+                            <p class="acc-value">{{ accountData.licencia.nombre }}</p>
                         </div>
                         <div>
-                            <span class="text-muted-foreground">Número de parte</span>
-                            <p class="font-medium text-foreground">{{ accountData.licencia.numeroParte || 'N/D' }}</p>
+                            <span class="acc-label">Número de parte</span>
+                            <p class="acc-value">{{ accountData.licencia.numeroParte || 'N/D' }}</p>
                         </div>
                         <div>
-                            <span class="text-muted-foreground">Disponibles</span>
-                            <p class="font-medium text-foreground">{{ accountData.licencia.cantidadDisponible }}</p>
+                            <span class="acc-label">Disponibles</span>
+                            <p class="acc-value">{{ accountData.licencia.cantidadDisponible }}</p>
                         </div>
                         <div>
-                            <span class="text-muted-foreground">Consumidas</span>
-                            <p class="font-medium text-foreground">{{ accountData.licencia.cantidadConsumida }}</p>
+                            <span class="acc-label">Consumidas</span>
+                            <p class="acc-value">{{ accountData.licencia.cantidadConsumida }}</p>
                         </div>
                         <div>
-                            <span class="text-muted-foreground">Fecha inicio</span>
-                            <p class="font-medium text-foreground">{{ accountData.licencia.fechaInicio |
+                            <span class="acc-label">Fecha inicio</span>
+                            <p class="acc-value">{{ accountData.licencia.fechaInicio |
                                 date:'dd/MM/yyyy' }}</p>
                         </div>
                         <div>
-                            <span class="text-muted-foreground">Fecha fin</span>
-                            <p class="font-medium text-foreground">{{ accountData.licencia.fechaFin | date:'dd/MM/yyyy'
+                            <span class="acc-label">Fecha fin</span>
+                            <p class="acc-value">{{ accountData.licencia.fechaFin | date:'dd/MM/yyyy'
                                 }}</p>
                         </div>
                         <div class="md:col-span-2">
-                            <span class="text-muted-foreground">Estado licencia</span>
-                            <p class="font-medium text-foreground">{{ accountData.licencia.estadoLicencia || 'N/D' }}
+                            <span class="acc-label">Estado licencia</span>
+                            <p class="acc-value">{{ accountData.licencia.estadoLicencia || 'N/D' }}
                             </p>
                         </div>
                     </div>
@@ -179,45 +186,41 @@
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                 d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4" />
                         </svg>
-                        <p class="mt-2 text-sm text-muted-foreground italic">Sin licencia HID asignada.</p>
+                        <p class="acc-label mt-2">Sin licencia HID asignada.</p>
                     </div>
                 </ng-template>
             </div>
 
             <!-- Tarjeta: Permisos del perfil -->
-            <div class="mt-6 rounded-xl bg-background p-6"
+            <div class="rounded-xl bg-background acc-card acc-card-gap"
                 *ngIf="accountData.permisos && accountData.permisos.length > 0">
-                <div class="flex items-center gap-3 mb-4">
+                <div class="acc-card-head flex items-center gap-3">
                     <div class="w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center shadow-sm">
                         <svg class="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                 d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
                         </svg>
                     </div>
-                    <h3 class="text-lg font-bold text-foreground">Permisos del perfil</h3>
+                    <h3 class="acc-card-title">Permisos del perfil</h3>
                 </div>
                 <div class="overflow-x-auto">
                     <table class="min-w-full divide-y divide-gray-200">
                         <thead class="bg-transparent">
                             <tr>
-                                <th
-                                    class="px-4 py-3 text-left text-xs font-medium text-gray-600 dark:text-gray-300 uppercase tracking-wider">
+                                <th class="acc-th">
                                     Módulo</th>
-                                <th
-                                    class="px-4 py-3 text-left text-xs font-medium text-gray-600 dark:text-gray-300 uppercase tracking-wider">
+                                <th class="acc-th">
                                     Sección</th>
-                                <th
-                                    class="px-4 py-3 text-left text-xs font-medium text-gray-600 dark:text-gray-300 uppercase tracking-wider">
+                                <th class="acc-th">
                                     Permiso</th>
                             </tr>
                         </thead>
                         <tbody class="bg-transparent divide-y divide-gray-200 dark:divide-gray-700">
                             <tr *ngFor="let permiso of accountData.permisos">
-                                <td class="px-4 py-2 text-sm text-foreground">{{ permiso.modulo }}</td>
-                                <td class="px-4 py-2 text-sm text-foreground">{{ permiso.seccion }}</td>
-                                <td class="px-4 py-2 text-sm">
-                                    <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full"
-                                        [ngClass]="{
+                                <td class="acc-td">{{ permiso.modulo }}</td>
+                                <td class="acc-td">{{ permiso.seccion }}</td>
+                                <td class="acc-td">
+                                    <span class="acc-chip" [ngClass]="{
                           'bg-green-100 text-green-800': permiso.permiso === 1,
                           'bg-blue-100 text-blue-800': permiso.permiso === 2,
                           'bg-purple-100 text-purple-800': permiso.permiso === 3,
@@ -237,6 +240,6 @@
     <!-- Cargando -->
     <div *ngIf="!accountData" class="flex justify-center items-center py-12">
         <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
-        <span class="ml-3 text-muted-foreground">Cargando información...</span>
+        <span class="acc-label ml-3">Cargando información...</span>
     </div>
 </div>
