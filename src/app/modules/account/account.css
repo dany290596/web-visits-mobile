@@ -153,3 +153,45 @@
 :host-context(html.dark) .divide-gray-200>* {
     border-color: #232B3D;
 }
+
+/* --- tabla de permisos: mismo patrón que las listas de la app --------- */
+/* Antes era una tabla con líneas divisorias. Ahora cada fila es una tarjeta
+   separada, con borde izquierdo de color, como en Usuarios o Perfiles. */
+
+.acc-perm-table {
+    /* Tailwind fuerza border-collapse: collapse en <table>; sin esto las filas
+       quedan pegadas y el radio no se ve. */
+    border-collapse: separate !important;
+    border-spacing: 0 10px !important;
+}
+
+.acc-perm-table thead th {
+    padding-bottom: 4px;
+}
+
+.acc-perm-table tbody tr {
+    background: var(--background, #fff);
+}
+
+.acc-perm-cell {
+    border-top: 1px solid var(--line, #E2E8F1);
+    border-bottom: 1px solid var(--line, #E2E8F1);
+    background: var(--background, #fff);
+}
+
+.acc-perm-cell:last-child {
+    border-right: 1px solid var(--line, #E2E8F1);
+    border-top-right-radius: 14px;
+    border-bottom-right-radius: 14px;
+}
+
+.acc-perm-first {
+    border-left: 3px solid var(--primary, #186DDE);
+    border-top-left-radius: 14px;
+    border-bottom-left-radius: 14px;
+    padding-left: 18px;
+}
+
+.acc-perm-table tbody tr:hover .acc-perm-cell {
+    background: color-mix(in srgb, var(--primary, #186DDE) 4%, transparent);
+}
