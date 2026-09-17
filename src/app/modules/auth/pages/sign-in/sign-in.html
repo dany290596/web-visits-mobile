@@ -285,17 +285,26 @@
 
         <!-- Paso 2: Validación de código -->
         <div *ngIf="PasoCambioContrasena==2" class="step-container">
-            <div class="step-header">
-                <i class="pi pi-key step-icon"></i>
-                <h4 class="step-title">Verificación de código</h4>
-                <p class="step-description">
-                    Se ha enviado una clave de recuperación a <strong>{{FormularioContrasena.value.email}}</strong>.
-                    Esta clave será válida durante 30 minutos.
-                </p>
+            <div class="step-header"
+                style="display:flex;align-items:flex-start;gap:14px;text-align:left;margin-bottom:26px">
+                <i class="pi pi-key step-icon"
+                    style="flex:0 0 44px;width:44px;height:44px;display:flex;align-items:center;justify-content:center;margin:0;border-radius:12px;background:color-mix(in srgb, var(--primary,#186DDE) 12%, transparent);color:var(--primary,#186DDE);font-size:17px"></i>
+                <div style="min-width:0">
+                    <h4 class="step-title"
+                        style="margin:0 0 4px;font-size:17px;font-weight:600;letter-spacing:-.01em;color:var(--ink,#0E1420)">
+                        Verificación de código</h4>
+                    <p class="step-description"
+                        style="margin:0;font-size:14px;line-height:1.45;color:var(--txt-3,#6B7686)">
+                        Se ha enviado una clave de recuperación a <strong>{{FormularioContrasena.value.email}}</strong>.
+                        Esta clave será válida durante 30 minutos.
+                    </p>
+                </div>
             </div>
 
             <div class="form-group">
-                <label class="form-label">Código de verificación</label>
+                <label class="form-label"
+                    style="display:block;margin-bottom:8px;font-size:14px;font-weight:400;color:var(--ink,#0E1420);letter-spacing:0;text-transform:none">Código
+                    de verificación</label>
                 <p-inputMask mask="99999999" [style]="{'width':'100%'}" inputStyleClass="form-control"
                     formControlName="codigo"></p-inputMask>
 
@@ -305,8 +314,9 @@
                 </small>
             </div>
 
-            <div class="form-actions">
+            <div class="form-actions" style="margin-top:24px;padding-top:24px;border-top:1px solid var(--line,#E2E8F1)">
                 <button class="bg-primary btn-login" type="button"
+                    style="width:100%;height:50px;border:0;border-radius:12px;font-size:15px;font-weight:600;color:#fff"
                     [disabled]="FormularioContrasena.get('codigo')!.invalid" (click)="validarCodigo()">Validar
                     código</button>
             </div>
@@ -322,12 +332,14 @@
                     <div class="timer-circle animate__animated animate__fadeInUp">
                         <h1>{{ secondsLeft }}</h1>
                     </div>
-                    <p class="timer-text animate__animated animate__fadeInUp">
+                    <p class="timer-text animate__animated animate__fadeInUp"
+                        style="margin:0;font-size:14px;line-height:1.45;color:var(--txt-3,#6B7686)">
                         Por favor, espere {{secondsLeft}} segundos antes de solicitar un nuevo código.
                     </p>
                 </div>
 
-                <p class="resend-text">
+                <p class="resend-text"
+                    style="margin:16px 0 0;font-size:14px;line-height:1.45;color:var(--txt-3,#6B7686)">
                     ¿Sigue sin recibir su clave de recuperación?
                     <span class="resend-link" *ngIf="timeIsUp" (click)="enviarCorreoNuevo()">
                         De clic para reenviarla
@@ -338,8 +350,9 @@
                 </p>
             </div>
 
-            <div class="change-email" *ngIf="timeIsUp">
+            <div class="change-email" *ngIf="timeIsUp" style="margin-top:16px">
                 <button class="bg-primary btn-login" type="button" label="Cambiar correo electrónico"
+                    style="width:100%;height:50px;border:0;border-radius:12px;font-size:15px;font-weight:600;color:#fff"
                     icon="pi pi-envelope" (click)="this.PasoCambioContrasena=1">Cambiar correo electrónico</button>
             </div>
         </div>

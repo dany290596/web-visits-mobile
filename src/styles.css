@@ -6598,3 +6598,83 @@ html.dark #main-content .text-gray-500 {
 html.dark #main-content .border-white {
   border-color: #121826 !important;
 }
+
+/* ==========================================================================
+   54. ESTADOS "PENDIENTE" Y "ACTIVO": TAMBIÉN TRANSLÚCIDOS
+   --------------------------------------------------------------------------
+   Los severity warn (#FFF4E5) y success (--ok-bg) seguían con fondo sólido
+   claro, así que en oscuro salían en blanco. Mismo criterio que el resto:
+   el color propio con opacidad.
+   ========================================================================== */
+
+.p-tag.p-tag-warn,
+.p-tag.p-tag-warning,
+app-table-dynamic .p-tag.p-tag-warn,
+app-table-dynamic .p-tag.p-tag-warning,
+app-table-dynamic-simple .p-tag.p-tag-warn,
+.p-datatable .p-tag.p-tag-warn,
+.p-datatable .p-tag.p-tag-warning {
+  background: color-mix(in srgb, #B26A00 16%, transparent) !important;
+  color: #B26A00 !important;
+}
+
+.p-tag.p-tag-success,
+app-table-dynamic .p-tag.p-tag-success,
+app-table-dynamic-simple .p-tag.p-tag-success,
+.p-datatable .p-tag.p-tag-success {
+  background: color-mix(in srgb, var(--ok) 16%, transparent) !important;
+  color: var(--ok) !important;
+}
+
+.p-tag.p-tag-info,
+.p-tag.p-tag-primary,
+app-table-dynamic .p-tag.p-tag-info,
+app-table-dynamic .p-tag.p-tag-primary,
+.p-datatable .p-tag.p-tag-info,
+.p-datatable .p-tag.p-tag-primary {
+  background: color-mix(in srgb, var(--ok) 16%, transparent) !important;
+}
+
+.p-tag.p-tag-danger,
+.p-tag.p-tag-secondary,
+app-table-dynamic .p-tag.p-tag-danger,
+app-table-dynamic .p-tag.p-tag-secondary,
+app-table-dynamic-simple .p-tag.p-tag-danger,
+.p-datatable .p-tag.p-tag-danger,
+.p-datatable .p-tag.p-tag-secondary {
+  background: color-mix(in srgb, #475467 16%, transparent) !important;
+}
+
+/* modo oscuro: solo se aclara el tono */
+html.dark .p-tag.p-tag-warn,
+html.dark .p-tag.p-tag-warning,
+html.dark app-table-dynamic .p-tag.p-tag-warn,
+html.dark app-table-dynamic .p-tag.p-tag-warning,
+html.dark .p-datatable .p-tag.p-tag-warn,
+html.dark .p-datatable .p-tag.p-tag-warning {
+  background: color-mix(in srgb, #F0B355 18%, transparent) !important;
+  color: #F0B355 !important;
+}
+
+html.dark .p-tag.p-tag-success,
+html.dark app-table-dynamic .p-tag.p-tag-success,
+html.dark .p-datatable .p-tag.p-tag-success {
+  background: color-mix(in srgb, #4ED7AC 18%, transparent) !important;
+  color: #4ED7AC !important;
+}
+
+html.dark .p-tag.p-tag-danger,
+html.dark .p-tag.p-tag-secondary,
+html.dark app-table-dynamic .p-tag.p-tag-danger,
+html.dark app-table-dynamic .p-tag.p-tag-secondary,
+html.dark .p-datatable .p-tag.p-tag-danger,
+html.dark .p-datatable .p-tag.p-tag-secondary {
+  background: color-mix(in srgb, #C3CBDA 16%, transparent) !important;
+  color: #C3CBDA !important;
+}
+
+/* el texto interno del chip hereda el color */
+.p-tag .p-tag-label,
+.p-tag>span {
+  color: inherit !important;
+}
