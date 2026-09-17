@@ -6368,3 +6368,38 @@ html.dark .password-dialog input:-webkit-autofill {
   -webkit-text-fill-color: var(--ink) !important;
   -webkit-box-shadow: 0 0 0 1000px var(--field) inset !important;
 }
+
+/* --- 50. login en móvil: la tarjeta centrada en la pantalla ------------ */
+/* Solo se centra el contenedor. El contenido interior no se toca: sigue
+   alineado a la izquierda como ahora. */
+
+@media (max-width: 1023px) {
+  .login-container {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    min-height: 100vh;
+    min-height: 100dvh;
+  }
+
+  .login-card {
+    width: 100%;
+    max-width: 420px;
+    margin: auto !important;
+    height: auto !important;
+    min-height: 0 !important;
+    border-radius: 22px;
+  }
+
+  .login-card .login-form,
+  .login-card .form-container {
+    height: auto !important;
+    min-height: 0 !important;
+    justify-content: center !important;
+  }
+
+  /* el panel azul no se muestra en móvil: no debe reservar alto */
+  .login-card .login-illustration {
+    display: none !important;
+  }
+}
