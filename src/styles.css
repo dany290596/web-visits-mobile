@@ -6765,3 +6765,47 @@ html.dark .p-datepicker-input,
 html.dark .form-control {
   caret-color: #F6F8FB !important;
 }
+
+/* reposo: gris. foco: azul. nunca blanco */
+html.dark input:not([type='checkbox']):not([type='radio']),
+html.dark textarea,
+html.dark select,
+html.dark .p-inputtext,
+html.dark .p-password-input,
+html.dark .form-control,
+html.dark .password-dialog input {
+  border: 1px solid #2A3548 !important;
+  outline: none !important;
+  box-shadow: none !important;
+}
+
+html.dark input:focus,
+html.dark input:focus-visible,
+html.dark textarea:focus,
+html.dark select:focus,
+html.dark .p-inputtext:focus,
+html.dark .p-password-input:focus,
+html.dark .form-control:focus,
+html.dark .password-dialog input:focus,
+html.dark .p-inputwrapper-focus .p-inputtext {
+  border-color: #3884FF !important;
+  outline: none !important;
+  box-shadow: 0 0 0 3px rgba(56, 132, 255, .22) !important;
+}
+
+/* el campo del diálogo: gris en reposo, azul al enfocar */
+.password-dialog input.form-control {
+  border: 1px solid #E2E8F1 !important;
+}
+
+html.dark .password-dialog input.form-control,
+html:not(.dark) .password-dialog input.form-control:not(:focus) {}
+
+html.dark .password-dialog input.form-control {
+  border: 1px solid #2A3548 !important;
+}
+
+html.dark .password-dialog input.form-control:focus {
+  border: 1px solid #3884FF !important;
+  box-shadow: 0 0 0 3px rgba(56, 132, 255, .22) !important;
+}
