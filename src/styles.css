@@ -6678,3 +6678,90 @@ html.dark .p-datatable .p-tag.p-tag-secondary {
 .p-tag>span {
   color: inherit !important;
 }
+
+/* el título del diálogo y el del paso, ilegibles en oscuro */
+html.dark .password-dialog .p-dialog-header,
+html.dark .password-dialog .p-dialog-header *,
+html.dark .password-dialog .p-dialog-title,
+html.dark .password-dialog h4,
+html.dark .password-dialog .step-title,
+html.dark .password-dialog label,
+html.dark .password-dialog .form-label {
+  color: #F6F8FB !important;
+}
+
+html.dark .password-dialog .p-dialog-header-icon {
+  color: #F6F8FB !important;
+}
+
+html.dark .password-dialog p,
+html.dark .password-dialog small,
+html.dark .password-dialog .step-description,
+html.dark .password-dialog input,
+html.dark .password-dialog .p-inputtext {
+  color: #F6F8FB !important;
+}
+
+html.dark .password-dialog input::placeholder {
+  color: #F6F8FB !important;
+  opacity: .75;
+}
+
+/* bordes del diálogo en oscuro: gris, no blanco */
+html.dark .password-dialog input,
+html.dark .password-dialog .p-inputtext,
+html.dark .password-dialog .form-control {
+  border-color: #2A3548 !important;
+}
+
+html.dark .password-dialog .form-actions,
+html.dark .password-dialog [style*="border-top"] {
+  border-top-color: #2A3548 !important;
+}
+
+/* el tile del icono, con más presencia */
+html.dark .password-dialog .step-icon {
+  background: rgba(56, 132, 255, .22) !important;
+  color: #8FBEFF !important;
+}
+
+.password-dialog .step-icon {
+  background: color-mix(in srgb, var(--ac, #186DDE) 16%, #fff) !important;
+  color: var(--ac, #186DDE) !important;
+}
+
+/* --- 54. bordes y cursor en oscuro: todos los controles ---------------- */
+
+html.dark input:not([type='checkbox']):not([type='radio']),
+html.dark textarea,
+html.dark select,
+html.dark .p-inputtext,
+html.dark .p-select,
+html.dark .p-multiselect,
+html.dark .p-autocomplete-input,
+html.dark .p-password-input,
+html.dark .p-datepicker-input,
+html.dark .p-inputmask,
+html.dark .p-inputnumber-input,
+html.dark .form-control,
+html.dark .wv-field input,
+html.dark .wv-field select,
+html.dark .wv-field textarea {
+  border-color: #2A3548 !important;
+}
+
+html.dark .p-datepicker .p-datepicker-dropdown,
+html.dark .p-inputgroup-addon {
+  border-color: #2A3548 !important;
+}
+
+/* el cursor de escritura no se veía sobre el fondo oscuro */
+html.dark input,
+html.dark textarea,
+html.dark .p-inputtext,
+html.dark .p-password-input,
+html.dark .p-autocomplete-input,
+html.dark .p-datepicker-input,
+html.dark .form-control {
+  caret-color: #F6F8FB !important;
+}
