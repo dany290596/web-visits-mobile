@@ -6838,3 +6838,62 @@ html.dark .login-card .login-form .input-group .form-control:autofill {
   -webkit-text-fill-color: #E7ECF3 !important;
   filter: none !important;
 }
+
+/* el texto del botón y la palomita del check, en oscuro */
+html.dark .login-card .login-form .btn-login,
+html.dark .login-card .login-form button[type='submit'] {
+  color: #FFFFFF !important;
+}
+
+html.dark .login-card .login-form .p-checkbox .p-checkbox-box.p-highlight,
+html.dark .login-card .login-form .p-checkbox-checked .p-checkbox-box,
+html.dark .login-card .login-form input[type='checkbox']:checked {
+  background: var(--ac) !important;
+  border-color: var(--ac) !important;
+}
+
+html.dark .login-card .login-form .p-checkbox .p-checkbox-icon,
+html.dark .login-card .login-form .p-checkbox-box .p-icon {
+  color: #FFFFFF !important;
+}
+
+html.dark .login-card .login-form input[type='checkbox'] {
+  accent-color: var(--ac);
+}
+
+/* texto del botón y palomita: especificidad suficiente */
+html.dark .login-card .login-form .form-wrapper .btn-login,
+html.dark .login-card .login-form form button.btn-login,
+html.dark .login-card .login-form form button[type='submit'] {
+  color: #FFFFFF !important;
+  -webkit-text-fill-color: #FFFFFF !important;
+  opacity: 1 !important;
+}
+
+html.dark .login-card .login-form .form-check-input,
+html.dark .login-card .login-form input[type='checkbox'] {
+  accent-color: #186DDE !important;
+  width: 18px;
+  height: 18px;
+  border: 1px solid #2A3548 !important;
+  background: transparent !important;
+  appearance: auto !important;
+  -webkit-appearance: checkbox !important;
+  opacity: 1 !important;
+  filter: none !important;
+}
+
+/* todos los campos del login llevan su línea inferior, también el de contraseña */
+html.dark .login-card .login-form .form-group .input-group,
+html.dark .login-card .login-form .error-wrapper .input-group {
+  border-bottom: 1px solid #2A3548 !important;
+}
+
+html.dark .login-card .login-form .form-group .input-group:focus-within,
+html.dark .login-card .login-form .error-wrapper .input-group:focus-within {
+  border-bottom-color: #3884FF !important;
+}
+
+html.dark .login-card .login-form .login-footer {
+  border-top-color: #2A3548 !important;
+}
