@@ -6809,3 +6809,32 @@ html.dark .password-dialog input.form-control:focus {
   border: 1px solid #3884FF !important;
   box-shadow: 0 0 0 3px rgba(56, 132, 255, .22) !important;
 }
+
+/* el texto escrito del login, en el tono del tema oscuro */
+html.dark .login-card .login-form .input-group .form-control,
+html.dark .login-card .login-form .input-group input {
+  -webkit-text-fill-color: #E7ECF3 !important;
+}
+
+/* el relleno del navegador pintaba el campo de blanco */
+html.dark .login-card .login-form .input-group input:-webkit-autofill,
+html.dark .login-card .login-form .input-group input:-webkit-autofill:hover,
+html.dark .login-card .login-form .input-group input:-webkit-autofill:focus,
+html.dark .login-card .login-form .input-group input:-webkit-autofill:active,
+html.dark .login-card .login-form .input-group .form-control:-webkit-autofill {
+  -webkit-box-shadow: 0 0 0 1000px transparent inset !important;
+  box-shadow: 0 0 0 1000px transparent inset !important;
+  -webkit-text-fill-color: #E7ECF3 !important;
+  caret-color: #E7ECF3 !important;
+  background: transparent !important;
+  background-color: transparent !important;
+  transition: background-color 6000000s 0s, color 6000000s 0s !important;
+}
+
+html.dark .login-card .login-form .input-group input:autofill,
+html.dark .login-card .login-form .input-group .form-control:autofill {
+  background: transparent !important;
+  box-shadow: none !important;
+  -webkit-text-fill-color: #E7ECF3 !important;
+  filter: none !important;
+}
