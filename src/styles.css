@@ -6897,3 +6897,126 @@ html.dark .login-card .login-form .error-wrapper .input-group:focus-within {
 html.dark .login-card .login-form .login-footer {
   border-top-color: #2A3548 !important;
 }
+
+/* ==========================================================================
+   58. PLANTILLAS DE CORREO (Wallet / HID) EN OSCURO
+   Con las variables que el tema SÍ redefine bajo html.dark:
+   --ink, --txt-2, --txt-3, --txt-4, --line, --field, --sb y --primary.
+   (--card y --background no cambian en oscuro: usarlas dejaba las tarjetas
+   en blanco.)
+   ========================================================================== */
+
+html.dark .ewt-form-col .p-card,
+html.dark .ewt-form-col .p-card .p-card-body,
+html.dark .ewt-form-col .p-card .p-card-content,
+html.dark .ewt-preview-col,
+html.dark .ewt-preview-col .p-card,
+html.dark .ewt-preview-col .p-card .p-card-body,
+html.dark .ewt-preview-col .p-card .p-card-content,
+html.dark .ewt-preview-wrap,
+html.dark .ewt-browser,
+html.dark .ewt-browser-bar {
+  background: var(--field) !important;
+  border-color: var(--line) !important;
+}
+
+html.dark .ewt-card-header,
+html.dark .ewt-preview-col .ewt-card-header {
+  background: var(--sb) !important;
+  border-color: var(--line) !important;
+}
+
+html.dark .ewt-card-header,
+html.dark .ewt-card-header span,
+html.dark .ewt-card-header-inner,
+html.dark .ewt-card-header-inner span,
+html.dark .ewt-section-title {
+  color: var(--ink) !important;
+}
+
+html.dark .ewt-card-icon,
+html.dark .ewt-card-header .pi,
+html.dark .ewt-card-header-inner .pi {
+  color: var(--primary) !important;
+}
+
+html.dark .ewt-form-col label,
+html.dark .ewt-form-col .form-label {
+  color: var(--txt-2) !important;
+}
+
+html.dark .ewt-form-col input,
+html.dark .ewt-form-col textarea,
+html.dark .ewt-form-col .p-inputtext,
+html.dark .ewt-browser-bar input,
+html.dark .ewt-browser-url {
+  background: var(--muted) !important;
+  border-color: var(--line) !important;
+  color: var(--ink) !important;
+  -webkit-text-fill-color: var(--ink) !important;
+}
+
+html.dark .ewt-form-col input::placeholder,
+html.dark .ewt-form-col textarea::placeholder {
+  color: var(--txt-4) !important;
+}
+
+html.dark .ewt-tabs button,
+html.dark .ewt-client-tab {
+  background: var(--muted) !important;
+  border-color: var(--line) !important;
+  color: var(--txt-2) !important;
+}
+
+html.dark .ewt-tabs button.active,
+html.dark .ewt-client-tab.active {
+  background: var(--primary) !important;
+  border-color: var(--primary) !important;
+  color: var(--primary-foreground) !important;
+}
+
+/* --- 58.b plantillas de correo: todo alineado a 16px ------------------- */
+/* La cabecera de cada tarjeta (.ewt-card-header) usa 12px 16px en el CSS del
+   componente. El contenido llevaba otro padding, así que los campos no
+   coincidían con el borde del título ni llegaban al filo derecho. */
+
+.ewt-form-col .p-card .p-card-body,
+.ewt-preview-col .p-card .p-card-body {
+  padding: 0 !important;
+}
+
+.ewt-form-col .p-card .p-card-content,
+.ewt-preview-col .p-card .p-card-content {
+  padding: 18px 28px 22px !important;
+}
+
+/* la cabecera de la tarjeta se alinea con la de la página (28px) */
+.ewt-card-header,
+.ewt-card-header-inner {
+  padding: 16px 28px !important;
+}
+
+.ewt-preview-col .ewt-card-header {
+  padding: 16px 28px !important;
+}
+
+.ewt-form-col .p-card .p-card-content>*:last-child {
+  margin-bottom: 0 !important;
+}
+
+.ewt-field input,
+.ewt-field textarea,
+.ewt-field .p-inputtext,
+.ewt-field-row input,
+.ewt-field-row .p-inputtext {
+  width: 100% !important;
+  box-sizing: border-box;
+}
+
+.ewt-field {
+  margin-bottom: 12px !important;
+}
+
+.ewt-field-row {
+  margin-bottom: 12px !important;
+}

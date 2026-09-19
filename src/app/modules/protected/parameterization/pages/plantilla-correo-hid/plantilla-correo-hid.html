@@ -60,8 +60,8 @@
 
 <!-- ── Skeleton ────────────────────────────────────────────── -->
 @if (loading()) {
-<div class="ewt-grid">
-    <div class="ewt-form-col">
+<div class="ewt-grid" style="gap:10px;column-gap:10px;row-gap:10px">
+    <div class="ewt-form-col" style="display:flex;flex-direction:column;gap:10px">
         <p-card>
             <p-skeleton height="2rem" styleClass="mb-3" />
             <p-skeleton height="2.5rem" styleClass="mb-3" />
@@ -69,7 +69,7 @@
             <p-skeleton height="2.5rem" />
         </p-card>
     </div>
-    <div class="ewt-preview-col">
+    <div class="ewt-preview-col" style="display:flex;flex-direction:column;gap:10px">
         <p-card>
             <p-skeleton height="420px" />
         </p-card>
@@ -79,13 +79,13 @@
 
 <!-- ── Contenido ───────────────────────────────────────────── -->
 @if (!loading()) {
-<div class="ewt-grid" [formGroup]="form">
+<div class="ewt-grid" [formGroup]="form" style="gap:10px;column-gap:10px;row-gap:10px">
 
     <!-- ── Columna formulario ─────────────────────────────── -->
-    <div class="ewt-form-col">
+    <div class="ewt-form-col" style="display:flex;flex-direction:column;gap:10px">
 
         <!-- Card 1: Datos del correo -->
-        <p-card styleClass="mb-4">
+        <p-card>
             <ng-template pTemplate="header">
                 <div class="ewt-card-header">
                     <i class="pi pi-send ewt-card-icon"></i>
@@ -124,7 +124,7 @@
         </p-card>
 
         <!-- Card 2: Pasos del correo -->
-        <p-card styleClass="mb-4">
+        <p-card>
             <ng-template pTemplate="header">
                 <div class="ewt-card-header">
                     <i class="pi pi-list ewt-card-icon"></i>
@@ -237,7 +237,7 @@
     </div><!-- /form-col -->
 
     <!-- ── Columna preview ────────────────────────────────── -->
-    <div class="ewt-preview-col">
+    <div class="ewt-preview-col" style="display:flex;flex-direction:column;gap:10px">
         <p-card styleClass="ewt-preview-card">
             <ng-template pTemplate="header">
                 <div class="ewt-preview-header">
